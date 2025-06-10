@@ -37,6 +37,8 @@ export default defineConfig([
         document: true,
         HTMLElement: true,
         window: true,
+        localStorage: true,
+        sessionStorage: true,
       },
     },
 
