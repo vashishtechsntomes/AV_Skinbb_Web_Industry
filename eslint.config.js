@@ -1,28 +1,105 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
+// eslint.config.ts
 
-export default tseslint.config(
-  { ignores: ['dist'] },
+import { defineConfig } from "eslint/config";
+
+// ESLint base JS rules
+import js from "@eslint/js";
+
+// TypeScript parser and plugin
+import tsParser from "@typescript-eslint/parser";
+import tseslint from "@typescript-eslint/eslint-plugin";
+import jsxA11y from "eslint-plugin-jsx-a11y";
+
+// React plugins
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+
+// Prettier for code formatting (disables conflicting ESLint rules)
+import prettier from "eslint-config-prettier";
+
+export default defineConfig([
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
+    // Directories and files to ignore during linting
+    ignores: ["node_modules/", "dist/", "build/"],
+
+    // Language and parser configuration
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      parser: tsParser,
+      parserOptions: {
+        project: ["./tsconfig.app.json", "./tsconfig.node.json"], // for full type-aware linting
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        document: true,
+        HTMLElement: true,
+        window: true,
+      },
     },
+
+    // Auto-detect React version
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+
+    // Apply these rules only to TypeScript React files
+    files: ["**/*.{ts,tsx}", "vite.config.ts"],
+
+    // Plugin definitions
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      "@typescript-eslint": tseslint,
+      react,
+      "react-hooks": reactHooks,
+      "jsx-a11y": jsxA11y,
     },
+
+    // ESLint rules
     rules: {
+      // Base ESLint recommended rules
+      ...js.configs.recommended.rules,
+
+      // React-specific recommended rules
+      ...react.configs.recommended.rules,
+
+      // React Hooks recommended rules
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
+
+      // TypeScript ESLint recommended rules
+      ...tseslint.configs.recommended.rules,
+
+      // Prettier: disables formatting rules that might conflict
+      ...prettier.rules,
+
+      ...jsxA11y.configs.recommended.rules,
+
+      // Enforce use of `const` where possible
+      "prefer-const": "error",
+
+      // Enforce semicolons
+      semi: ["error", "always"],
+
+      // Enforce double quotes
+      quotes: ["error", "double"],
+
+      // Disable old JS rule, prefer TS version
+      "no-unused-vars": "off",
+
+      // Warn on unused variables (ignore if name starts with _)
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
       ],
+
+      // Disable JSX React import rule (not needed in React 17+)
+      "react/react-in-jsx-scope": "off",
     },
   },
-)
+]);

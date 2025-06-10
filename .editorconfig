@@ -1,0 +1,23 @@
+# Marks this file as the root EditorConfig file (no parent .editorconfig files will be applied)
+root = true
+
+# Applies the following rules to all files
+[*]
+
+# Use UTF-8 character encoding
+charset = utf-8
+
+# Use LF (Unix-style) line endings
+end_of_line = lf
+
+# Use spaces instead of tabs
+indent_style = space
+
+# Set the number of spaces per indentation level to 2
+indent_size = 2
+
+# Ensure every file ends with a newline character
+insert_final_newline = true
+
+# Automatically remove any trailing whitespace at the end of lines
+trim_trailing_whitespace = true
