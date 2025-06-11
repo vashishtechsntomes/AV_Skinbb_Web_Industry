@@ -4,6 +4,6 @@ import { dashboardRoutes } from "./dashboard.routes";
 
 // later you can import dashboardRoutes, brandRoutes, etc.
 export const appRoutes = createBrowserRouter([
-  ...authRoutes,
   ...dashboardRoutes,
+  ...authRoutes,
 ]);

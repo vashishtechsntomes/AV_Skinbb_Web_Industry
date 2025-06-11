@@ -1,6 +1,7 @@
 // routes/auth.routes.ts
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
+import AuthLayout from "@/layouts/AuthLayout";
 
 export const AUTH_ROUTES = {
   SIGN_IN: "/sign-in",
@@ -10,11 +11,17 @@ export const AUTH_ROUTES = {
 
 export const authRoutes: RouteObject[] = [
   {
-    path: AUTH_ROUTES.SIGN_IN,
-    Component: lazy(() => import("@/features/auth/sign-in")),
-  },
-  {
-    path: AUTH_ROUTES.SIGN_UP,
-    Component: lazy(() => import("@/features/auth/sign-up")),
+    path: "/",
+    Component: AuthLayout,
+    children: [
+      {
+        path: AUTH_ROUTES.SIGN_IN,
+        Component: lazy(() => import("@/features/auth/sign-in")),
+      },
+      {
+        path: AUTH_ROUTES.SIGN_UP,
+        Component: lazy(() => import("@/features/auth/sign-up")),
+      },
+    ],
   },
 ];

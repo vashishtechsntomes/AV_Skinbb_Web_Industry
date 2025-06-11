@@ -39,6 +39,7 @@ export default defineConfig([
         window: true,
         localStorage: true,
         sessionStorage: true,
+        console: true,
       },
     },
 
