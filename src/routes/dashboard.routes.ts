@@ -1,4 +1,5 @@
 // routes/auth.routes.ts
+import MainLayout from "@/layouts/MainLayout";
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
 
@@ -7,7 +8,12 @@ export const DASHBOARD_ROUTES = {
 };
 export const dashboardRoutes: RouteObject[] = [
   {
-    path: DASHBOARD_ROUTES.dashboard,
-    Component: lazy(() => import("@/features/dashboard/index")),
+    Component: MainLayout,
+    children: [
+      {
+        index: true,
+        Component: lazy(() => import("@/features/dashboard/index")),
+      },
+    ],
   },
 ];

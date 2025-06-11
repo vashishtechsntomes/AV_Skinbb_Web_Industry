@@ -24,10 +24,10 @@ const buttonVariants = cva(
       },
       size: {
         tiny: "h-7 px-2 py-0 text-xs [&_svg]:size-3 gap-1",
-        sm: "h-9 px-3 text-sm [&_svg]:size-3 gap-1.5",
-        md: "h-11 px-4 text-base [&_svg]:size-4 ",
+        sm: "h-8 px-3 text-sm [&_svg]:size-4 gap-1.5",
+        md: "h-10 px-4 text-base [&_svg]:size-4 ",
         lg: "h-12 px-8 text-lg [&_svg]:size-5",
-        icon: "h-11 w-11",
+        icon: "h-10 w-10 text-muted-foreground",
       },
       rounded: {
         none: "rounded-none",

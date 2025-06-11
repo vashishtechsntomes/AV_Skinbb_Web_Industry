@@ -13,10 +13,27 @@ html {
   scroll-behavior: smooth;
 }
 
-a {
-  color: var(--primary);
+@layer components {
+  a {
+    color: var(--primary);
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
 }
 
-a:hover {
-  text-decoration: underline;
-}
+
+/* .header-main{
+  position: relative;
+  &::after{
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    border-top-left-radius: 20px;
+  }
+} */

@@ -2,9 +2,10 @@ import logo from "@/assets/images/logo-white.png";
 import { Button } from "@/components/ui/button";
 import { Form, FormInput } from "@/components/ui/form";
 import { AUTH_ROUTES } from "@/routes/auth.routes";
+import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 type FormType = {
   email: string;
@@ -14,6 +15,7 @@ type FormType = {
 
 const SignIn = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMode = () => {
     setIsDarkMode((prev) => !prev);
@@ -29,6 +31,7 @@ const SignIn = () => {
 
   function onSubmit(values: FormType) {
     console.log(values);
+    navigate(DASHBOARD_ROUTES.dashboard);
   }
   return (
     <Form {...form}>
