@@ -5,6 +5,7 @@ import type { RouteObject } from "react-router";
 
 export const DASHBOARD_ROUTES = {
   dashboard: "/",
+  brandLists: "/brands",
 };
 export const dashboardRoutes: RouteObject[] = [
   {
@@ -13,6 +14,10 @@ export const dashboardRoutes: RouteObject[] = [
       {
         index: true,
         Component: lazy(() => import("@/features/dashboard/index")),
+      },
+      {
+        path: DASHBOARD_ROUTES.brandLists,
+        Component: lazy(() => import("@/features/brands/brand-list")),
       },
     ],
   },

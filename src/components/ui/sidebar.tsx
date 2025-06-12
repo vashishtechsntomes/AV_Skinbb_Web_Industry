@@ -9,7 +9,7 @@ import {
   type ItemInstance,
 } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { NavLink, useLocation } from "react-router";
 import { Button } from "./button";
 const INDENT = 32;
@@ -224,7 +224,6 @@ function findActiveParentFolders(
 function SidebarNavigation() {
   const location = useLocation();
 
-  // Get the current item and expanded items based on active state
   const { currentId, expandedItems } = useMemo(() => {
     const currentItemId =
       Object.entries(items).find(
@@ -250,8 +249,29 @@ function SidebarNavigation() {
     features: [syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature],
   });
 
+  useEffect(() => {
+    if (!tree) return;
+
+    tree.getSelectedItems().forEach((selectedItem) => {
+      if (selectedItem && typeof selectedItem.deselect === "function") {
+        selectedItem.deselect();
+      }
+    });
+    const item = tree.getItems().find((item) => item.getId() === currentId);
+    if (item && typeof item.select === "function") {
+      item.select();
+    }
+
+    expandedItems.forEach((itemId) => {
+      const folder = tree.getItems().find((item) => item.getId() === itemId);
+      if (folder && typeof folder.expand === "function") {
+        folder.expand();
+      }
+    });
+  }, [tree, currentId, expandedItems]);
+
   return (
-    <div className="flex h-full flex-col gap-2 *:first:grow">
+    <nav className="flex h-full flex-col gap-2 *:first:grow">
       <Tree
         className="relative before:absolute before:inset-0 before:-ms-2.5 before:bg-[repeating-linear-gradient(to_right,transparent_0,transparent_calc(var(--tree-indent)-1px),var(--border)_calc(var(--tree-indent)-1px),var(--border)_calc(var(--tree-indent)))]"
         indent={INDENT}
@@ -265,7 +285,7 @@ function SidebarNavigation() {
           );
         })}
       </Tree>
-    </div>
+    </nav>
   );
 }
 
@@ -275,7 +295,7 @@ function SidebarItemLabel({ item }: { item: ItemInstance<Item> }) {
 
   // Check if current item or any of its children are active
   const isActive = React.useMemo(() => {
-    if (href === location.pathname) return true;
+    if (href === location.pathname) return false;
 
     const isChildActive = (childId: string): boolean => {
       const childItem = items[childId];
@@ -290,7 +310,7 @@ function SidebarItemLabel({ item }: { item: ItemInstance<Item> }) {
   const labelContent = (
     <TreeItemLabel
       className={cn(
-        "before:bg-background before:bg-background relative cursor-pointer px-3 py-2 not-in-data-[folder=true]:ps-3 before:absolute before:inset-x-0 before:-inset-y-0.5 before:-z-10",
+        "before:bg-background relative cursor-pointer px-3 py-2 not-in-data-[folder=true]:ps-3 before:absolute before:inset-x-0 before:-inset-y-0.5 before:-z-10",
         isActive && "bg-accent",
       )}
     >
@@ -338,9 +358,9 @@ const Sidebar = () => {
           onClick={handleOverlayClick}
         ></button>
       )}
-      <nav
+      <aside
         className={cn(
-          "bg-background fixed z-10 order-first h-screen w-64 overflow-y-auto px-2 transition-all",
+          "bg-background fixed z-10 order-first h-screen w-60 overflow-y-auto px-2 transition-all",
           isSidebarOpen && "-translate-x-100",
           isMobile
             ? isSidebarOpen
@@ -382,11 +402,11 @@ const Sidebar = () => {
         <div className="space-y-2 py-3">
           <SidebarNavigation />
         </div>
-      </nav>
+      </aside>
 
       <div
         className={cn(
-          "hidden w-64 transition-all md:block",
+          "hidden w-60 transition-all md:block",
           isSidebarOpen && "w-0",
         )}
       ></div>

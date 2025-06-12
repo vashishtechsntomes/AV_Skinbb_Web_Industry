@@ -22,22 +22,39 @@ html {
     text-decoration: underline;
   }
 
-  p{
+  p {
     @apply text-muted-foreground;
   }
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
 
-/* .header-main{
-  position: relative;
-  &::after{
-    content: "";
-    position: absolute;
-    bottom: -30px;
-    left: 0;
-    width: 30px;
-    height: 30px;
-    background-color: red;
-    border-top-left-radius: 20px;
-  }
-} */
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  border-radius: 10px;
+  background: #555;
+}
+
+table th:not(:last-child)::after {
+  content: "";
+  height: 50%;
+  border-right: 1px solid var(--color-border);
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+

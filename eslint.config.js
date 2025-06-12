@@ -103,6 +103,9 @@ export default defineConfig([
 
       // Disable JSX React import rule (not needed in React 17+)
       "react/react-in-jsx-scope": "off",
+
+      // Disable props of the component as read-only
+      "@typescript-eslint/prefer-readonly-parameter-types": "off",
     },
   },
 ]);
