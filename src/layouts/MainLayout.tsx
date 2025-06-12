@@ -166,7 +166,7 @@ const MainLayout = () => {
           <div
             className={cn(
               "h-full bg-linear-150 from-[#FFBCA830] via-[#FAFAFA70] to-[#DBD3FF70] p-2 inset-shadow-sm md:p-5",
-              !isSidebarOpen && "rounded-tl-lg",
+              !isSidebarOpen && "rounded-t-lg",
             )}
           >
             <Outlet />
