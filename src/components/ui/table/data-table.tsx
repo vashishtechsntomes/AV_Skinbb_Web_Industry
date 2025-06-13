@@ -13,8 +13,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  type TableProps,
 } from "@/components/ui/table";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { cn } from "@/utils";
+import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MagnifyingGlassIcon,
+  Squares2X2Icon,
+  TableCellsIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+} from "@heroicons/react/24/outline";
 import {
   flexRender,
   getCoreRowModel,
@@ -24,14 +35,40 @@ import {
   useReactTable,
   type ColumnDef,
   type ColumnFiltersState,
+  type Header,
   type Row,
   type SortingState,
   type Table as TableType,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  Dispatch,
+  type ComponentProps,
+  type ReactNode,
+  type SetStateAction,
+} from "react";
+import { Input } from "../input";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../dropdown-menu";
 
-function createGlobalFilter<TData extends object>(filterableKeys?: string[]) {
+export enum DataViewMode {
+  "list",
+  "grid",
+}
+
+export const DEFAULT_PAGE_SIZES = [5, 10, 20, 50];
+export const LOCAL_STORAGE_VIEW_MODE_KEY = "viewMode";
+
+function createGlobalFilter<TData extends object>(
+  filterableKeys?: (keyof TData)[],
+) {
   return (row: Row<TData>, _columnId: string, filterValue: string) => {
     const keys = filterableKeys?.length
       ? filterableKeys
@@ -50,7 +87,20 @@ interface UseTableOptions<TData> {
   rows: TData[];
   columns: ColumnDef<TData, any>[];
   pageSize?: number;
-  filterableKeys?: string[];
+  filterableKeys?: (keyof TData)[];
+  defaultViewMode?: DataViewMode;
+}
+
+export interface UseTableResponse<TData> {
+  table: TableType<TData>;
+  pagination: {
+    pageIndex: number;
+    pageSize: number;
+  };
+  setGlobalFilter: Dispatch<SetStateAction<string>>;
+  toggleViewMode: () => void;
+  viewMode: DataViewMode;
+  setViewMode: Dispatch<SetStateAction<DataViewMode>>;
 }
 
 export function useTable<TData extends object>({
@@ -58,7 +108,8 @@ export function useTable<TData extends object>({
   columns,
   pageSize = 5,
   filterableKeys = [],
-}: UseTableOptions<TData>) {
+  defaultViewMode = DataViewMode.grid,
+}: UseTableOptions<TData>): UseTableResponse<TData> {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState({
@@ -68,8 +119,9 @@ export function useTable<TData extends object>({
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-
-  const globalFilterFn = createGlobalFilter<TData>(filterableKeys);
+  const [viewMode, setViewMode] = useState<DataViewMode>(
+    defaultViewMode ?? DataViewMode.list,
+  );
 
   const table = useReactTable({
     data: rows,
@@ -92,28 +144,183 @@ export function useTable<TData extends object>({
       columnVisibility,
       rowSelection,
     },
-    globalFilterFn,
+    globalFilterFn: createGlobalFilter<TData>(filterableKeys),
   });
+
+  useEffect(() => {
+    const savedViewMode = localStorage.getItem(
+      LOCAL_STORAGE_VIEW_MODE_KEY,
+    ) as DataViewMode | null;
+    if (savedViewMode) setViewMode(savedViewMode);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("viewMode", LOCAL_STORAGE_VIEW_MODE_KEY.toString());
+  }, [viewMode]);
 
   return {
     table,
     pagination,
     setGlobalFilter,
+    toggleViewMode: () =>
+      setViewMode((prev) =>
+        prev === DataViewMode.list ? DataViewMode.grid : DataViewMode.list,
+      ),
+    viewMode,
+    setViewMode,
   };
 }
-interface DataTableProps<TData> {
+
+function SortableHeader<TData>({ header }: { header: Header<TData, unknown> }) {
+  const isSorted = header.column.getIsSorted() as string;
+  const toggleHandler = header.column.getToggleSortingHandler();
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (["Enter", " "].includes(e.key)) {
+      toggleHandler?.(e);
+      e.preventDefault();
+    }
+  };
+
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      aria-pressed={!!isSorted}
+      aria-label={`Sort by ${String(header.column.columnDef.header)}`}
+      onKeyDown={handleKeyDown}
+      className={cn(
+        "group hover:bg-accent flex h-full w-full items-center gap-2 px-3 focus:outline-none",
+        header.column.getCanSort() ? "cursor-pointer" : "text-left",
+      )}
+      onClick={(e) => {
+        // Prevent toggling sort if clicking inside an actual button
+        if ((e.target as HTMLElement).closest("button")) return;
+
+        toggleHandler?.(e);
+      }}
+    >
+      {flexRender(header.column.columnDef.header, header.getContext())}
+      {(header.column.getCanSort() && (
+        <button
+          type="button"
+          className={cn(
+            "hover:bg-background grid size-7 cursor-pointer place-content-center rounded-md opacity-0 group-hover:opacity-100",
+            header.column.getIsSorted() && "opacity-100",
+          )}
+          onClick={header.column.getToggleSortingHandler()}
+        >
+          {
+            {
+              asc: <ArrowUpIcon className="text-muted-foreground size-4" />,
+              desc: <ArrowDownIcon className="text-muted-foreground size-4" />,
+              false: <ArrowUpIcon className="text-border size-4" />,
+            }[header.column.getIsSorted() as string]
+          }
+        </button>
+      )) ??
+        null}
+    </div>
+  );
+}
+
+interface DataTableBodyProps<TData> {
   table: TableType<TData>;
-  showPagination?: boolean;
+  emptyMessage?: string;
+}
+
+export function DataTableBody<TData>({
+  table,
+  emptyMessage,
+  ...props
+}: DataTableBodyProps<TData> & TableProps) {
+  return (
+    <Table {...props}>
+      <TableHeader>
+        {table.getHeaderGroups().map((group) => (
+          <TableRow key={group.id}>
+            {group.headers.map((header) => (
+              <TableHead key={header.id} className="p-0">
+                {!header.isPlaceholder && <SortableHeader header={header} />}
+              </TableHead>
+            ))}
+          </TableRow>
+        ))}
+      </TableHeader>
+      <TableBody>
+        {table.getRowModel().rows.length ? (
+          table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell
+              colSpan={table.getAllColumns().length}
+              className="text-center"
+            >
+              {emptyMessage ?? "No results."}
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  );
+}
+
+interface DataGridViewProps<TData> extends ComponentProps<"section"> {
+  table: TableType<TData>;
+  renderGridItem?: (row: TData) => ReactNode;
+  emptyMessage?: string;
+}
+
+export function DataGridView<TData>({
+  table,
+  emptyMessage,
+  renderGridItem,
+  className,
+  ...props
+}: DataGridViewProps<TData>) {
+  if (!renderGridItem) return <>Please provide grid layout</>;
+  const memoizedItems = useMemo(
+    () => table.getRowModel().rows.map((row) => renderGridItem(row.original)),
+    [table],
+  );
+
+  return table.getRowModel().rows.length ? (
+    <section
+      className={cn(
+        "grid grid-cols-1 gap-2 sm:grid-cols-2 md:gap-5 lg:grid-cols-3",
+        className,
+      )}
+      {...props}
+    >
+      {memoizedItems}
+    </section>
+  ) : (
+    <div className="bg-background w-full rounded-md p-5 text-center">
+      {emptyMessage ?? "No results."}
+    </div>
+  );
+}
+
+interface DataPaginationProps<TData> {
+  table: TableType<TData>;
   showEntryCount?: boolean;
   showPageSizeOptions?: boolean;
 }
 
-export function DataTable<TData>({
+export function DataPagination<TData>({
   table,
-  showPagination = true,
   showEntryCount = true,
   showPageSizeOptions = true,
-}: DataTableProps<TData>) {
+  ...props
+}: DataPaginationProps<TData>) {
   const pageSize = table.getState().pagination.pageSize;
   const pageIndex = table.getState().pagination.pageIndex;
   const total = table.getRowCount();
@@ -121,106 +328,174 @@ export function DataTable<TData>({
   const endEntry = Math.min((pageIndex + 1) * pageSize, total);
 
   return (
-    <>
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((group) => (
-            <TableRow key={group.id}>
-              {group.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={table.getAllColumns().length}
-                className="text-center"
-              >
-                No results.
-              </TableCell>
-            </TableRow>
+    <div
+      className="flex flex-wrap items-center justify-between gap-2 py-1 md:gap-4"
+      {...props}
+    >
+      {showEntryCount && (
+        <div>
+          Showing {startEntry} to {endEntry} of {total} entries
+          {!!table.getFilteredSelectedRowModel().rows.length && (
+            <>
+              {" "}
+              (row {table.getFilteredSelectedRowModel().rows.length} selected)
+            </>
           )}
-        </TableBody>
-      </Table>
-
-      {showPagination && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 py-1 md:gap-4">
-          {showEntryCount && (
-            <div>
-              Showing {startEntry} to {endEntry} of {total} entries{" "}
-              {!!table.getFilteredSelectedRowModel().rows.length && (
-                <>
-                  (row {table.getFilteredSelectedRowModel().rows.length}{" "}
-                  selected)
-                </>
-              )}
-            </div>
-          )}
-          <div className="flex flex-wrap items-center gap-2 md:gap-4">
-            {showPageSizeOptions && (
-              <div className="flex items-center gap-2">
-                {/* <span className="text-sm">
-                  Page {pageIndex + 1} of {table.getPageCount()}
-                </span> */}
-                <Select
-                  value={String(pageSize)}
-                  onValueChange={(value) => table.setPageSize(Number(value))}
-                >
-                  <SelectTrigger className="w-[80px]" size="sm">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[5, 10, 20, 50].map((size) => (
-                      <SelectItem key={size} value={String(size)}>
-                        {size}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                Entries per page
-              </div>
-            )}
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-8"
-                startIcon={<ChevronLeftIcon className="!size-5" />}
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-8"
-                startIcon={<ChevronRightIcon className="!size-5" />}
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              />
-            </div>
-          </div>
         </div>
       )}
-    </>
+      <div className="flex flex-wrap items-center gap-2 md:gap-4">
+        {showPageSizeOptions && (
+          <div className="flex items-center gap-2">
+            <Select
+              value={String(pageSize)}
+              onValueChange={(value) => table.setPageSize(Number(value))}
+            >
+              <SelectTrigger className="w-[80px]" size="sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {DEFAULT_PAGE_SIZES.map((size) => (
+                  <SelectItem key={size} value={String(size)}>
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            Entries per page
+          </div>
+        )}
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8"
+            startIcon={<ChevronLeftIcon className="!size-5" />}
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8"
+            startIcon={<ChevronRightIcon className="!size-5" />}
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface DataTableActionProps<TData> extends ComponentProps<"div"> {
+  tableState: UseTableResponse<TData>;
+  children?: ReactNode;
+}
+
+export function DataTableAction<TData>({
+  tableState,
+  children,
+  className,
+  ...props
+}: DataTableActionProps<TData>) {
+  const { table, viewMode, toggleViewMode } = tableState;
+  return (
+    <div
+      className={cn("flex items-center justify-between", className)}
+      {...props}
+    >
+      <div></div>
+      <div className="flex flex-wrap gap-2 md:gap-4">
+        <Input
+          startIcon={<MagnifyingGlassIcon />}
+          placeholder="Search..."
+          onChange={(event) => table?.setGlobalFilter(event.target.value)}
+          className="max-w-52"
+          aria-label="Search table content"
+        />
+
+        {children}
+        {viewMode === DataViewMode.list && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outlined" className="ml-auto">
+                Columns <ChevronDownIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                ?.getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+        <Button variant={"outlined"} size={"icon"} onClick={toggleViewMode}>
+          {viewMode !== DataViewMode.grid ? (
+            <TableCellsIcon />
+          ) : (
+            <Squares2X2Icon />
+          )}
+        </Button>
+      </div>
+    </div>
+  );
+}
+interface DataTableProps<TData extends object> extends UseTableOptions<TData> {
+  bodyProps?: Omit<DataTableBodyProps<TData>, "table">;
+  gridProps?: Omit<DataGridViewProps<TData>, "table">;
+  paginationProps?: Omit<DataPaginationProps<TData>, "table">;
+  actionProps?: Omit<DataTableActionProps<TData>, "tableState">; // Optional custom actions (e.g. filters, buttons)
+  showPagination?: boolean;
+  showAction?: boolean;
+}
+
+export function DataTable<TData extends object>({
+  rows,
+  columns,
+  bodyProps = {},
+  gridProps = {},
+  paginationProps = {},
+  actionProps,
+  showAction = true,
+  showPagination = true,
+  ...props
+}: DataTableProps<TData>) {
+  const tableState = useTable({
+    rows,
+    columns,
+    ...props,
+  });
+
+  const { table, viewMode } = tableState;
+  return (
+    <div className="space-y-5">
+      {showAction && (
+        <DataTableAction
+          tableState={tableState}
+          {...actionProps}
+        ></DataTableAction>
+      )}
+
+      {viewMode === DataViewMode.list ? (
+        <DataTableBody table={table} {...bodyProps} />
+      ) : (
+        <DataGridView table={table} {...gridProps} />
+      )}
+      {showPagination && <DataPagination table={table} {...paginationProps} />}
+    </div>
   );
 }

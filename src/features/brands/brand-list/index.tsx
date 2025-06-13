@@ -1,22 +1,15 @@
 import { StatusBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenuCheckboxItem,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { StatCard } from "@/components/ui/statCards";
 import { PageContent } from "@/components/ui/structure";
-import { DataTable, useTable } from "@/components/ui/table/data-table";
+import { DataTable } from "@/components/ui/table/data-table";
 import type { Brand } from "@/types/brand.type";
 import { formatCurrency } from "@/utils";
-import { EyeIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import type { ColumnDef, Table } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
-import { useEffect, useRef, type FC } from "react";
+import { EyeIcon } from "@heroicons/react/24/outline";
+import type { ColumnDef } from "@tanstack/react-table";
+import { BrandCard } from "./BrandCard";
+import { NavLink } from "react-router";
+import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
 
 const statsData = [
   {
@@ -145,31 +138,18 @@ export const brandData: Brand[] = [
 
 const columns: ColumnDef<Brand>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "name",
     header: "Name",
-    cell: ({ getValue }) => <div>{getValue() as string}</div>,
+    cell: ({ row, getValue }) => (
+      <div className="flex items-center gap-2">
+        <img
+          src={row.original.image}
+          alt={`${row.original.name} logo`}
+          className="size-10 rounded-md border object-contain p-1"
+        />
+        {getValue() as string}
+      </div>
+    ),
   },
   {
     accessorKey: "category",
@@ -209,8 +189,7 @@ const columns: ColumnDef<Brand>[] = [
     header: "Action",
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const _payment = row.original;
+    cell: () => {
       return (
         <Button variant="ghost" size="icon" className="">
           <span className="sr-only">Open Brand Details</span>
@@ -221,19 +200,12 @@ const columns: ColumnDef<Brand>[] = [
   },
 ];
 const BrandList = () => {
-  const { table } = useTable({
-    rows: brandData,
-    columns,
-    // pageSize: 10,
-    // filterableKeys: ["name", "email"],
-  });
-
   return (
     <PageContent
       header={{
         title: "Brands",
         description: "Discover top brands from around the world.",
-        actions: <Button color={"primary"}>Add Brand</Button>,
+        actions: <Button color={"primary"} asChild><NavLink  to={DASHBOARD_ROUTES.addBrand}>Add Brand</NavLink></Button>,
       }}
     >
       <section className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">
@@ -246,116 +218,16 @@ const BrandList = () => {
           />
         ))}
       </section>
-      <div className="flex items-center justify-between">
-        <div></div>
-        <div className="flex flex-wrap gap-2 md:gap-4">
-          <Input
-            startIcon={<MagnifyingGlassIcon />}
-            placeholder="Search..."
-            onChange={(event) => table?.setGlobalFilter(event.target.value)}
-            className="max-w-52"
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outlined" className="ml-auto">
-                Columns <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                ?.getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-      <div className="bg-background1 shadow-lg1 overflow-hidden rounded-md">
-        <DataTable table={table} />
-        {/* <DataTable
-          ref={tableRef}
-          columns={columns}
-          rows={brandData}
-          pageSize={5}
-          containerProps={{
-            className: "rounded-md",
-          }}
-          // filterableKeys={["products"]}
-        /> */}
-      </div>
-      <section className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:gap-5 lg:grid-cols-3">
-        {brandData.map((brand) => (
-          <BrandCard key={brand.name} brand={brand} />
-        ))}
-      </section>
-      ``
+
+      <DataTable
+        rows={brandData}
+        columns={columns}
+        gridProps={{
+          renderGridItem: (row) => <BrandCard key={row.id} brand={row} />,
+        }}
+      />
     </PageContent>
   );
 };
 
 export default BrandList;
-
-interface StatProps {
-  label: string;
-  value: string | number;
-}
-
-const Stat: FC<StatProps> = ({ label, value }) => (
-  <div>
-    <p className="text-sm">{label}</p>
-    <p className="text-foreground font-medium">{value}</p>
-  </div>
-);
-
-interface BrandCardProps {
-  brand: Brand;
-}
-
-export const BrandCard: FC<BrandCardProps> = ({ brand }) => {
-  return (
-    <article className="bg-background flex flex-col gap-4 rounded-md p-5 shadow-md">
-      <header className="flex items-center gap-2">
-        <img
-          src={brand.image}
-          alt={`${brand.name} logo`}
-          className="h-15 w-15 rounded-md border object-contain p-1"
-        />
-        <div>
-          <h6 className="font-medium">{brand.name}</h6>
-          <p>{brand.category}</p>
-        </div>
-      </header>
-
-      <hr />
-
-      <section className="flex justify-around gap-2 text-center">
-        <Stat label="Products" value={brand.products} />
-        <Stat label="Surveys" value={brand.surveys} />
-        <Stat label="Promotions" value={brand.promotions} />
-      </section>
-
-      <hr />
-
-      <section className="flex justify-around gap-2 text-center">
-        <Stat label="Earnings" value={`₹${brand.earnings.toLocaleString()}`} />
-        <div>
-          <p className="text-sm">Status</p>
-          <StatusBadge module="brand" status={brand.status} />
-        </div>
-      </section>
-    </article>
-  );
-};

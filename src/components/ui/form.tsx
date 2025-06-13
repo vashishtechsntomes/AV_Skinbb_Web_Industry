@@ -214,7 +214,7 @@ type CustomProps<
   options?: never;
 };
 
-type FormInputProps<
+export type FormInputProps<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>,
 > =
@@ -229,10 +229,10 @@ function FormInput<
   const {
     control,
     name,
-    type,
-    label,
-    description,
-    placeholder,
+    type = "text",
+    label = "",
+    description = "",
+    placeholder = "",
     rules,
     formItemProps,
     formControlProps,
@@ -240,7 +240,7 @@ function FormInput<
   } = props;
 
   const formItemPropsClass = cn(
-    type === "checkbox" && "flex items-center flex-row-reverse",
+    type === "checkbox" && "flex items-center flex-row-reverse justify-end",
     formItemProps?.className,
   );
 
@@ -287,7 +287,7 @@ function FormInput<
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {props.options.map((option) => (
+                {props?.options?.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -296,7 +296,7 @@ function FormInput<
             </Select>
           )}
 
-          {type === "custom" && props.render({ field, formState, fieldState })}
+          {type === "custom" && props?.render({ field, formState, fieldState })}
 
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
