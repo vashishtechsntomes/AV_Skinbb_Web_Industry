@@ -13,176 +13,129 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  type TableProps,
 } from "@/components/ui/table";
-import { cn } from "@/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
   type ColumnDef,
+  type ColumnFiltersState,
+  type Row,
   type SortingState,
+  type Table as TableType,
+  type VisibilityState,
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-interface DataTableProps<TData, TValue = unknown> extends TableProps {
+function createGlobalFilter<TData extends object>(filterableKeys?: string[]) {
+  return (row: Row<TData>, _columnId: string, filterValue: string) => {
+    const keys = filterableKeys?.length
+      ? filterableKeys
+      : Object.keys(row.original);
+
+    return keys.some((key) => {
+      const value = row.original[key as keyof TData];
+      return String(value ?? "")
+        .toLowerCase()
+        .includes(filterValue.toLowerCase());
+    });
+  };
+}
+
+interface UseTableOptions<TData> {
   rows: TData[];
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, any>[];
   pageSize?: number;
+  filterableKeys?: string[];
+}
+
+export function useTable<TData extends object>({
+  rows,
+  columns,
+  pageSize = 5,
+  filterableKeys = [],
+}: UseTableOptions<TData>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize,
+  });
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+
+  const globalFilterFn = createGlobalFilter<TData>(filterableKeys);
+
+  const table = useReactTable({
+    data: rows,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter,
+    state: {
+      sorting,
+      columnFilters,
+      pagination,
+      globalFilter,
+      columnVisibility,
+      rowSelection,
+    },
+    globalFilterFn,
+  });
+
+  return {
+    table,
+    pagination,
+    setGlobalFilter,
+  };
+}
+interface DataTableProps<TData> {
+  table: TableType<TData>;
   showPagination?: boolean;
   showEntryCount?: boolean;
   showPageSizeOptions?: boolean;
 }
 
 export function DataTable<TData>({
-  rows,
-  columns,
-  pageSize = 10,
+  table,
   showPagination = true,
   showEntryCount = true,
   showPageSizeOptions = true,
-  ...props
 }: DataTableProps<TData>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize,
-  });
-
-  const table = useReactTable({
-    data: rows,
-    columns,
-    state: {
-      sorting,
-      pagination,
-    },
-    onSortingChange: setSorting,
-    onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    manualPagination: false,
-    manualSorting: false,
-  });
-
-  const pagePageSize = table.getState().pagination.pageSize;
-  const currentPage = table.getState().pagination.pageIndex; // zero-based
-  const totalEntries = table.getRowCount();
-
-  const startEntry = currentPage * pagePageSize + 1;
-  const endEntry = Math.min((currentPage + 1) * pagePageSize, totalEntries);
+  const pageSize = table.getState().pagination.pageSize;
+  const pageIndex = table.getState().pagination.pageIndex;
+  const total = table.getRowCount();
+  const startEntry = pageIndex * pageSize + 1;
+  const endEntry = Math.min((pageIndex + 1) * pageSize, total);
 
   return (
     <>
-      <Table {...props}>
+      <Table>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id} className="p-0">
-                    {header.isPlaceholder ? null : (
-                      <div
-                        role="button"
-                        tabIndex={0}
-                        aria-pressed={!!header.column.getIsSorted()}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            header.column.getToggleSortingHandler()?.(e);
-                            e.preventDefault();
-                          }
-                        }}
-                        className={cn(
-                          "group hover:bg-accent flex h-full w-full items-center gap-2 px-3 focus:outline-none",
-                          header.column.getCanSort()
-                            ? "cursor-pointer"
-                            : "text-left",
-                        )}
-                        aria-label={`Sort by ${String(header.column.columnDef.header)}`}
-                        onClick={(e) => {
-                          // Prevent toggling sort if clicking inside an actual button
-                          if ((e.target as HTMLElement).closest("button"))
-                            return;
-
-                          header.column.getToggleSortingHandler()?.(e);
-                        }}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {(header.column.getCanSort() && (
-                          <button
-                            type="button"
-                            className={cn(
-                              "hover:bg-background grid size-7 cursor-pointer place-content-center rounded-md opacity-0 group-hover:opacity-100",
-                              header.column.getIsSorted() && "opacity-100",
-                            )}
-                            onClick={header.column.getToggleSortingHandler()}
-                          >
-                            {
-                              {
-                                asc: (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={2}
-                                    stroke="currentColor"
-                                    className="text-muted-foreground size-4 rotate-90"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-                                    />
-                                  </svg>
-                                ),
-                                desc: (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={2}
-                                    stroke="currentColor"
-                                    className="text-muted-foreground size-4 -rotate-90"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-                                    />
-                                  </svg>
-                                ),
-                                false: (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={2}
-                                    stroke="currentColor"
-                                    className="text-border size-4 rotate-90"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-                                    />
-                                  </svg>
-                                ),
-                              }[header.column.getIsSorted() as string]
-                            }
-                          </button>
-                        )) ??
-                          null}
-                      </div>
-                    )}
-                  </TableHead>
-                );
-              })}
+          {table.getHeaderGroups().map((group) => (
+            <TableRow key={group.id}>
+              {group.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
+              ))}
             </TableRow>
           ))}
         </TableHeader>
@@ -199,7 +152,10 @@ export function DataTable<TData>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="text-center">
+              <TableCell
+                colSpan={table.getAllColumns().length}
+                className="text-center"
+              >
                 No results.
               </TableCell>
             </TableRow>
@@ -207,23 +163,27 @@ export function DataTable<TData>({
         </TableBody>
       </Table>
 
-      {/* Pagination Controls */}
       {showPagination && (
-        <div className="mt-4 flex items-center justify-between py-1">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 py-1 md:gap-4">
           {showEntryCount && (
             <div>
-              Showing {startEntry} to {endEntry} of {totalEntries} entries
+              Showing {startEntry} to {endEntry} of {total} entries{" "}
+              {!!table.getFilteredSelectedRowModel().rows.length && (
+                <>
+                  (row {table.getFilteredSelectedRowModel().rows.length}{" "}
+                  selected)
+                </>
+              )}
             </div>
           )}
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap items-center gap-2 md:gap-4">
             {showPageSizeOptions && (
-              <>
-                <span className="text-sm">
-                  Page {table.getState().pagination.pageIndex + 1} of{" "}
-                  {table.getPageCount()}
-                </span>
+              <div className="flex items-center gap-2">
+                {/* <span className="text-sm">
+                  Page {pageIndex + 1} of {table.getPageCount()}
+                </span> */}
                 <Select
-                  value={String(table.getState().pagination.pageSize)}
+                  value={String(pageSize)}
                   onValueChange={(value) => table.setPageSize(Number(value))}
                 >
                   <SelectTrigger className="w-[80px]" size="sm">
@@ -237,7 +197,8 @@ export function DataTable<TData>({
                     ))}
                   </SelectContent>
                 </Select>
-              </>
+                Entries per page
+              </div>
             )}
             <div className="flex items-center space-x-2">
               <Button
@@ -247,7 +208,7 @@ export function DataTable<TData>({
                 startIcon={<ChevronLeftIcon className="!size-5" />}
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
-              ></Button>
+              />
               <Button
                 variant="ghost"
                 size="icon"
@@ -255,7 +216,7 @@ export function DataTable<TData>({
                 startIcon={<ChevronRightIcon className="!size-5" />}
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
-              ></Button>
+              />
             </div>
           </div>
         </div>

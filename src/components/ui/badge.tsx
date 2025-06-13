@@ -74,7 +74,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({
           )}
         >
           <span className="h-2 w-2 rounded-full bg-current" />
-          <span className="text-sm capitalize">{label}</span>
+          <span className="capitalize">{label}</span>
         </div>
       );
 
