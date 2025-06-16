@@ -132,7 +132,11 @@ export function Container({
     <Tag
       id={id}
       aria-labelledby={ariaLabelledBy}
-      className={cn("w-full bg-background rounded-md", !noPadding && "p-4 md:p-6", className)}
+      className={cn(
+        "bg-background w-full rounded-md",
+        !noPadding && "p-4 md:p-6",
+        className,
+      )}
     >
       {children}
     </Tag>

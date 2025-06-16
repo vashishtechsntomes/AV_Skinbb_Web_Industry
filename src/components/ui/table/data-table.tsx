@@ -86,7 +86,7 @@ function createGlobalFilter<TData extends object>(
 
 interface UseTableOptions<TData> {
   rows: TData[];
-  columns: ColumnDef<TData, any>[];
+  columns: ColumnDef<TData, unknown>[];
   pageSize?: number;
   filterableKeys?: (keyof TData)[];
   defaultViewMode?: DataViewMode;
@@ -287,11 +287,15 @@ export function DataGridView<TData>({
   className,
   ...props
 }: DataGridViewProps<TData>) {
-  if (!renderGridItem) return <>Please provide grid layout</>;
   const memoizedItems = useMemo(
-    () => table.getRowModel().rows.map((row) => renderGridItem(row.original)),
-    [table],
+    () =>
+      renderGridItem
+        ? table.getRowModel().rows.map((row) => renderGridItem(row.original))
+        : [],
+    [table, renderGridItem],
   );
+
+  if (!renderGridItem) return <>Please provide grid layout</>;
 
   return table.getRowModel().rows.length ? (
     <section

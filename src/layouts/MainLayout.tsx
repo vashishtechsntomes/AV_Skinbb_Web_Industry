@@ -5,10 +5,7 @@ import { Input } from "@/components/ui/input";
 import Sidebar from "@/components/ui/sidebar";
 import { useSidebar } from "@/context/theme-provider";
 import { cn } from "@/utils";
-import {
-  BellIcon,
-  MagnifyingGlassIcon
-} from "@heroicons/react/24/outline";
+import { BellIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import type { ReactNode } from "react";
 import { NavLink, Outlet } from "react-router";
 

@@ -12,7 +12,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
@@ -30,7 +30,7 @@ import {
   type Table as TableType,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { forwardRef, useImperativeHandle, useState } from "react";
+import React, { forwardRef, useImperativeHandle, useState } from "react";
 
 function createGlobalFilter<TData extends object>(filterableKeys?: string[]) {
   return (row: Row<TData>, _columnId: string, filterValue: string) => {

@@ -1,7 +1,7 @@
 export type StatusType = "active" | "closed" | "pending" | "inactive";
 
 export interface Brand {
-  id?: string | number,
+  id?: string | number;
   name: string;
   category: string;
   image: string;

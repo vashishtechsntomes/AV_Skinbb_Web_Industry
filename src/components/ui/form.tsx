@@ -12,6 +12,7 @@ import {
   type ControllerRenderProps,
   type FieldPath,
   type FieldValues,
+  type Path,
   type RegisterOptions,
   type UseFormStateReturn,
 } from "react-hook-form";
@@ -169,10 +170,10 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
-type BaseProps<
+interface BaseProps<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>,
-> = {
+> extends React.ComponentProps<"div"> {
   control: Control<TFieldValues>;
   name: TName;
   label?: string;
@@ -181,8 +182,7 @@ type BaseProps<
   rules?: RegisterOptions<TFieldValues, TName>;
   inputProps?: InputProps & TextareaProps;
   formControlProps?: React.HTMLAttributes<HTMLDivElement>;
-  formItemProps?: React.HTMLAttributes<HTMLDivElement>;
-};
+}
 
 type SelectProps<
   TFieldValues extends FieldValues,
@@ -197,7 +197,6 @@ type NonSelectProps<
   TName extends FieldPath<TFieldValues>,
 > = BaseProps<TFieldValues, TName> & {
   type: "text" | "textarea" | "checkbox" | "password";
-  options?: never; // Disallow options for non-select types
 };
 
 // Custom element props
@@ -211,7 +210,6 @@ type CustomProps<
     fieldState: ControllerFieldState;
     formState: UseFormStateReturn<TFieldValues>;
   }) => React.ReactNode;
-  options?: never;
 };
 
 export type FormInputProps<
@@ -222,10 +220,16 @@ export type FormInputProps<
   | NonSelectProps<TFieldValues, TName>
   | CustomProps<TFieldValues, TName>;
 
+export type FormFieldConfig<TFieldValues extends FieldValues> =
+  | Omit<SelectProps<TFieldValues, FieldPath<TFieldValues>>, "control">
+  | Omit<NonSelectProps<TFieldValues, FieldPath<TFieldValues>>, "control">
+  | Omit<CustomProps<TFieldValues, FieldPath<TFieldValues>>, "control">;
+
 function FormInput<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>,
 >(props: FormInputProps<TFieldValues, TName>) {
+  const inputId = React.useId();
   const {
     control,
     name,
@@ -234,14 +238,15 @@ function FormInput<
     description = "",
     placeholder = "",
     rules,
-    formItemProps,
     formControlProps,
     inputProps,
+    className,
+    ...rest
   } = props;
 
   const formItemPropsClass = cn(
     type === "checkbox" && "flex items-center flex-row-reverse justify-end",
-    formItemProps?.className,
+    className,
   );
 
   return (
@@ -250,12 +255,13 @@ function FormInput<
       name={name}
       rules={rules}
       render={({ field, formState, fieldState }) => (
-        <FormItem {...formItemProps} className={formItemPropsClass}>
-          {label && <FormLabel>{label}</FormLabel>}
+        <FormItem className={formItemPropsClass} {...rest}>
+          {label && <FormLabel htmlFor={inputId}>{label}</FormLabel>}
 
           {(type === "text" || type === "password") && (
             <FormControl {...formControlProps}>
               <Input
+                id={inputId}
                 type={type}
                 placeholder={placeholder}
                 {...field}
@@ -266,13 +272,19 @@ function FormInput<
 
           {type === "textarea" && (
             <FormControl {...formControlProps}>
-              <Textarea {...field} placeholder={placeholder} {...inputProps} />
+              <Textarea
+                id={inputId}
+                {...field}
+                placeholder={placeholder}
+                {...inputProps}
+              />
             </FormControl>
           )}
 
           {type === "checkbox" && (
             <FormControl {...formControlProps}>
               <Checkbox
+                id={inputId}
                 checked={field.value}
                 onCheckedChange={field.onChange}
               />
@@ -280,23 +292,26 @@ function FormInput<
           )}
 
           {type === "select" && (
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select onValueChange={field.onChange} value={field.value}>
               <FormControl {...formControlProps}>
                 <SelectTrigger>
-                  <SelectValue placeholder={placeholder} />
+                  <SelectValue id={inputId} placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {props?.options?.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
+                {"options" in props &&
+                  props?.options?.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           )}
 
-          {type === "custom" && props?.render({ field, formState, fieldState })}
+          {type === "custom" &&
+            "render" in props &&
+            props?.render({ field, formState, fieldState })}
 
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
@@ -306,8 +321,77 @@ function FormInput<
   );
 }
 
+interface FormConditionRenderProps<TFieldValues extends FieldValues>
+  extends React.ComponentProps<"div"> {
+  formSchema: FormFieldConfig<TFieldValues>[];
+  control: Control<TFieldValues>;
+}
+
+function FormConditionRender<TFieldValues extends FieldValues>({
+  formSchema,
+  control,
+  className,
+  ...props
+}: FormConditionRenderProps<TFieldValues>) {
+  return (
+    <div
+      className={cn(
+        "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3",
+        className,
+      )}
+      {...props}
+    >
+      {formSchema.map((item: FormFieldConfig<TFieldValues>) => {
+        const basicProps = {
+          name: item.name,
+          className: item.className,
+          placeholder: item.placeholder,
+          label: item.label,
+          control,
+        };
+
+        switch (item.type) {
+          case "text":
+          case "password":
+          case "textarea":
+          case "checkbox":
+            return (
+              <FormInput key={item.name} type={item.type} {...basicProps} />
+            );
+
+          case "select":
+            return (
+              <FormInput
+                key={item.name}
+                type="select"
+                options={item.options}
+                {...basicProps}
+              />
+            );
+
+          case "custom":
+            return (
+              <FormInput
+                key={item.name}
+                type="custom"
+                render={
+                  (item as CustomProps<TFieldValues, Path<TFieldValues>>).render
+                }
+                {...basicProps}
+              />
+            );
+
+          default:
+            throw new Error("Unsupported input type");
+        }
+      })}
+    </div>
+  );
+}
+
 export {
   Form,
+  FormConditionRender,
   FormControl,
   FormDescription,
   FormField,

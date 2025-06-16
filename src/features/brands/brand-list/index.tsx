@@ -205,7 +205,11 @@ const BrandList = () => {
       header={{
         title: "Brands",
         description: "Discover top brands from around the world.",
-        actions: <Button color={"primary"} asChild><NavLink  to={DASHBOARD_ROUTES.addBrand}>Add Brand</NavLink></Button>,
+        actions: (
+          <Button color={"primary"} asChild>
+            <NavLink to={DASHBOARD_ROUTES.addBrand}>Add Brand</NavLink>
+          </Button>
+        ),
       }}
     >
       <section className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">

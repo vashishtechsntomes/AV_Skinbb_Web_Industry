@@ -57,4 +57,3 @@ table th:not(:last-child)::after {
   top: 50%;
   transform: translateY(-50%);
 }
-
