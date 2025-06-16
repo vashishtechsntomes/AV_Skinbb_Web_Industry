@@ -17,14 +17,14 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/utils";
 import {
+  ArrowDownIcon,
+  ArrowUpIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   MagnifyingGlassIcon,
   Squares2X2Icon,
   TableCellsIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import {
   flexRender,
@@ -42,21 +42,22 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table";
 import {
+  type Dispatch,
   useEffect,
   useMemo,
   useState,
-  Dispatch,
   type ComponentProps,
   type ReactNode,
   type SetStateAction,
+  type KeyboardEvent,
 } from "react";
-import { Input } from "../input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "../dropdown-menu";
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 
 export enum DataViewMode {
   "list",
@@ -175,7 +176,7 @@ function SortableHeader<TData>({ header }: { header: Header<TData, unknown> }) {
   const isSorted = header.column.getIsSorted() as string;
   const toggleHandler = header.column.getToggleSortingHandler();
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (["Enter", " "].includes(e.key)) {
       toggleHandler?.(e);
       e.preventDefault();
