@@ -42,6 +42,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --font-sans: "Jost", "sans-serif";
   --font-jost: Jost, sans-serif;
+  --shadow-md: 0px 4px 12px rgba(13, 10, 44, 0.06);
 }
 
 :root {
@@ -59,9 +60,9 @@
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.4286 0.0477 290.56);
   --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.7317 0.1325 20.8);
+  --accent-foreground: oklch(0.21 0.006 285.885);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
+  --border: oklch(0.8853 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);

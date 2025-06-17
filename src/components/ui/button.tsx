@@ -2,10 +2,10 @@ import * as React from "react";
 import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/utils";
+import { cn } from "@/utils/index";
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 cursor-pointer select-none flex-wrap items-center justify-center text-center leading-[1em] gap-2 font-medium no-underline duration-[0.2s] ease-out transition-[color,background-color,border-color,opacity,box-shadow,transform,scale] shadow border-transparent border-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:hidden active:scale-98 disabled:cursor-not-allowed disabled:scale-100 disabled:bg-muted disabled:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex shrink-0 cursor-pointer select-none flex-wrap items-center justify-center text-center leading-[1em] gap-2 no-underline duration-[0.2s] ease-out transition-[color,background-color,border-color,opacity,box-shadow,transform,scale] shadow border-transparent border-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:hidden active:scale-95 disabled:cursor-not-allowed disabled:scale-100 disabled:bg-muted disabled:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -13,7 +13,7 @@ const buttonVariants = cva(
         outlined: "border border-border shadow-none",
         ghost:
           "text-foreground shadow-none hover:bg-accent hover:text-foreground",
-        text: "shadow-none cursor-auto font-normal",
+        text: "shadow-none cursor-auto",
         link: "shadow-none underline-offset-4 hover:underline",
       },
       color: {
@@ -25,9 +25,9 @@ const buttonVariants = cva(
       size: {
         tiny: "h-7 px-2 py-0 text-xs [&_svg]:size-3 gap-1",
         sm: "h-8 px-3 text-sm [&_svg]:size-4 gap-1.5",
-        md: "h-10 px-4 text-base [&_svg]:size-4 ",
+        md: "h-10 px-4 text-base [&_svg]:size-5 ",
         lg: "h-12 px-8 text-lg [&_svg]:size-5",
-        icon: "h-10 w-10 text-muted-foreground",
+        icon: "h-10 w-10 text-muted-foreground [&_svg]:size-5",
       },
       rounded: {
         none: "rounded-none",
@@ -219,7 +219,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         ref={ref}
         aria-busy={loading}
-        aria-label={props["aria-label"] || (loading ? "Loading" : undefined)}
+        aria-label={props["aria-label"] ?? (loading ? "Loading" : undefined)}
         disabled={loading || disabled}
         {...props}
       >
@@ -232,4 +232,65 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-export { Button, buttonVariants };
+const BlobIcon = ({
+  children,
+  size = "md",
+  blobClassName,
+  className,
+  icon,
+  ...props
+}: {
+  children?: React.ReactElement<React.SVGProps<SVGSVGElement>>;
+  icon?: React.ReactElement<React.SVGProps<SVGSVGElement>>;
+  size?: "sm" | "md" | "lg";
+  blobClassName?: string;
+  className?: string;
+}) => {
+  const sizeBlob = {
+    sm: "h-4 w-4",
+    md: "h-7 w-7",
+    lg: "h-10 w-10",
+  };
+  const sizeBlobIcon = {
+    sm: "size-6",
+    md: "size-9",
+    lg: "size-14",
+  };
+
+  const sizeContainer = {
+    sm: "-space-x-3",
+    md: "-space-x-5",
+    lg: "-space-x-7",
+  };
+
+  const renderIcon = icon ?? children;
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-center",
+        sizeContainer[size],
+        className,
+      )}
+      {...props}
+    >
+      <div
+        className={cn(
+          "bg-primary/20 rounded-full",
+          sizeBlob[size],
+          blobClassName,
+        )}
+      ></div>
+      {renderIcon && React.isValidElement(renderIcon)
+        ? React.cloneElement(renderIcon, {
+            className: cn(
+              "text-muted-foreground",
+              sizeBlobIcon[size],
+              renderIcon.props.children,
+            ),
+          })
+        : renderIcon}
+    </div>
+  );
+};
+
+export { Button, buttonVariants, BlobIcon };

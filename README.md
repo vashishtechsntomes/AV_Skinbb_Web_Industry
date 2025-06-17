@@ -1,54 +1,125 @@
-# React + TypeScript + Vite
+# SkinBB Web Industry
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern web application built with React, TypeScript, and Vite, featuring a robust component library and best practices for web development.
 
-Currently, two official plugins are available:
+## 🛠️ Technology Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Framework**: React 19
+- **Language**: TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **UI Components**:
+  - Radix UI
+  - Headless Tree
+  - Heroicons
+  - Lucide React
+- **Form Handling**: React Hook Form with Zod validation
+- **Routing**: React Router
+- **Code Quality**:
+  - ESLint
+  - Prettier
+  - TypeScript
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Clone the repository**
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
+   ```bash
+   git clone [repository-url]
+   cd skinbb-web-industry
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. **Install dependencies**
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+   ```bash
+   npm install
+   ```
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    "react-x": reactX,
-    "react-dom": reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
-```
+3. **Start development server**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
+
+## 📝 Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check code formatting
+
+## 🎨 Project Architecture
+
+### Components
+
+The project follows a modular component architecture:
+
+- Reusable UI components in `src/components`
+- Feature-specific components in `src/features`
+- Layout components in `src/layouts`
+
+### State Management
+
+- React Context for global state management
+- Custom hooks for reusable state logic
+
+### Routing
+
+- React Router for navigation
+- Route definitions in `src/routes`
+
+### Styling
+
+- Tailwind CSS for utility-first styling
+- Custom styles in `src/styles`
+
+## 🔧 Development Guidelines
+
+1. **TypeScript**
+
+   - Use strict type checking
+   - Define types in `src/types`
+   - Avoid using `any` type
+
+2. **Component Structure**
+
+   - Keep components small and focused
+   - Use TypeScript interfaces for props
+   - Follow atomic design principles
+
+3. **Code Style**
+
+   - Follow ESLint rules
+   - Use Prettier for formatting
+   - Write meaningful comments
+
+4. **Performance**
+   - Use React.memo for expensive components
+   - Implement proper code splitting
+   - Optimize bundle size
+
+## 📚 Additional Resources
+
+- [React Documentation](https://react.dev)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs)
+- [Vite Documentation](https://vitejs.dev/guide)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

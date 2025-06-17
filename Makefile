@@ -52,3 +52,10 @@ check:
 	make lint
 	make format-check
 	
+# Start SonarQube server
+sonar-start:
+	cd ~/sonarqube/bin/linux-x86-64 && ./sonar.sh start
+
+# Run SonarScanner analysis
+sonar:
+	sonar-scanner
