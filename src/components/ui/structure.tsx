@@ -106,7 +106,7 @@ export const PageHeader = ({
         )}
         {description && <p>{description}</p>}
       </div>
-      {actions && actions}
+      {actions}
     </header>
   );
 };

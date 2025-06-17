@@ -123,7 +123,7 @@ const MainLayout = ({ children }: { children?: ReactNode }) => {
             </div>
           </div>
         </header>
-        {children ? children : <Outlet />}
+        {children ?? <Outlet />}
       </main>
     </div>
   );

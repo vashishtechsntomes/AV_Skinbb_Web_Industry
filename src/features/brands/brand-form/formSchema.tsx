@@ -22,17 +22,66 @@ export type BrandFormData = {
   addressLine1: string;
   addressLine2: string;
   postalCode: string;
+
+  certificate_of_incorporation: string;
+  certificate_of_incorporation_files: string;
+  letter_of_authorization: string;
+  letter_of_authorization_files: string;
+  business_license: string;
+  business_license_files: string;
+  logo_files: File[];
+  logo: string;
+};
+
+export const defaultValues = {
+  brandName: "",
+  businessType: "",
+  category: "",
+  registeredBusinessNumber: "",
+  taxIdNumber: "",
+  establishedIn: "",
+  website: "",
+  description: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNo: "",
+  sendPassword: false,
+  password: "",
+  confirmPassword: "",
+  country: "",
+  state: "",
+  city: "",
+  addressLine1: "",
+  addressLine2: "",
+  postalCode: "",
+  certificate_of_incorporation: "",
+  letter_of_authorization: "",
+  business_license: "",
+  logo: "",
+  logo_files: [],
 };
 
 export type BrandFormSchema = Record<string, FormFieldConfig<BrandFormData>[]>;
 
 export const brandFormSchema: BrandFormSchema = {
+  uploadImage: [
+    {
+      type: "file",
+      name: "logo",
+      label: "Logo",
+    },
+  ],
+
   brand_information: [
     {
       type: "text",
       name: "brandName",
       label: "Brand Name",
       placeholder: "Enter brand name",
+      rules: {
+        required: "Brand is required",
+      },
     },
     {
       type: "select",
@@ -40,8 +89,46 @@ export const brandFormSchema: BrandFormSchema = {
       label: "Business Type",
       placeholder: "Select business type",
       options: [
-        { label: "Private", value: "private" },
-        { label: "Public", value: "public" },
+        {
+          value: "clinic",
+          label: "Dermatology Clinic",
+        },
+        {
+          value: "pharmacy",
+          label: "Pharmacy",
+        },
+        {
+          value: "medspa",
+          label: "Medical Spa",
+        },
+        {
+          value: "retail_store",
+          label: "Retail Store",
+        },
+        {
+          value: "online_store",
+          label: "Online Store",
+        },
+        {
+          value: "hospital",
+          label: "Hospital Dermatology Department",
+        },
+        {
+          value: "distributor",
+          label: "Distributor / Wholesaler",
+        },
+        {
+          value: "manufacturer",
+          label: "Brand Manufacturer",
+        },
+        {
+          value: "influencer",
+          label: "Skin Influencer / Content Creator",
+        },
+        {
+          value: "salon",
+          label: "Beauty Salon",
+        },
       ],
     },
     {
@@ -50,8 +137,30 @@ export const brandFormSchema: BrandFormSchema = {
       label: "Category",
       placeholder: "Enter category",
       options: [
-        { label: "Skincare", value: "skincare" },
-        { label: "Healthcare", value: "healthcare" },
+        {
+          value: "prescription",
+          label: "Prescription Dermatology Brands",
+        },
+        {
+          value: "medical_grade",
+          label: "Medical-Grade / Cosmeceutical Brands",
+        },
+        {
+          value: "otc",
+          label: "Over-the-Counter (OTC) Dermatology Brands",
+        },
+        {
+          value: "natural_organic",
+          label: "Natural / Organic Dermatology Brands",
+        },
+        {
+          value: "cosmetic_aesthetic",
+          label: "Cosmetic Dermatology / Aesthetic Brands",
+        },
+        {
+          value: "condition_specific",
+          label: "Therapeutic / Condition-Specific Brands",
+        },
       ],
     },
     {
@@ -172,6 +281,23 @@ export const brandFormSchema: BrandFormSchema = {
       name: "postalCode",
       label: "Postal Code",
       placeholder: "Enter postal code",
+    },
+  ],
+  legal_documents: [
+    {
+      type: "file",
+      name: "certificate_of_incorporation",
+      label: "Certificate of Incorporation",
+    },
+    {
+      type: "file",
+      name: "business_license",
+      label: "Business License",
+    },
+    {
+      type: "file",
+      name: "letter_of_authorization",
+      label: "Letter of authorization",
     },
   ],
 };

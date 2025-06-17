@@ -1,3 +1,4 @@
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
@@ -12,7 +13,6 @@ import {
   type ControllerRenderProps,
   type FieldPath,
   type FieldValues,
-  type Path,
   type RegisterOptions,
   type UseFormStateReturn,
 } from "react-hook-form";
@@ -27,16 +27,17 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  type SelectTriggerProps,
 } from "./select";
 import { Textarea, type TextareaProps } from "./textarea";
 
 const Form = FormProvider;
 
 type FormFieldContextValue<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  T extends FieldValues = FieldValues,
+  N extends FieldPath<T> = FieldPath<T>,
 > = {
-  name: TName;
+  name: N;
 };
 
 const FormFieldContext = React.createContext<FormFieldContextValue>(
@@ -44,11 +45,11 @@ const FormFieldContext = React.createContext<FormFieldContextValue>(
 );
 
 const FormField = <
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  T extends FieldValues = FieldValues,
+  N extends FieldPath<T> = FieldPath<T>,
 >({
   ...props
-}: ControllerProps<TFieldValues, TName>) => {
+}: ControllerProps<T, N>) => {
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
       <Controller {...props} />
@@ -60,13 +61,13 @@ const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
   const { getFieldState } = useFormContext();
-  const formState = useFormState({ name: fieldContext.name });
-  const fieldState = getFieldState(fieldContext.name, formState);
 
-  if (!fieldContext) {
-    throw new Error("useFormField should be used within <FormField>");
+  if (!fieldContext?.name) {
+    throw new Error("useFormField must be used within a <FormField>");
   }
 
+  const formState = useFormState({ name: fieldContext.name });
+  const fieldState = getFieldState(fieldContext.name, formState);
   const { id } = itemContext;
 
   return {
@@ -152,102 +153,195 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message ?? "") : props.children;
+  const content = error ? String(error?.message ?? "") : props.children;
 
-  if (!body) {
-    return null;
-  }
+  if (!content) return null;
 
   return (
     <p
-      data-slot="form-message"
       id={formMessageId}
+      data-slot="form-message"
       className={cn("text-destructive text-sm", className)}
       {...props}
     >
-      {body}
+      {content}
     </p>
   );
 }
 
-interface BaseProps<
-  TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues>,
-> extends React.ComponentProps<"div"> {
-  control: Control<TFieldValues>;
-  name: TName;
+const INPUT_TYPES = {
+  TEXT: "text",
+  TEXTAREA: "textarea",
+  CHECKBOX: "checkbox",
+  PASSWORD: "password",
+  FILE: "file",
+  SELECT: "select",
+  CUSTOM: "custom",
+} as const;
+
+interface BaseInputProps<T extends FieldValues, N extends FieldPath<T>>
+  extends React.ComponentProps<"div"> {
+  control: Control<T>;
+  name: N;
   label?: string;
   description?: string;
   placeholder?: string;
-  rules?: RegisterOptions<TFieldValues, TName>;
-  inputProps?: InputProps & TextareaProps;
+  rules?: RegisterOptions<T, N>;
   formControlProps?: React.HTMLAttributes<HTMLDivElement>;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
+type StandardInputProps = InputProps &
+  TextareaProps &
+  React.ComponentProps<typeof CheckboxPrimitive.Root>;
+
+export type SelectOption = { value: string; label: string };
 type SelectProps<
-  TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues>,
-> = BaseProps<TFieldValues, TName> & {
-  type: "select";
-  options: { value: string; label: string }[];
+  T extends FieldValues,
+  N extends FieldPath<T>,
+> = BaseInputProps<T, N> & {
+  type: typeof INPUT_TYPES.SELECT;
+  options: SelectOption[];
+  inputProps?: SelectTriggerProps;
 };
 
 type NonSelectProps<
-  TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues>,
-> = BaseProps<TFieldValues, TName> & {
-  type: "text" | "textarea" | "checkbox" | "password";
+  T extends FieldValues,
+  N extends FieldPath<T>,
+> = BaseInputProps<T, N> & {
+  type:
+    | typeof INPUT_TYPES.TEXT
+    | typeof INPUT_TYPES.TEXTAREA
+    | typeof INPUT_TYPES.CHECKBOX
+    | typeof INPUT_TYPES.PASSWORD
+    | typeof INPUT_TYPES.FILE;
+  inputProps?: StandardInputProps;
 };
 
 // Custom element props
 type CustomProps<
-  TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues>,
-> = BaseProps<TFieldValues, TName> & {
+  T extends FieldValues,
+  N extends FieldPath<T>,
+> = BaseInputProps<T, N> & {
   type: "custom";
   render: (args: {
-    field: ControllerRenderProps<TFieldValues, TName>;
+    field: ControllerRenderProps<T, N>;
     fieldState: ControllerFieldState;
-    formState: UseFormStateReturn<TFieldValues>;
+    formState: UseFormStateReturn<T>;
   }) => React.ReactNode;
+  inputProps?: never;
 };
 
-export type FormInputProps<
-  TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues>,
-> =
-  | SelectProps<TFieldValues, TName>
-  | NonSelectProps<TFieldValues, TName>
-  | CustomProps<TFieldValues, TName>;
+export type FormInputProps<T extends FieldValues, N extends FieldPath<T>> =
+  | SelectProps<T, N>
+  | NonSelectProps<T, N>
+  | CustomProps<T, N>;
 
-export type FormFieldConfig<TFieldValues extends FieldValues> =
-  | Omit<SelectProps<TFieldValues, FieldPath<TFieldValues>>, "control">
-  | Omit<NonSelectProps<TFieldValues, FieldPath<TFieldValues>>, "control">
-  | Omit<CustomProps<TFieldValues, FieldPath<TFieldValues>>, "control">;
+export type FormFieldConfig<T extends FieldValues> =
+  | Omit<SelectProps<T, FieldPath<T>>, "control">
+  | Omit<NonSelectProps<T, FieldPath<T>>, "control">
+  | Omit<CustomProps<T, FieldPath<T>>, "control">;
 
-function FormInput<
-  TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues>,
->(props: FormInputProps<TFieldValues, TName>) {
+function FormInput<T extends FieldValues, N extends FieldPath<T>>({
+  control,
+  name,
+  type = INPUT_TYPES.TEXT,
+  label = "",
+  description = "",
+  placeholder = "",
+  rules,
+  formControlProps,
+  inputProps,
+  className,
+  disabled,
+  readOnly,
+  ...rest
+}: FormInputProps<T, N>) {
   const inputId = React.useId();
-  const {
-    control,
-    name,
-    type = "text",
-    label = "",
-    description = "",
-    placeholder = "",
-    rules,
-    formControlProps,
-    inputProps,
-    className,
-    ...rest
-  } = props;
+  const { setValue } = useFormContext();
 
   const formItemPropsClass = cn(
     type === "checkbox" && "flex items-center flex-row-reverse justify-end",
     className,
   );
+
+  function renderElement({
+    field,
+    formState,
+    fieldState,
+  }: {
+    field: ControllerRenderProps<T, N>;
+    fieldState: ControllerFieldState;
+    formState: UseFormStateReturn<T>;
+  }) {
+    const sharedProps = {
+      id: inputId,
+      placeholder,
+      disabled,
+      readOnly,
+      ...field,
+    };
+
+    if (type === INPUT_TYPES.TEXTAREA)
+      return (
+        <FormControl {...formControlProps}>
+          <Textarea
+            {...sharedProps}
+            {...(inputProps as NonSelectProps<T, N>["inputProps"])}
+          />
+        </FormControl>
+      );
+    if (type === INPUT_TYPES.CHECKBOX)
+      return (
+        <FormControl {...formControlProps}>
+          <Checkbox
+            checked={field.value}
+            onCheckedChange={field.onChange}
+            {...sharedProps}
+            {...(inputProps as NonSelectProps<T, N>["inputProps"])}
+          />
+        </FormControl>
+      );
+    if (type === INPUT_TYPES.SELECT)
+      return (
+        <Select onValueChange={field.onChange} value={field.value}>
+          <FormControl {...formControlProps}>
+            <SelectTrigger {...(inputProps as SelectProps<T, N>["inputProps"])}>
+              <SelectValue {...sharedProps} />
+            </SelectTrigger>
+          </FormControl>
+          <SelectContent>
+            {"options" in rest &&
+              rest?.options?.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+      );
+
+    if (type === INPUT_TYPES.CUSTOM)
+      return "render" in rest && rest?.render({ field, formState, fieldState });
+
+    return (
+      <FormControl {...formControlProps}>
+        <Input
+          type={type}
+          {...sharedProps}
+          {...field}
+          onChange={(e) => {
+            field.onChange(e);
+            if (type === INPUT_TYPES.FILE) {
+              setValue(`${String(name)}_files`, e.target.files);
+            }
+          }}
+          {...(inputProps as InputProps)}
+        />
+      </FormControl>
+    );
+  }
 
   return (
     <FormField
@@ -257,62 +351,7 @@ function FormInput<
       render={({ field, formState, fieldState }) => (
         <FormItem className={formItemPropsClass} {...rest}>
           {label && <FormLabel htmlFor={inputId}>{label}</FormLabel>}
-
-          {(type === "text" || type === "password") && (
-            <FormControl {...formControlProps}>
-              <Input
-                id={inputId}
-                type={type}
-                placeholder={placeholder}
-                {...field}
-                {...inputProps}
-              />
-            </FormControl>
-          )}
-
-          {type === "textarea" && (
-            <FormControl {...formControlProps}>
-              <Textarea
-                id={inputId}
-                {...field}
-                placeholder={placeholder}
-                {...inputProps}
-              />
-            </FormControl>
-          )}
-
-          {type === "checkbox" && (
-            <FormControl {...formControlProps}>
-              <Checkbox
-                id={inputId}
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
-            </FormControl>
-          )}
-
-          {type === "select" && (
-            <Select onValueChange={field.onChange} value={field.value}>
-              <FormControl {...formControlProps}>
-                <SelectTrigger>
-                  <SelectValue id={inputId} placeholder={placeholder} />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {"options" in props &&
-                  props?.options?.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
-          )}
-
-          {type === "custom" &&
-            "render" in props &&
-            props?.render({ field, formState, fieldState })}
-
+          {renderElement({ field, formState, fieldState })}
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
         </FormItem>
@@ -321,77 +360,9 @@ function FormInput<
   );
 }
 
-interface FormConditionRenderProps<TFieldValues extends FieldValues>
-  extends React.ComponentProps<"div"> {
-  formSchema: FormFieldConfig<TFieldValues>[];
-  control: Control<TFieldValues>;
-}
-
-function FormConditionRender<TFieldValues extends FieldValues>({
-  formSchema,
-  control,
-  className,
-  ...props
-}: FormConditionRenderProps<TFieldValues>) {
-  return (
-    <div
-      className={cn(
-        "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3",
-        className,
-      )}
-      {...props}
-    >
-      {formSchema.map((item: FormFieldConfig<TFieldValues>) => {
-        const basicProps = {
-          name: item.name,
-          className: item.className,
-          placeholder: item.placeholder,
-          label: item.label,
-          control,
-        };
-
-        switch (item.type) {
-          case "text":
-          case "password":
-          case "textarea":
-          case "checkbox":
-            return (
-              <FormInput key={item.name} type={item.type} {...basicProps} />
-            );
-
-          case "select":
-            return (
-              <FormInput
-                key={item.name}
-                type="select"
-                options={item.options}
-                {...basicProps}
-              />
-            );
-
-          case "custom":
-            return (
-              <FormInput
-                key={item.name}
-                type="custom"
-                render={
-                  (item as CustomProps<TFieldValues, Path<TFieldValues>>).render
-                }
-                {...basicProps}
-              />
-            );
-
-          default:
-            throw new Error("Unsupported input type");
-        }
-      })}
-    </div>
-  );
-}
 
 export {
   Form,
-  FormConditionRender,
   FormControl,
   FormDescription,
   FormField,

@@ -14,11 +14,11 @@ html {
 }
 
 @layer components {
-  a {
+  a:not(:has(*)) {
     color: var(--primary);
   }
 
-  a:hover {
+  a:not(:has(*)):hover {
     text-decoration: underline;
   }
 

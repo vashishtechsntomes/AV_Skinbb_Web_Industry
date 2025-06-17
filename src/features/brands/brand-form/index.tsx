@@ -1,25 +1,74 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Form, FormConditionRender } from "@/components/ui/form";
+import { Form, FormInput, type FormFieldConfig } from "@/components/ui/form";
 import { Container, PageContent } from "@/components/ui/structure";
-import { type ReactNode } from "react";
-import { useForm } from "react-hook-form";
-import { brandFormSchema, type BrandFormData } from "./formSchema";
+import { cn } from "@/utils";
+import { useEffect, useState, type ReactNode } from "react";
+import { useForm, type Control, type FieldValues } from "react-hook-form";
+import {
+  brandFormSchema,
+  defaultValues,
+  type BrandFormData,
+} from "./formSchema";
+import { useParams } from "react-router";
 
 const BrandForm = () => {
+  const { id } = useParams();
   const form = useForm<BrandFormData>({
-    defaultValues: {},
+    defaultValues: defaultValues,
   });
-  const { control, handleSubmit } = form;
+  const { control, watch, reset, handleSubmit } = form;
+  const [logo, setLogo] = useState("");
+
+  const logoForm = watch("logo_files");
+
+  useEffect(() => {
+    const logoObj = logoForm?.[0];
+    if (logoObj) {
+      const url = URL.createObjectURL(logoObj);
+      setLogo(url);
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }
+  }, [logoForm]);
 
   const onSubmit = (data: unknown) => {
     console.log(data);
   };
 
+  const action = (
+    <div className="flex justify-end gap-4">
+      <Button variant={"outlined"} type="reset" onClick={() => reset()}>
+        Reset
+      </Button>
+      <Button color={"primary"} type="submit">
+        Save
+      </Button>
+    </div>
+  );
+
   return (
-    <PageContent header={{ title: "Add Brand" }}>
-      <Container>
-        <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <PageContent
+          header={{
+            title: id ? "Edit Brand" : "Add Brand",
+            actions: action,
+          }}
+        >
+          <Container className="space-y-5">
+            <div className="flex items-center gap-2 md:gap-4">
+              <Avatar className="size-28 rounded-md border">
+                <AvatarImage src={logo} alt="Logo" />
+                <AvatarFallback className="rounded-md"></AvatarFallback>
+              </Avatar>
+              <FormConditionRender
+                className="flex"
+                control={control}
+                formSchema={brandFormSchema.uploadImage}
+              />
+            </div>
             <Card name={"Brand Information"}>
               <FormConditionRender
                 control={control}
@@ -39,6 +88,13 @@ const BrandForm = () => {
                 className="lg:grid-cols-2"
               />
             </Card>
+            <Card name={"Legal Documents"}>
+              <FormConditionRender
+                control={control}
+                formSchema={brandFormSchema.legal_documents}
+              />
+            </Card>
+
             <Card name={"Address"}>
               <FormConditionRender
                 control={control}
@@ -46,22 +102,40 @@ const BrandForm = () => {
               />
             </Card>
 
-            <div className="flex justify-end gap-4">
-              <Button
-                variant={"outlined"}
-                type="reset"
-              >
-                Reset
-              </Button>
-              <Button color={"primary"} type="submit">Save</Button>
-            </div>
-          </form>
-        </Form>
-      </Container>
-    </PageContent>
+            {action}
+          </Container>
+        </PageContent>
+      </form>
+    </Form>
   );
 };
 
+interface FormConditionRenderProps<T extends FieldValues>
+  extends React.ComponentProps<"div"> {
+  formSchema: FormFieldConfig<T>[];
+  control: Control<T>;
+}
+
+function FormConditionRender<T extends FieldValues>({
+  formSchema,
+  control,
+  className,
+  ...props
+}: FormConditionRenderProps<T>) {
+  return (
+    <div
+      className={cn(
+        "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3",
+        className,
+      )}
+      {...props}
+    >
+      {formSchema.map((item: FormFieldConfig<T>) => {
+        return <FormInput key={item.name} {...item} control={control} />;
+      })}
+    </div>
+  );
+}
 function Card({ children, name }: { children: ReactNode; name: string }) {
   return (
     <section>

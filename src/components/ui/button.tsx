@@ -263,7 +263,7 @@ const BlobIcon = ({
     lg: "-space-x-7",
   };
 
-  const renderIcon = icon ? icon : children;
+  const renderIcon = icon ?? children;
   return (
     <div
       className={cn(

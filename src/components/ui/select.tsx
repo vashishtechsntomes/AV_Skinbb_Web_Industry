@@ -19,31 +19,104 @@ function SelectGroup({
 function SelectValue({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Value>) {
-  return <SelectPrimitive.Value data-slot="select-value" {...props} />;
+  return (
+    <SelectPrimitive.Value
+      data-slot="select-value"
+      className={cn("text-left")}
+      {...props}
+    />
+  );
+}
+
+export interface SelectTriggerProps
+  extends React.ComponentProps<typeof SelectPrimitive.Trigger> {
+  startIcon?: React.ReactElement<React.SVGProps<SVGSVGElement>>;
+  endIcon?: React.ReactElement<React.SVGProps<SVGSVGElement>>;
+  startIconProps?: React.HTMLAttributes<SVGSVGElement> & { className?: string };
+  endIconProps?: React.HTMLAttributes<SVGSVGElement> & { className?: string };
+  size?: "sm" | "default";
 }
 
 function SelectTrigger({
   className,
   size = "default",
   children,
+  startIcon,
+  endIcon,
+  startIconProps,
+  endIconProps,
   ...props
-}: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
-  size?: "sm" | "default";
-}) {
+}: SelectTriggerProps) {
+  let paddingClass = "px-4"; // default
+
+  if (startIcon && endIcon) {
+    paddingClass = "ps-10 pe-10";
+  } else if (startIcon) {
+    paddingClass = "ps-10 pe-4";
+  } else if (endIcon) {
+    paddingClass = "ps-4 pe-10";
+  }
   return (
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "border-input data-[placeholder]:text-muted-foreground/50 [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full items-center justify-between gap-2 rounded-md border bg-transparent px-4 py-2 whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-10 data-[size=sm]:h-9 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        // Layout & Box Model
+        "flex w-full items-center justify-between gap-2",
+        "relative rounded-md border bg-transparent px-4 py-2",
+
+        // Height based on size variant
+        "data-[size=default]:h-10 data-[size=sm]:h-9",
+
+        // Borders & Colors
+        "border-input focus-visible:border-primary",
+        "focus-visible:ring-primary/50 focus-visible:ring-[3px]",
+        "aria-invalid:border-destructive aria-invalid:ring-destructive/20",
+
+        // Text & Color
+        "data-[placeholder]:text-muted-foreground/50",
+        "transition-[color,box-shadow] outline-none",
+        "disabled:cursor-not-allowed disabled:opacity-50",
+
+        // Child & Slot Styling
+        "*:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:text-left",
+        "*:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:gap-2",
+
+        // SVG Styling
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "[&_svg:not([class*='text-'])]:text-muted-foreground",
+        "[&_svg:not([class*='size-'])]:size-5",
+
+        paddingClass,
         className,
       )}
       {...props}
     >
+      {startIcon && React.isValidElement(startIcon)
+        ? React.cloneElement(startIcon, {
+            ...startIconProps,
+            className: cn(
+              "text-muted-foreground pointer-events-none absolute left-0 mx-3 flex h-full items-center",
+              startIconProps?.className,
+              startIcon.props.className,
+            ),
+          })
+        : startIcon}
+
       {children}
       <SelectPrimitive.Icon asChild>
         <ChevronDownIcon className="size-4 opacity-50" />
       </SelectPrimitive.Icon>
+      {endIcon && React.isValidElement(endIcon)
+        ? React.cloneElement(endIcon, {
+            ...endIconProps,
+            className: cn(
+              "text-muted-foreground pointer-events-none absolute right-0 mx-3 flex h-full items-center",
+              endIconProps?.className,
+              endIcon.props.className,
+            ),
+          })
+        : endIcon}
     </SelectPrimitive.Trigger>
   );
 }

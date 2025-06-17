@@ -26,7 +26,7 @@ export const dashboardRoutes: RouteObject[] = [
         Component: lazy(() => import("@/features/brands/brand-form")),
       },
       {
-        path: DASHBOARD_ROUTES.editBrand,
+        path: `${DASHBOARD_ROUTES.editBrand}/:id`,
         Component: lazy(() => import("@/features/brands/brand-form")),
       },
     ],

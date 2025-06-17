@@ -12,18 +12,27 @@ export function formatCurrency(
     currency = "INR",
     useAbbreviation = true,
     decimalPlaces = 2,
-  } = options || {};
+  } = options ?? {};
 
   if (useAbbreviation) {
+    const format = (val: number, suffix: string) => {
+      let str = val.toFixed(decimalPlaces);
+      // Remove trailing zeroes and optional dot
+      if (str.includes(".")) {
+        str = str
+          .replace(/(\.\d*?[1-9])0+$/, "$1")
+          .replace(/\.0+$/, "")
+          .replace(/\.$/, "");
+      }
+      return `${str}${suffix}`;
+    };
+
     if (amount >= 1e7) {
-      const val = amount / 1e7;
-      return `${val.toFixed(decimalPlaces ?? 3).replace(/\.?0+$/, "")}Cr`;
+      return format(amount / 1e7, "Cr");
     } else if (amount >= 1e5) {
-      const val = amount / 1e5;
-      return `${val.toFixed(decimalPlaces ?? 3).replace(/\.?0+$/, "")}L`;
+      return format(amount / 1e5, "L");
     } else if (amount >= 1e3) {
-      const val = amount / 1e3;
-      return `${val.toFixed(decimalPlaces ?? 3).replace(/\.?0+$/, "")}k`;
+      return format(amount / 1e3, "k");
     }
   }
 

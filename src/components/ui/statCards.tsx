@@ -20,7 +20,7 @@ export const StatCard: FC<StatCardProps> = ({
         <p>{title}</p>
         <h4 className="font-bold">{value}</h4>
       </div>
-      {icon && icon}
+      {icon}
     </div>
   );
 };

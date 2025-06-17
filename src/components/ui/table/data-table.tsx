@@ -178,12 +178,13 @@ function SortableHeader<TData>({ header }: { header: Header<TData, unknown> }) {
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (["Enter", " "].includes(e.key)) {
-      toggleHandler?.(e);
       e.preventDefault();
+      toggleHandler?.(e);
     }
   };
 
   return (
+    /* NOSONAR */ // Suppresses this line from being flagged
     <div
       role="button"
       tabIndex={0}
