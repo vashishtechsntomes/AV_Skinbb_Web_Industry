@@ -305,7 +305,12 @@ function FormInput<T extends FieldValues, N extends FieldPath<T>>({
       );
     if (type === INPUT_TYPES.SELECT)
       return (
-        <Select onValueChange={field.onChange} value={field.value}>
+        <Select
+          onValueChange={field.onChange}
+          // value={field.value}
+          // disabled={sharedProps.disabled}
+          {...sharedProps}
+        >
           <FormControl {...formControlProps}>
             <SelectTrigger {...(inputProps as SelectProps<T, N>["inputProps"])}>
               <SelectValue {...sharedProps} />
@@ -359,7 +364,6 @@ function FormInput<T extends FieldValues, N extends FieldPath<T>>({
     />
   );
 }
-
 
 export {
   Form,

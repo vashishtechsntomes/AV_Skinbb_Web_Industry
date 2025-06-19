@@ -106,11 +106,10 @@ export default defineConfig([
 
       // Disable props of the component as read-only
       "@typescript-eslint/prefer-readonly-parameter-types": "off",
-      '@typescript-eslint/prefer-readonly': 'off',
+      "@typescript-eslint/prefer-readonly": "off",
 
       // Disabled props type
       "react/prop-types": "off",
-
     },
   },
 ]);

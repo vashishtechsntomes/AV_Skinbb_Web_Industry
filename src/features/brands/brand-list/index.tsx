@@ -213,7 +213,7 @@ const BrandList = () => {
       }}
     >
       <section className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">
-        {statsData.map((item, index) => (
+        {statsData.map((item) => (
           <StatCard
             key={item.title}
             title={item.title}

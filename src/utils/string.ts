@@ -16,3 +16,35 @@ export function truncate(str: string, max = 100) {
 export function kebabToTitle(str: string) {
   return str.split("-").map(capitalize).join(" ");
 }
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+export function mapToSelectOptions<T extends string | Record<string, unknown>>(
+  values: T[],
+  labelKey?: T extends string
+    ? never
+    : keyof Extract<T, Record<string, unknown>>,
+  valueKey?: T extends string
+    ? never
+    : keyof Extract<T, Record<string, unknown>>,
+): SelectOption[] {
+  return values.map((item) => {
+    if (typeof item === "string") {
+      return {
+        label: camelToTitle(item),
+        value: item,
+      };
+    }
+
+    const obj = item as Record<string, unknown>;
+    const label = labelKey ?? "label";
+    const value = valueKey ?? "value";
+
+    return {
+      label: camelToTitle(String(obj[label])),
+      value: String(obj[value]),
+    };
+  });
+}

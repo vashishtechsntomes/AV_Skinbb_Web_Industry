@@ -1,5 +1,6 @@
 import { BlobIcon, Button } from "@/components/ui/button";
 import { PageContent } from "@/components/ui/structure";
+import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
 import { cn } from "@/utils";
 import { Fragment, type ReactElement, type SVGProps } from "react";
 import { NavLink } from "react-router";
@@ -29,8 +30,14 @@ const cardData = [
     title: "Analytics",
     description: "Dive into user behavior, demographics, and performance",
     buttons: [
-      { name: "Platform", href: "/brands" },
-      { name: "Brand", href: "/brands" },
+      {
+        name: "Platform",
+        href: `${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}`,
+      },
+      {
+        name: "Brand",
+        href: `${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsBrand}`,
+      },
     ],
     icon: (
       <svg

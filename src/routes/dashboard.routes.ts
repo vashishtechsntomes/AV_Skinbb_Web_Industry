@@ -8,7 +8,11 @@ export const DASHBOARD_ROUTES = {
   brandLists: "/brands",
   addBrand: "/brand/create",
   editBrand: "/brand/edit",
+  analytics: "/analytics",
+  analyticsPlatform: "/platform",
+  analyticsBrand: "/brand",
 };
+
 export const dashboardRoutes: RouteObject[] = [
   {
     Component: MainLayout,
@@ -28,6 +32,30 @@ export const dashboardRoutes: RouteObject[] = [
       {
         path: `${DASHBOARD_ROUTES.editBrand}/:id`,
         Component: lazy(() => import("@/features/brands/brand-form")),
+      },
+      {
+        path: DASHBOARD_ROUTES.analytics,
+        Component: lazy(() => import("@/features/analytics/dashboard")),
+        children: [
+          // {
+          //   index: true,
+          //   Component: lazy(
+          //     () => import("@/features/analytics/dashboard/platform"),
+          //   ),
+          // },
+          {
+            path: DASHBOARD_ROUTES.analyticsPlatform.slice(1),
+            Component: lazy(
+              () => import("@/features/analytics/dashboard/platform"),
+            ),
+          },
+          {
+            path: DASHBOARD_ROUTES.analyticsBrand.slice(1),
+            Component: lazy(
+              () => import("@/features/analytics/dashboard/brand"),
+            ),
+          },
+        ],
       },
     ],
   },
