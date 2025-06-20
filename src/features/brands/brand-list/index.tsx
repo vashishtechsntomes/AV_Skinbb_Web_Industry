@@ -1,8 +1,8 @@
 import { StatusBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { StatCard } from "@/components/ui/statCards";
+import { StatCard } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
-import { DataTable } from "@/components/ui/table/data-table";
+import { DataTableToogle } from "@/components/ui/table/data-table";
 import type { Brand } from "@/types/brand.type";
 import { formatCurrency } from "@/utils";
 import { EyeIcon } from "@heroicons/react/24/outline";
@@ -213,7 +213,7 @@ const BrandList = () => {
       }}
     >
       <section className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">
-        {statsData.map((item, index) => (
+        {statsData.map((item) => (
           <StatCard
             key={item.title}
             title={item.title}
@@ -223,7 +223,8 @@ const BrandList = () => {
         ))}
       </section>
 
-      <DataTable
+      <DataTableToogle
+      
         rows={brandData}
         columns={columns}
         gridProps={{

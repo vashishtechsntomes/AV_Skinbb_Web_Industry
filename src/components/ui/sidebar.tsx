@@ -12,19 +12,20 @@ import { useTree } from "@headless-tree/react";
 import React, { useEffect, useMemo } from "react";
 import { NavLink, useLocation } from "react-router";
 import { Button } from "./button";
+import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
 const INDENT = 32;
 
-const DASHBOARD_ROUTES = {
-  dashboard: "/",
-  brands: "/brands",
-  marketResearch: "/market-research",
-  promotions: "/promotions",
-  listing: "/listing",
-  users: "/users",
-  userInsight: "/user-insight",
-  marketTrends: "/market-trends",
-  anyDashboard: "/any-dashboard",
-};
+// const DASHBOARD_ROUTES = {
+//   dashboard: "/",
+//   brands: "/brands",
+//   marketResearch: "/market-research",
+//   promotions: "/promotions",
+//   listing: "/listing",
+//   users: "/users",
+//   userInsight: "/user-insight",
+//   marketTrends: "/market-trends",
+//   anyDashboard: DASHBOARD_ROUTES.analyticsDashboardPlatform,
+// };
 
 interface Item {
   name: string;
@@ -34,7 +35,7 @@ interface Item {
   icon?: React.ReactNode;
 }
 
-const items: Record<string, Item> = {
+const items: () => Record<string, Item> = () => ({
   sidebar: {
     name: "sidebar",
     children: [
@@ -68,7 +69,7 @@ const items: Record<string, Item> = {
   },
   brands: {
     name: "brands",
-    href: DASHBOARD_ROUTES.brands,
+    href: DASHBOARD_ROUTES.brandLists,
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -106,20 +107,20 @@ const items: Record<string, Item> = {
   },
   anyDashboard: {
     name: "Dashboard",
-    href: DASHBOARD_ROUTES.anyDashboard,
+    href: `${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}`,
     current: true,
   },
   "user insight": {
     name: "user insight",
-    href: DASHBOARD_ROUTES.userInsight,
+    href: "/user-insight",
   },
   "market trends": {
     name: "market trends",
-    href: DASHBOARD_ROUTES.marketTrends,
+    href: "market-trends",
   },
   "market research": {
     name: "market research",
-    href: DASHBOARD_ROUTES.marketResearch,
+    href: "market-research",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +139,7 @@ const items: Record<string, Item> = {
   },
   promotions: {
     name: "promotions",
-    href: DASHBOARD_ROUTES.promotions,
+    href: "promo",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -157,7 +158,7 @@ const items: Record<string, Item> = {
   },
   listing: {
     name: "listing",
-    href: DASHBOARD_ROUTES.listing,
+    href: "listing",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +177,7 @@ const items: Record<string, Item> = {
   },
   users: {
     name: "users",
-    href: DASHBOARD_ROUTES.users,
+    href: "users",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +194,7 @@ const items: Record<string, Item> = {
       </svg>
     ),
   },
-};
+});
 
 // Find all parent folders that have an active child
 function findActiveParentFolders(
@@ -226,10 +227,10 @@ function SidebarNavigation() {
 
   const { currentId, expandedItems } = useMemo(() => {
     const currentItemId =
-      Object.entries(items).find(
+      Object.entries(items()).find(
         ([_, item]) => item.href === location.pathname,
       )?.[0] ?? "dashboard";
-    const expanded = findActiveParentFolders(items, location.pathname);
+    const expanded = findActiveParentFolders(items(), location.pathname);
     return { currentId: currentItemId, expandedItems: expanded };
   }, [location.pathname]);
 
@@ -243,8 +244,8 @@ function SidebarNavigation() {
     getItemName: (item) => item.getItemData().name,
     isItemFolder: (item) => (item.getItemData()?.children?.length ?? 0) > 0,
     dataLoader: {
-      getItem: (itemId) => items[itemId],
-      getChildren: (itemId) => items[itemId].children ?? [],
+      getItem: (itemId) => items()[itemId],
+      getChildren: (itemId) => items()[itemId].children ?? [],
     },
     features: [syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature],
   });
@@ -298,7 +299,7 @@ function SidebarItemLabel({ item }: { item: ItemInstance<Item> }) {
     if (href === location.pathname) return false;
 
     const isChildActive = (childId: string): boolean => {
-      const childItem = items[childId];
+      const childItem = items()[childId];
       if (!childItem) return false;
       if (childItem.href === location.pathname) return true;
       return childItem.children?.some(isChildActive) ?? false;

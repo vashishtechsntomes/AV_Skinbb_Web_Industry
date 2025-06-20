@@ -3,14 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Form, FormInput, type FormFieldConfig } from "@/components/ui/form";
 import { Container, PageContent } from "@/components/ui/structure";
 import { cn } from "@/utils";
-import { useEffect, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useState,
+  type ComponentProps,
+  type ReactNode,
+} from "react";
 import { useForm, type Control, type FieldValues } from "react-hook-form";
+import { useParams } from "react-router";
 import {
   brandFormSchema,
   defaultValues,
   type BrandFormData,
 } from "./formSchema";
-import { useParams } from "react-router";
 
 const BrandForm = () => {
   const { id } = useParams();
@@ -111,7 +116,7 @@ const BrandForm = () => {
 };
 
 interface FormConditionRenderProps<T extends FieldValues>
-  extends React.ComponentProps<"div"> {
+  extends ComponentProps<"div"> {
   formSchema: FormFieldConfig<T>[];
   control: Control<T>;
 }
