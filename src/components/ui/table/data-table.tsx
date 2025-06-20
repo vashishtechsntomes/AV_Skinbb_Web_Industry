@@ -89,7 +89,7 @@ interface UseTableOptions<TData> {
   columns: ColumnDef<TData, unknown>[];
   pageSize?: number;
   filterableKeys?: (keyof TData)[];
-  defaultViewMode?: DataViewMode;
+  defaultViewMode: DataViewMode;
 }
 
 export interface UseTableResponse<TData> {
@@ -109,7 +109,7 @@ export function useTable<TData extends object>({
   columns,
   pageSize = 5,
   filterableKeys = [],
-  defaultViewMode = DataViewMode.grid,
+  defaultViewMode = DataViewMode.list,
 }: UseTableOptions<TData>): UseTableResponse<TData> {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -226,7 +226,7 @@ function SortableHeader<TData>({ header }: { header: Header<TData, unknown> }) {
   );
 }
 
-interface DataTableBodyProps<TData> {
+interface DataTableBodyProps<TData> extends React.ComponentProps<"table"> {
   table: TableType<TData>;
   emptyMessage?: string;
 }
@@ -315,7 +315,7 @@ export function DataGridView<TData>({
   );
 }
 
-interface DataPaginationProps<TData> {
+interface DataPaginationProps<TData> extends ComponentProps<"div"> {
   table: TableType<TData>;
   showEntryCount?: boolean;
   showPageSizeOptions?: boolean;
@@ -325,6 +325,7 @@ export function DataPagination<TData>({
   table,
   showEntryCount = true,
   showPageSizeOptions = true,
+  className,
   ...props
 }: DataPaginationProps<TData>) {
   const pageSize = table.getState().pagination.pageSize;
@@ -335,7 +336,10 @@ export function DataPagination<TData>({
 
   return (
     <div
-      className="flex flex-wrap items-center justify-between gap-2 py-1 md:gap-4"
+      className={cn(
+        "flex flex-wrap items-center justify-between gap-2 py-1 md:gap-4",
+        className,
+      )}
       {...props}
     >
       {showEntryCount && (
@@ -460,9 +464,9 @@ export function DataTableAction<TData>({
     </div>
   );
 }
-interface DataTableProps<TData extends object> extends UseTableOptions<TData> {
+interface DataTableProps<TData extends object>
+  extends Omit<UseTableOptions<TData>, "defaultViewMode"> {
   bodyProps?: Omit<DataTableBodyProps<TData>, "table">;
-  gridProps?: Omit<DataGridViewProps<TData>, "table">;
   paginationProps?: Omit<DataPaginationProps<TData>, "table">;
   actionProps?: Omit<DataTableActionProps<TData>, "tableState">; // Optional custom actions (e.g. filters, buttons)
   showPagination?: boolean;
@@ -473,7 +477,6 @@ export function DataTable<TData extends object>({
   rows,
   columns,
   bodyProps = {},
-  gridProps = {},
   paginationProps = {},
   actionProps,
   showAction = true,
@@ -483,6 +486,50 @@ export function DataTable<TData extends object>({
   const tableState = useTable({
     rows,
     columns,
+    defaultViewMode: DataViewMode.list,
+    ...props,
+  });
+
+  const { table } = tableState;
+  return (
+    <div className="space-y-5">
+      {showAction && (
+        <DataTableAction
+          tableState={tableState}
+          {...actionProps}
+        ></DataTableAction>
+      )}
+
+      <DataTableBody table={table} {...bodyProps} />
+      {showPagination && <DataPagination table={table} {...paginationProps} />}
+    </div>
+  );
+}
+interface DataTableToggleProps<TData extends object>
+  extends Omit<UseTableOptions<TData>, "defaultViewMode"> {
+  bodyProps?: Omit<DataTableBodyProps<TData>, "table">;
+  gridProps?: Omit<DataGridViewProps<TData>, "table">;
+  paginationProps?: Omit<DataPaginationProps<TData>, "table">;
+  actionProps?: Omit<DataTableActionProps<TData>, "tableState">; // Optional custom actions (e.g. filters, buttons)
+  showPagination?: boolean;
+  showAction?: boolean;
+}
+
+export function DataTableToogle<TData extends object>({
+  rows,
+  columns,
+  bodyProps = {},
+  gridProps = {},
+  paginationProps = {},
+  actionProps,
+  showAction = true,
+  showPagination = true,
+  ...props
+}: DataTableToggleProps<TData>) {
+  const tableState = useTable({
+    rows,
+    columns,
+    defaultViewMode: DataViewMode.grid,
     ...props,
   });
 

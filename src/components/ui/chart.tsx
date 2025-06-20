@@ -43,8 +43,9 @@ function ChartContainer({
   children: React.ComponentProps<
     typeof RechartsPrimitive.ResponsiveContainer
   >["children"];
-  responsiveProps?: React.ComponentProps<
-    typeof RechartsPrimitive.ResponsiveContainer
+  responsiveProps?: Omit<
+    React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>,
+    "children"
   >;
 }) {
   const uniqueId = React.useId();

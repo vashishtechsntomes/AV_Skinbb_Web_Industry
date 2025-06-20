@@ -1,4 +1,4 @@
-import { StatCard } from "@/components/ui/statCards";
+import { StatCard } from "@/components/ui/stat";
 import {
   Bar,
   BarChart,
@@ -25,9 +25,19 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { cn } from "@/utils";
-import { useContext, type ComponentProps } from "react";
+import { useContext, useState, type ComponentProps } from "react";
 import { AnalysisContext } from "..";
 import { AnalyticsFilterForm } from "./AnalyticsFilterForm";
+import {
+  UserIcon,
+  CalendarDaysIcon,
+  FunnelIcon,
+} from "@heroicons/react/24/outline";
+import { BlobIcon, Button } from "@/components/ui/button";
+import { PageContent } from "@/components/ui/structure";
+import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useLocation, useNavigate } from "react-router";
 
 const genderData = [
   { key: "male", value: 275, fill: "var(--chart-1)" },
@@ -145,25 +155,25 @@ const statsData = [
     title: "Active Users",
     value: 1250,
     barColor: "bg-primary",
-    icon: true,
+    icon: <UserIcon />,
   },
   {
     title: "Number of Routines",
     value: 3400,
     barColor: "bg-blue-300",
-    icon: false,
+    icon: <CalendarDaysIcon />,
   },
   {
     title: "Avg Routines per User",
     value: 1.7,
     barColor: "bg-violet-300",
-    icon: false,
+    icon: <UserIcon />,
   },
   {
     title: "Avg Products of Routine",
     value: 4.3,
     barColor: "bg-red-300",
-    icon: true,
+    icon: <CalendarDaysIcon />,
   },
 ];
 
@@ -201,7 +211,9 @@ const concernChartConfig = {
 } satisfies ChartConfig;
 
 const PlatformDashboard = () => {
-  const { isFilter } = useContext(AnalysisContext);
+  const [isFilter, setIsFilter] = useState<boolean>(false);
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
   const totalVisitors = skinChartData[0].dry + skinChartData[0].normal;
 
   function onSubmit(data: {
@@ -213,26 +225,77 @@ const PlatformDashboard = () => {
   }
 
   return (
-    <div>
+    <PageContent
+      header={{
+        title: "Platform Analytics",
+        description: `Dive into user behavior, demographics,
+and performance`,
+        actions: (
+          <div className="flex gap-2">
+            {
+              <Button
+                color={isFilter ? "primary" : "default"}
+                startIcon={<FunnelIcon />}
+                variant={isFilter ? "contained" : "outlined"}
+                onClick={() => setIsFilter((val) => !val)}
+              >
+                Filter
+              </Button>
+            }
+
+            <ToggleGroup
+              type="single"
+              variant={"outline"}
+              size={"lg"}
+              className="bg-card h-10"
+              value={pathname}
+              onValueChange={(value) => {
+                if (!value) return;
+                navigate(`${value}`);
+              }}
+            >
+              <ToggleGroupItem
+                className="aspect-auto h-full flex-auto px-3"
+                value={`${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}`}
+                aria-label="Toggle Platform"
+              >
+                Platform
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                className="aspect-auto h-full flex-auto px-3"
+                value={`${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsBrand}`}
+                aria-label="Toggle Brand"
+              >
+                Brand
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+        ),
+      }}
+    >
       {isFilter && (
         <>
-          <AnalyticsFilterForm onSubmit={onSubmit} /> <br />
+          <AnalyticsFilterForm onSubmit={onSubmit} />
         </>
       )}
 
-      <div className="grid gap-2 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">
+      <div className="grid gap-2 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
         {statsData.map((item) => (
           <StatCard
             key={item.title}
             title={item.title}
             value={item.value}
             barColor={item.barColor}
-            className="md:flex-1"
+            className="relative md:flex-1"
+            icon={
+              item.icon && (
+                <BlobIcon className="absolute right-3" icon={item.icon} />
+              )
+            }
           />
         ))}
       </div>
-      <br />
-      <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 md:gap-4">
+      <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
         <StatChart
           name="Gender Distribution"
           config={genderConfig}
@@ -459,7 +522,7 @@ const PlatformDashboard = () => {
           </BarChart>
         </StatChart>
       </div>
-    </div>
+    </PageContent>
   );
 };
 
@@ -480,10 +543,7 @@ const StatChart = ({
 }) => {
   return (
     <Card
-      className={cn(
-        "flex max-h-86 max-w-full flex-col md:aspect-square",
-        className,
-      )}
+      className={cn("flex max-h-86 min-h-82 max-w-full flex-col", className)}
     >
       <CardHeader className="items-center pb-0">
         <CardTitle className="text-muted-foreground text-lg leading-none">

@@ -24,21 +24,28 @@ const AnalyticsDashboard = () => {
   const navigate = useNavigate();
   return (
     <AnalysisContext value={{ isFilter, setIsFilter }}>
-      <PageContent
+      {/* <PageContent
         header={{
-          title: "Platform Analytics",
+          title:
+            `${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}` ===
+            pathname
+              ? "Platform Analytics"
+              : "Brand Analytics",
           description: `Dive into user behavior, demographics,
 and performance`,
           actions: (
             <div className="flex gap-2">
-              <Button
-                color={isFilter ? "primary" : "default"}
-                startIcon={<FunnelIcon />}
-                variant={"outlined"}
-                onClick={() => setIsFilter((val) => !val)}
-              >
-                Filter
-              </Button>
+              {`${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}` ===
+                pathname && (
+                <Button
+                  color={isFilter ? "primary" : "default"}
+                  startIcon={<FunnelIcon />}
+                  variant={"outlined"}
+                  onClick={() => setIsFilter((val) => !val)}
+                >
+                  Filter
+                </Button>
+              )}
 
               <ToggleGroup
                 type="single"
@@ -69,9 +76,9 @@ and performance`,
             </div>
           ),
         }}
-      >
+      > */}
         <Outlet />
-      </PageContent>
+      {/* </PageContent> */}
     </AnalysisContext>
   );
 };
