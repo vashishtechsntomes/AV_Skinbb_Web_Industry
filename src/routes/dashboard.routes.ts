@@ -11,6 +11,9 @@ export const DASHBOARD_ROUTES = {
   analytics: "/analytics",
   analyticsPlatform: "/platform",
   analyticsBrand: "/brand",
+  marketResearch: "/market-research",
+  marketResearchAdd: "/market-research/add",
+  marketResearchEdit: "/market-research/edit",
 };
 
 export const dashboardRoutes: RouteObject[] = [
@@ -37,12 +40,6 @@ export const dashboardRoutes: RouteObject[] = [
         path: DASHBOARD_ROUTES.analytics,
         Component: lazy(() => import("@/features/analytics/dashboard")),
         children: [
-          // {
-          //   index: true,
-          //   Component: lazy(
-          //     () => import("@/features/analytics/dashboard/platform"),
-          //   ),
-          // },
           {
             path: DASHBOARD_ROUTES.analyticsPlatform.slice(1),
             Component: lazy(
@@ -55,6 +52,27 @@ export const dashboardRoutes: RouteObject[] = [
               () => import("@/features/analytics/dashboard/brand"),
             ),
           },
+        ],
+      },
+      {
+        path: DASHBOARD_ROUTES.marketResearch,
+        children: [
+          {
+            index: true,
+            Component: lazy(() => import("@/features/market-research/market-research-list")),
+          },
+          // {
+          //   path: DASHBOARD_ROUTES.marketResearchAdd.slice(1),
+          //   Component: lazy(
+          //     () => import("@/features/market-research/"),
+          //   ),
+          // },
+          // {
+          //   path: DASHBOARD_ROUTES.marketResearchEdit.slice(1),
+          //   Component: lazy(
+          //     () => import("@/features/market-research"),
+          //   ),
+          // },
         ],
       },
     ],

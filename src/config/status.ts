@@ -66,6 +66,21 @@ export const STATUS_MAP: Record<ModuleType, Record<string, StatusStyle>> = {
       textColor: "text-blue-700",
       bgColor: "bg-blue-100",
     },
+    active: {
+      label: "Active",
+      textColor: "text-blue-700",
+      bgColor: "bg-blue-100",
+    },
+    inactive: {
+      label: "Inactive",
+      textColor: "text-gray-700",
+      bgColor: "bg-gray-200",
+    },
+    closed: {
+      label: "Closed",
+      textColor: "text-red-700",
+      bgColor: "bg-red-100",
+    },
   },
 
   product: {

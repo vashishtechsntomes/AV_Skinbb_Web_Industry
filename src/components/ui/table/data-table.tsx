@@ -293,7 +293,7 @@ export function DataGridView<TData>({
       renderGridItem
         ? table.getRowModel().rows.map((row) => renderGridItem(row.original))
         : [],
-    [table, renderGridItem],
+    [table.getRowModel(), renderGridItem],
   );
 
   if (!renderGridItem) return <>Please provide grid layout</>;
