@@ -30,6 +30,12 @@ import {
   type SelectTriggerProps,
 } from "./select";
 import { Textarea, type TextareaProps } from "./textarea";
+import {
+  DatePicker,
+  type DatePickerProps,
+  type DatepickerValueForMode,
+} from "./date-picker";
+import type { Mode } from "react-day-picker";
 
 const Form = FormProvider;
 
@@ -176,6 +182,7 @@ const INPUT_TYPES = {
   PASSWORD: "password",
   FILE: "file",
   SELECT: "select",
+  DATEPICKER: "datepicker",
   CUSTOM: "custom",
 } as const;
 
@@ -219,6 +226,15 @@ type NonSelectProps<
   inputProps?: StandardInputProps;
 };
 
+type DatePickerBaseProps<
+  T extends FieldValues,
+  N extends FieldPath<T>,
+> = BaseInputProps<T, N> & {
+  type: typeof INPUT_TYPES.DATEPICKER;
+  inputProps?: DatePickerProps;
+  mode: Mode;
+};
+
 // Custom element props
 type CustomProps<
   T extends FieldValues,
@@ -236,12 +252,14 @@ type CustomProps<
 export type FormInputProps<T extends FieldValues, N extends FieldPath<T>> =
   | SelectProps<T, N>
   | NonSelectProps<T, N>
-  | CustomProps<T, N>;
+  | CustomProps<T, N>
+  | DatePickerBaseProps<T, N>;
 
 export type FormFieldConfig<T extends FieldValues> =
   | Omit<SelectProps<T, FieldPath<T>>, "control">
   | Omit<NonSelectProps<T, FieldPath<T>>, "control">
-  | Omit<CustomProps<T, FieldPath<T>>, "control">;
+  | Omit<CustomProps<T, FieldPath<T>>, "control">
+  | Omit<DatePickerBaseProps<T, FieldPath<T>>, "control">;
 
 function FormInput<T extends FieldValues, N extends FieldPath<T>>({
   control,
@@ -283,7 +301,7 @@ function FormInput<T extends FieldValues, N extends FieldPath<T>>({
       ...field,
     };
 
-    if (type === INPUT_TYPES.TEXTAREA)
+    if (type === INPUT_TYPES.TEXTAREA) {
       return (
         <FormControl {...formControlProps}>
           <Textarea
@@ -292,7 +310,8 @@ function FormInput<T extends FieldValues, N extends FieldPath<T>>({
           />
         </FormControl>
       );
-    if (type === INPUT_TYPES.CHECKBOX)
+    }
+    if (type === INPUT_TYPES.CHECKBOX) {
       return (
         <FormControl {...formControlProps}>
           <Checkbox
@@ -303,29 +322,47 @@ function FormInput<T extends FieldValues, N extends FieldPath<T>>({
           />
         </FormControl>
       );
-    if (type === INPUT_TYPES.SELECT)
+    }
+    if (type === INPUT_TYPES.SELECT) {
       return (
-        <Select
-          onValueChange={field.onChange}
-          // value={field.value}
-          // disabled={sharedProps.disabled}
-          {...sharedProps}
-        >
-          <FormControl {...formControlProps}>
-            <SelectTrigger {...(inputProps as SelectProps<T, N>["inputProps"])}>
-              <SelectValue {...sharedProps} />
-            </SelectTrigger>
-          </FormControl>
-          <SelectContent>
-            {"options" in rest &&
-              rest?.options?.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
+        <FormControl {...formControlProps}>
+          <Select onValueChange={field.onChange} {...sharedProps}>
+            <FormControl {...formControlProps}>
+              <SelectTrigger
+                {...(inputProps as SelectProps<T, N>["inputProps"])}
+              >
+                <SelectValue {...sharedProps} />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              {"options" in rest &&
+                rest?.options?.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
+        </FormControl>
       );
+    }
+
+    if (type === INPUT_TYPES.DATEPICKER && "mode" in rest) {
+      const mode = rest.mode as Mode;
+      const { defaultValue: _default, ...safeInputProps } =
+        (inputProps as DatePickerBaseProps<T, N>["inputProps"]) ?? {};
+
+      return (
+        <DatePicker
+          {...safeInputProps}
+          mode={mode}
+          value={field.value as DatepickerValueForMode<typeof mode>}
+          onChange={(date) => {
+            field.onChange(date as DatepickerValueForMode<typeof mode>);
+          }}
+        />
+      );
+    }
 
     if (type === INPUT_TYPES.CUSTOM)
       return "render" in rest && rest?.render({ field, formState, fieldState });

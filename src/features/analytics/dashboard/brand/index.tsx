@@ -1,4 +1,4 @@
-import { BlobIcon, Button } from "@/components/ui/button";
+import { BlobIcon } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
@@ -7,27 +7,21 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import { DatePicker } from "@/components/ui/date-picker";
 import { StatCard, StatValue, type StatValueProps } from "@/components/ui/stat";
+import { PageContent } from "@/components/ui/structure";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
 import { cn } from "@/utils";
 import {
   CalendarDateRangeIcon,
-  FunnelIcon,
   ShoppingBagIcon,
 } from "@heroicons/react/24/outline";
-import { useState, type ComponentProps, type ReactNode } from "react";
+import { type ComponentProps, type ReactNode } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { Area, CartesianGrid, Line, LineChart, XAxis } from "recharts";
 import ActiveCarts from "./ActiveCarts";
 import Products from "./Products";
-import { PageContent } from "@/components/ui/structure";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
-import { useLocation, useNavigate } from "react-router";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  DatePicker,
-  DateRangePicker,
-  UnifiedDatePicker,
-} from "@/components/ui/date-picker";
-import { Input } from "@/components/ui/input";
 
 const impressionChartData = [
   { month: "1May", desktop: 186 },
@@ -88,13 +82,10 @@ const BrandDashboard = () => {
 and performance`,
           actions: (
             <div className="flex gap-2">
-              <UnifiedDatePicker
+              <DatePicker
                 className="max-w-69"
                 startIcon={<CalendarDateRangeIcon />}
                 mode="range"
-                onChange={(date) => {
-                  console.log("🚀 ~ BrandDashboard ~ date:", date);
-                }}
               />
 
               <ToggleGroup
@@ -127,8 +118,8 @@ and performance`,
           ),
         }}
       >
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-5">
-          <div className="space-y-5">
+        <div className="grid grid-cols-1 gap-2 md:gap-5 lg:grid-cols-3">
+          <div className="space-y-2 md:space-y-5">
             <StatCard
               title={"Listed Products"}
               value={"150"}
@@ -288,6 +279,8 @@ and performance`,
               </LineChart>
             </ChartContainer>
           </StatChart>
+        </div>
+        <div className="grid grid-cols-1 gap-2 md:gap-5 lg:grid-cols-3">
           <StatChart
             name="Active Carts"
             value={"1.2K"}
