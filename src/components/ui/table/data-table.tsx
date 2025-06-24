@@ -226,7 +226,7 @@ function SortableHeader<TData>({ header }: { header: Header<TData, unknown> }) {
   );
 }
 
-interface DataTableBodyProps<TData> extends React.ComponentProps<"table"> {
+interface DataTableBodyProps<TData> extends ComponentProps<"table"> {
   table: TableType<TData>;
   emptyMessage?: string;
 }
@@ -293,7 +293,7 @@ export function DataGridView<TData>({
       renderGridItem
         ? table.getRowModel().rows.map((row) => renderGridItem(row.original))
         : [],
-    [table.getRowModel(), renderGridItem],
+    [table.getRowModel(), renderGridItem, table],
   );
 
   if (!renderGridItem) return <>Please provide grid layout</>;

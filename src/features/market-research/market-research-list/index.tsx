@@ -5,11 +5,11 @@ import { StatCard } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
 import { DataTableToogle } from "@/components/ui/table/data-table";
 import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
-import type { MarketResearch } from "@/types/research.type";
+import type { Survey } from "@/types/research.type";
 import { formatCurrency } from "@/utils";
 import { CalendarDateRangeIcon, EyeIcon } from "@heroicons/react/24/outline";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Link, NavLink } from "react-router";
+import { NavLink } from "react-router";
 
 const statsData = [
   {
@@ -38,7 +38,7 @@ const statsData = [
   },
 ];
 
-export const researchData: MarketResearch[] = [
+export const researchData: Survey[] = [
   {
     id: "PF-2025-0050",
     title: "Dermatology Product Feedback",
@@ -46,7 +46,16 @@ export const researchData: MarketResearch[] = [
       "We want to understand your experience and preferences regarding our website/app, include",
     category: "Product Feedback",
     startDate: "01-May-2025",
-    respondents: 500,
+    audience: {
+      respondents: 500,
+      age: [],
+      location: [],
+      gender: [],
+      skin: [],
+      concern: [],
+      skinType: [],
+    },
+    questions: [],
     cost: "₹15k",
     status: "active",
   },
@@ -57,7 +66,16 @@ export const researchData: MarketResearch[] = [
       "We want to understand your experience and preferences regarding our website/app, include",
     category: "Brand Perception",
     startDate: "06-May-2025",
-    respondents: 250,
+    audience: {
+      respondents: 250,
+      age: [],
+      location: [],
+      gender: [],
+      skin: [],
+      concern: [],
+      skinType: [],
+    },
+    questions: [],
     cost: "₹7.5k",
     status: "draft",
   },
@@ -68,7 +86,16 @@ export const researchData: MarketResearch[] = [
       "We want to understand your experience and preferences regarding our website/app, include",
     category: "Market Trends",
     startDate: "01-Apr-2025",
-    respondents: "895/1,000",
+    audience: {
+      respondents: "895/1,000",
+      age: [],
+      location: [],
+      gender: [],
+      skin: [],
+      concern: [],
+      skinType: [],
+    },
+    questions: [],
     cost: "25k/₹30k",
     status: "closed",
   },
@@ -79,7 +106,16 @@ export const researchData: MarketResearch[] = [
       "We want to understand your experience and preferences regarding our website/app, include",
     category: "Other",
     startDate: "23-May-2025",
-    respondents: 500,
+    audience: {
+      respondents: 500,
+      age: [],
+      location: [],
+      gender: [],
+      skin: [],
+      concern: [],
+      skinType: [],
+    },
+    questions: [],
     cost: "₹15k",
     status: "active",
   },
@@ -90,7 +126,16 @@ export const researchData: MarketResearch[] = [
       "We want to understand your experience and preferences regarding our website/app, include",
     category: "Product Feedback",
     startDate: "22-May-2025",
-    respondents: 500,
+    audience: {
+      respondents: 500,
+      age: [],
+      location: [],
+      gender: [],
+      skin: [],
+      concern: [],
+      skinType: [],
+    },
+    questions: [],
     cost: "₹15k",
     status: "draft",
   },
@@ -101,13 +146,22 @@ export const researchData: MarketResearch[] = [
       "We want to understand your experience and preferences regarding our website/app, include",
     category: "Product Feedback",
     startDate: "24-Apr-2025",
-    respondents: 500,
+    audience: {
+      respondents: 500,
+      age: [],
+      location: [],
+      gender: [],
+      skin: [],
+      concern: [],
+      skinType: [],
+    },
+    questions: [],
     cost: "₹15k",
     status: "active",
   },
 ];
 
-const columns: ColumnDef<MarketResearch>[] = [
+const columns: ColumnDef<Survey>[] = [
   {
     accessorKey: "title",
     header: "Title",
@@ -126,6 +180,9 @@ const columns: ColumnDef<MarketResearch>[] = [
   {
     accessorKey: "respondents",
     header: "Respondents",
+    cell: ({ row }) => {
+      return row.original.audience.respondents;
+    },
   },
   {
     accessorKey: "cost",
@@ -145,11 +202,15 @@ const columns: ColumnDef<MarketResearch>[] = [
     header: "Action",
     id: "actions",
     enableHiding: false,
-    cell: () => {
+    cell: ({ row }) => {
       return (
-        <Button variant="ghost" size="icon">
-          <span className="sr-only">Open Survey Details</span>
-          <EyeIcon />
+        <Button variant="ghost" size="icon" asChild>
+          <NavLink
+            to={`${DASHBOARD_ROUTES.marketResearchEdit}/${row.original.id}`}
+          >
+            <span className="sr-only">Open Survey Details</span>
+            <EyeIcon />
+          </NavLink>
         </Button>
       );
     },
@@ -170,7 +231,9 @@ const MarketResearchList = () => {
               mode="range"
             />
             <Button color={"primary"} asChild>
-              <NavLink to={DASHBOARD_ROUTES.addBrand}>Add Research</NavLink>
+              <NavLink to={DASHBOARD_ROUTES.marketResearchAdd}>
+                Add Research
+              </NavLink>
             </Button>
           </div>
         ),
@@ -199,9 +262,9 @@ const MarketResearchList = () => {
   );
 };
 
-function Card({ research }: { research: MarketResearch }) {
+function Card({ research }: { research: Survey }) {
   return (
-    <NavLink to={"/"}>
+    <NavLink to={`${DASHBOARD_ROUTES.marketResearchEdit}/${research.id}`}>
       <article className="bg-card w-full rounded-xl p-5 shadow-md transition hover:shadow-md">
         <div className="text-muted-foreground mb-2 text-sm">{research.id}</div>
         <h3 className="text-lg leading-snug font-semibold text-gray-900">
@@ -218,7 +281,7 @@ function Card({ research }: { research: MarketResearch }) {
           </div>
           <div className="text-center">
             <div className="text-muted-foreground text-sm">Start Date</div>
-            <div className="font-medium">{research.startDate}</div>
+            <div className="font-medium">{String(research.startDate)}</div>
           </div>
         </div>
 
@@ -227,7 +290,7 @@ function Card({ research }: { research: MarketResearch }) {
         <div className="mt-4 grid grid-cols-3">
           <div className="text-center">
             <div className="text-muted-foreground text-sm">Respondents</div>
-            <div className="font-medium">{research.respondents}</div>
+            <div className="font-medium">{research.audience.respondents}</div>
           </div>
           <div className="text-center">
             <div className="text-muted-foreground text-sm">Cost</div>

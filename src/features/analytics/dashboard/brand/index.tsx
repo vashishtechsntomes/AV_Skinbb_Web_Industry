@@ -90,7 +90,7 @@ and performance`,
 
               <ToggleGroup
                 type="single"
-                variant={"outline"}
+                variant={"outlined"}
                 size={"lg"}
                 className="bg-card h-10"
                 value={pathname}
@@ -314,7 +314,7 @@ interface StatChartProps extends ComponentProps<"div"> {
   value?: string;
   change?: number;
   children?: ReactNode;
-  contentProps?: React.ComponentProps<"div">;
+  contentProps?: ComponentProps<"div">;
   statValueProps?: StatValueProps;
 }
 

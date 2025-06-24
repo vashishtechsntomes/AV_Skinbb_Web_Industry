@@ -56,24 +56,21 @@ export const dashboardRoutes: RouteObject[] = [
       },
       {
         path: DASHBOARD_ROUTES.marketResearch,
-        children: [
-          {
-            index: true,
-            Component: lazy(() => import("@/features/market-research/market-research-list")),
-          },
-          // {
-          //   path: DASHBOARD_ROUTES.marketResearchAdd.slice(1),
-          //   Component: lazy(
-          //     () => import("@/features/market-research/"),
-          //   ),
-          // },
-          // {
-          //   path: DASHBOARD_ROUTES.marketResearchEdit.slice(1),
-          //   Component: lazy(
-          //     () => import("@/features/market-research"),
-          //   ),
-          // },
-        ],
+        Component: lazy(
+          () => import("@/features/market-research/market-research-list"),
+        ),
+      },
+      {
+        path: DASHBOARD_ROUTES.marketResearchAdd,
+        Component: lazy(
+          () => import("@/features/market-research/market-research-create"),
+        ),
+      },
+      {
+        path: `${DASHBOARD_ROUTES.marketResearchEdit}/:id`,
+        Component: lazy(
+          () => import("@/features/market-research/market-research-create"),
+        ),
       },
     ],
   },

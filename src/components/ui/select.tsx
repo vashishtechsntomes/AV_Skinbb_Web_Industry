@@ -105,7 +105,7 @@ function SelectTrigger({
 
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="size-4 opacity-50" />
+        <ChevronDownIcon className="size-5 opacity-50" />
       </SelectPrimitive.Icon>
       {endIcon && React.isValidElement(endIcon)
         ? React.cloneElement(endIcon, {

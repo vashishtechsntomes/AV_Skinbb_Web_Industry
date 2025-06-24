@@ -32,3 +32,15 @@ export const PERSONAL_CARE_DATA = {
     concerns: ["Dandruff", "Sensitive Scalp"],
   },
 };
+
+export const MASTER_DATA = {
+  location: ["Metro", "Tier 1", "Tier 2"],
+  gender: ["Male", "Female"],
+  ageGroup: ["18-24", "25-32", "33-40", "41-50", "51+"],
+};
+
+export const SURVEY = {
+  MAX_QUESTIONS: 5,
+  MAX_OPTIONS: 7,
+  INPUT_TYPES: ["yes/no", "multiple choice", "single choice"],
+};

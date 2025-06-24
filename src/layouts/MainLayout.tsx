@@ -14,7 +14,7 @@ const MainLayout = ({ children }: { children?: ReactNode }) => {
   return (
     <div className="bg-background flex min-h-screen flex-1 flex-row">
       <Sidebar />
-      <main className="w-full flex-1 overflow-x-hidden">
+      <main className="w-full flex-1">
         <header className="header-main sticky1 bg-background top-0">
           <div
             className={cn(

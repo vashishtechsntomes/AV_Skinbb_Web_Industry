@@ -1,0 +1,348 @@
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import * as SliderPrimitive from "@radix-ui/react-slider";
+import * as React from "react";
+import {
+  useFormContext,
+  type Control,
+  type ControllerFieldState,
+  type ControllerRenderProps,
+  type FieldPath,
+  type FieldPathValue,
+  type FieldValues,
+  type RegisterOptions,
+  type UseFormStateReturn,
+} from "react-hook-form";
+
+import { cn } from "@/utils/index";
+import type { Mode } from "react-day-picker";
+import { Checkbox } from "./checkbox";
+import { DatePicker, type DatePickerProps } from "./date-picker";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./form";
+import { Input, type InputProps } from "./input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  type SelectTriggerProps,
+} from "./select";
+import { Textarea, type TextareaProps } from "./textarea";
+import { Slider } from "./slider";
+
+const INPUT_TYPES = {
+  TEXT: "text",
+  TEXTAREA: "textarea",
+  CHECKBOX: "checkbox",
+  PASSWORD: "password",
+  FILE: "file",
+  SELECT: "select",
+  DATEPICKER: "datepicker",
+  SLIDER: "slider",
+  CUSTOM: "custom",
+} as const;
+
+type TransformType<TF, TI, TE = React.ChangeEvent<HTMLInputElement>> = {
+  input: (value: TF) => TI;
+  output: (event: TE) => TF;
+};
+
+interface BaseInputProps<
+  T extends FieldValues,
+  N extends FieldPath<T>,
+  TF = FieldPathValue<T, N>,
+  TI = TF,
+> extends React.ComponentProps<"div"> {
+  control: Control<T>;
+  name: N;
+  label?: string;
+  description?: string;
+  placeholder?: string;
+  rules?: RegisterOptions<T, N>;
+  formControlProps?: React.HTMLAttributes<HTMLDivElement>;
+  disabled?: boolean;
+  readOnly?: boolean;
+  transform?: TransformType<TF, TI>;
+}
+
+type StandardInputProps = InputProps &
+  TextareaProps &
+  React.ComponentProps<typeof CheckboxPrimitive.Root>;
+
+export type SelectOption = { value: string; label: string };
+type SelectProps<
+  T extends FieldValues,
+  N extends FieldPath<T>,
+> = BaseInputProps<T, N> & {
+  type: typeof INPUT_TYPES.SELECT;
+  options: SelectOption[];
+  inputProps?: SelectTriggerProps;
+};
+
+type SliderProps<
+  T extends FieldValues,
+  N extends FieldPath<T>,
+> = BaseInputProps<T, N> & {
+  type: typeof INPUT_TYPES.SLIDER;
+  inputProps?: React.ComponentProps<typeof SliderPrimitive.Root>;
+};
+type NonSelectProps<
+  T extends FieldValues,
+  N extends FieldPath<T>,
+> = BaseInputProps<T, N> & {
+  type:
+    | typeof INPUT_TYPES.TEXT
+    | typeof INPUT_TYPES.TEXTAREA
+    | typeof INPUT_TYPES.CHECKBOX
+    | typeof INPUT_TYPES.PASSWORD
+    | typeof INPUT_TYPES.FILE;
+  inputProps?: StandardInputProps;
+};
+
+type DatePickerBaseProps<
+  T extends FieldValues,
+  N extends FieldPath<T>,
+> = BaseInputProps<T, N> & {
+  type: typeof INPUT_TYPES.DATEPICKER;
+  inputProps?: DatePickerProps;
+  mode: Mode;
+};
+
+// Custom element props
+type CustomProps<
+  T extends FieldValues,
+  N extends FieldPath<T>,
+> = BaseInputProps<T, N> & {
+  type: "custom";
+  render: (args: {
+    field: ControllerRenderProps<T, N>;
+    fieldState: ControllerFieldState;
+    formState: UseFormStateReturn<T>;
+  }) => React.ReactNode;
+  inputProps?: never;
+};
+
+export type FormInputProps<T extends FieldValues, N extends FieldPath<T>> =
+  | SelectProps<T, N>
+  | NonSelectProps<T, N>
+  | CustomProps<T, N>
+  | SliderProps<T, N>
+  | DatePickerBaseProps<T, N>;
+
+export type FormFieldConfig<T extends FieldValues> =
+  | Omit<SelectProps<T, FieldPath<T>>, "control">
+  | Omit<NonSelectProps<T, FieldPath<T>>, "control">
+  | Omit<CustomProps<T, FieldPath<T>>, "control">
+  | Omit<DatePickerBaseProps<T, FieldPath<T>>, "control">
+  | Omit<SliderProps<T, FieldPath<T>>, "control">;
+
+function FormInput<T extends FieldValues, N extends FieldPath<T>>(
+  props: FormInputProps<T, N>,
+) {
+  const inputId = React.useId();
+  const {
+    control,
+    name,
+    type = INPUT_TYPES.TEXT,
+    label = "",
+    description = "",
+    placeholder = "",
+    rules,
+    formControlProps,
+    inputProps,
+    className,
+    disabled,
+    transform,
+    readOnly,
+    ...rest
+  } = props ?? {};
+
+  const formItemPropsClass = cn(
+    type === "checkbox" && "flex items-center flex-row-reverse justify-end",
+    className,
+  );
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      rules={rules}
+      render={({ field, formState, fieldState }) => (
+        <FormItem className={formItemPropsClass} {...rest}>
+          {label && <FormLabel htmlFor={inputId}>{label}</FormLabel>}
+          <InputRenderer
+            {...props}
+            field={field}
+            fieldState={fieldState}
+            formState={formState}
+            inputId={inputId}
+          />
+          {description && <FormDescription>{description}</FormDescription>}
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function InputRenderer({
+  type,
+  field,
+  fieldState,
+  formState,
+  inputId,
+  inputProps,
+  placeholder,
+  disabled,
+  readOnly,
+  formControlProps,
+  transform,
+  options,
+  render,
+  mode,
+  name,
+}: any) {
+  const { setValue } = useFormContext();
+
+  const rawValue = inputProps?.value ?? field.value;
+  const value = transform ? transform.input(rawValue) : rawValue;
+
+  switch (type) {
+    case INPUT_TYPES.TEXTAREA:
+      return (
+        <FormControl {...formControlProps}>
+          <Textarea
+            id={inputId}
+            placeholder={placeholder}
+            disabled={disabled}
+            readOnly={readOnly}
+            {...field}
+            value={typeof value === "string" ? value : ""}
+            onChange={(e) => {
+              field.onChange(transform ? transform.output(e) : e.target.value);
+            }}
+            {...inputProps}
+          />
+        </FormControl>
+      );
+
+    case INPUT_TYPES.CHECKBOX:
+      return (
+        <FormControl {...formControlProps}>
+          <Checkbox
+            checked={!!value}
+            onCheckedChange={(checked) =>
+              field.onChange(transform ? transform.output(checked) : checked)
+            }
+            id={inputId}
+            disabled={disabled}
+            readOnly={readOnly}
+            {...field}
+            {...inputProps}
+          />
+        </FormControl>
+      );
+    case INPUT_TYPES.SLIDER:
+      return (
+        <FormControl {...formControlProps}>
+          <Slider
+            id={inputId}
+            {...field}
+            disabled={disabled}
+            step={50}
+            max={300}
+            value={[value]}
+            onValueChange={(e) => {
+              field.onChange(transform ? transform.output(e[0]) : String(e[0]));
+            }}
+            {...inputProps}
+          />
+        </FormControl>
+      );
+
+    case INPUT_TYPES.SELECT:
+      return (
+        <FormControl {...formControlProps}>
+          <Select
+            value={value}
+            disabled={disabled}
+            onValueChange={(val) =>
+              field.onChange(transform ? transform.output(val) : val)
+            }
+            {...field}
+          >
+            <FormControl>
+              <SelectTrigger {...inputProps}>
+                <SelectValue placeholder={placeholder}></SelectValue>
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              {options?.map((option: SelectOption) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </FormControl>
+      );
+
+    case INPUT_TYPES.DATEPICKER:
+      return (
+        <DatePicker
+          {...inputProps}
+          {...field}
+          mode={mode}
+          value={value ? new Date(value) : null}
+          placeholder={placeholder}
+          disabled={disabled}
+          onChange={(date) =>
+            field.onChange(
+              transform ? transform.output(date) : date?.toISOString(),
+            )
+          }
+          aria-invalid={!!formState.errors[name]}
+        />
+      );
+
+    case INPUT_TYPES.CUSTOM:
+      return render ? render({ field, fieldState, formState }) : null;
+
+    default:
+      return (
+        <FormControl {...formControlProps}>
+          <Input
+            id={inputId}
+            placeholder={placeholder}
+            type={type}
+            disabled={disabled}
+            readOnly={readOnly}
+            {...field}
+            value={
+              typeof value === "string" || typeof value === "number"
+                ? value
+                : ""
+            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              //   if (inputProps?.onChange) inputProps.onChange(e);
+
+              field.onChange(transform ? transform.output(e) : e.target.value);
+
+              if (type === INPUT_TYPES.FILE) {
+                setValue(`${String(name)}_files`, e.target?.files);
+              }
+            }}
+            {...inputProps}
+          />
+        </FormControl>
+      );
+  }
+}
+export { FormInput, INPUT_TYPES };

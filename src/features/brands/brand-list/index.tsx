@@ -224,7 +224,6 @@ const BrandList = () => {
       </section>
 
       <DataTableToogle
-      
         rows={brandData}
         columns={columns}
         gridProps={{

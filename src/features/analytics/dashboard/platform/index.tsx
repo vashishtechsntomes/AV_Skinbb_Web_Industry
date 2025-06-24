@@ -16,6 +16,7 @@ import {
   type ResponsiveContainerProps,
 } from "recharts";
 
+import { BlobIcon, Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
@@ -24,20 +25,18 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import { PageContent } from "@/components/ui/structure";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
 import { cn } from "@/utils";
-import { useContext, useState, type ComponentProps } from "react";
-import { AnalysisContext } from "..";
-import { AnalyticsFilterForm } from "./AnalyticsFilterForm";
 import {
-  UserIcon,
   CalendarDaysIcon,
   FunnelIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
-import { BlobIcon, Button } from "@/components/ui/button";
-import { PageContent } from "@/components/ui/structure";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useState, type ComponentProps } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { AnalyticsFilterForm } from "./AnalyticsFilterForm";
 
 const genderData = [
   { key: "male", value: 275, fill: "var(--chart-1)" },
@@ -245,7 +244,7 @@ and performance`,
 
             <ToggleGroup
               type="single"
-              variant={"outline"}
+              variant={"outlined"}
               size={"lg"}
               className="bg-card h-10"
               value={pathname}

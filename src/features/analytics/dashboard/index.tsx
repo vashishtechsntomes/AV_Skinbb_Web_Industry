@@ -1,15 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { PageContent } from "@/components/ui/structure";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
-import { FunnelIcon } from "@heroicons/react/24/outline";
 import {
   createContext,
   useState,
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router";
+import { Outlet } from "react-router";
 
 export const AnalysisContext = createContext<{
   isFilter: boolean;
@@ -20,8 +15,8 @@ export const AnalysisContext = createContext<{
 
 const AnalyticsDashboard = () => {
   const [isFilter, setIsFilter] = useState<boolean>(false);
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
+  // const { pathname } = useLocation();
+  // const navigate = useNavigate();
   return (
     <AnalysisContext value={{ isFilter, setIsFilter }}>
       {/* <PageContent
@@ -77,7 +72,7 @@ and performance`,
           ),
         }}
       > */}
-        <Outlet />
+      <Outlet />
       {/* </PageContent> */}
     </AnalysisContext>
   );
