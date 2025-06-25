@@ -44,7 +44,7 @@ function SurveyQuestions({ control }: SurveyQuestionsProps<SurveySchema>) {
           </p>
         </div>
         <p className="text-foreground ml-auto text-xl font-medium">
-          {fields.length}/${SURVEY.MAX_QUESTIONS} Questions
+          {fields.length}/{SURVEY.MAX_QUESTIONS} Questions
         </p>
       </div>
       {fields.map((field, index) => {

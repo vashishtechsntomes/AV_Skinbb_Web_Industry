@@ -9,6 +9,7 @@ import {
   type FieldPath,
   type FieldPathValue,
   type FieldValues,
+  type PathValue,
   type RegisterOptions,
   type UseFormStateReturn,
 } from "react-hook-form";
@@ -34,8 +35,8 @@ import {
   SelectValue,
   type SelectTriggerProps,
 } from "./select";
-import { Textarea, type TextareaProps } from "./textarea";
 import { Slider } from "./slider";
+import { Textarea, type TextareaProps } from "./textarea";
 
 const INPUT_TYPES = {
   TEXT: "text",
@@ -49,9 +50,17 @@ const INPUT_TYPES = {
   CUSTOM: "custom",
 } as const;
 
-type TransformType<TF, TI, TE = React.ChangeEvent<HTMLInputElement>> = {
+type TransformType<
+  TF,
+  TI,
+  // TE =
+  //   | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  //   | CheckboxPrimitive.CheckedState
+  //   | number
+  //   | string,
+> = {
   input: (value: TF) => TI;
-  output: (event: TE) => TF;
+  output: (event: unknown) => TF;
 };
 
 interface BaseInputProps<
@@ -153,14 +162,14 @@ function FormInput<T extends FieldValues, N extends FieldPath<T>>(
     type = INPUT_TYPES.TEXT,
     label = "",
     description = "",
-    placeholder = "",
+    // placeholder = "",
     rules,
-    formControlProps,
-    inputProps,
+    // formControlProps,
+    // inputProps,
     className,
-    disabled,
-    transform,
-    readOnly,
+    // disabled,
+    // transform,
+    // readOnly,
     ...rest
   } = props ?? {};
 
@@ -192,7 +201,14 @@ function FormInput<T extends FieldValues, N extends FieldPath<T>>(
   );
 }
 
-export function InputRenderer({
+type InputRendererProps<T extends FieldValues, N extends FieldPath<T>> = {
+  field: ControllerRenderProps<T, N>;
+  fieldState: ControllerFieldState;
+  formState: UseFormStateReturn<T>;
+  inputId: string;
+} & FormInputProps<T, N>;
+
+export function InputRenderer<T extends FieldValues, N extends FieldPath<T>>({
   type,
   field,
   fieldState,
@@ -204,14 +220,15 @@ export function InputRenderer({
   readOnly,
   formControlProps,
   transform,
-  options,
-  render,
-  mode,
+  // options,
+  // render,
+  // mode,
   name,
-}: any) {
+  ...props
+}: InputRendererProps<T, N>) {
   const { setValue } = useFormContext();
 
-  const rawValue = inputProps?.value ?? field.value;
+  const rawValue = (inputProps?.value ?? field.value) as PathValue<T, N>;
   const value = transform ? transform.input(rawValue) : rawValue;
 
   switch (type) {
@@ -267,16 +284,16 @@ export function InputRenderer({
         </FormControl>
       );
 
-    case INPUT_TYPES.SELECT:
+    case INPUT_TYPES.SELECT: {
       return (
         <FormControl {...formControlProps}>
           <Select
+            {...field}
             value={value}
             disabled={disabled}
             onValueChange={(val) =>
               field.onChange(transform ? transform.output(val) : val)
             }
-            {...field}
           >
             <FormControl>
               <SelectTrigger {...inputProps}>
@@ -284,36 +301,39 @@ export function InputRenderer({
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {options?.map((option: SelectOption) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
+              {"options" in props &&
+                props?.options?.map((option: SelectOption) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
         </FormControl>
       );
+    }
 
-    case INPUT_TYPES.DATEPICKER:
+    case INPUT_TYPES.DATEPICKER: {
       return (
         <DatePicker
           {...inputProps}
           {...field}
-          mode={mode}
-          value={value ? new Date(value) : null}
+          mode={"mode" in props ? props.mode : "single"}
+          value={value ? value : undefined}
           placeholder={placeholder}
           disabled={disabled}
-          onChange={(date) =>
-            field.onChange(
-              transform ? transform.output(date) : date?.toISOString(),
-            )
-          }
+          onChange={(date) => {
+            return field.onChange(transform ? transform.output(date) : date);
+          }}
           aria-invalid={!!formState.errors[name]}
         />
       );
+    }
 
     case INPUT_TYPES.CUSTOM:
-      return render ? render({ field, fieldState, formState }) : null;
+      return "render" in props
+        ? props.render({ field, fieldState, formState })
+        : null;
 
     default:
       return (

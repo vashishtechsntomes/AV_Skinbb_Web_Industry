@@ -6,7 +6,7 @@ import { PageContent } from "@/components/ui/structure";
 import { DataTableToogle } from "@/components/ui/table/data-table";
 import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
 import type { Survey } from "@/types/research.type";
-import { formatCurrency } from "@/utils";
+import { formatCurrency, formatDate } from "@/utils";
 import { CalendarDateRangeIcon, EyeIcon } from "@heroicons/react/24/outline";
 import type { ColumnDef } from "@tanstack/react-table";
 import { NavLink } from "react-router";
@@ -197,6 +197,10 @@ const columns: ColumnDef<Survey>[] = [
   {
     accessorKey: "startDate",
     header: "Start Date",
+    cell: ({ row }) => {
+      const startDate = row.getValue("startDate") as string;
+      return formatDate(startDate);
+    },
   },
   {
     header: "Action",
@@ -281,7 +285,7 @@ function Card({ research }: { research: Survey }) {
           </div>
           <div className="text-center">
             <div className="text-muted-foreground text-sm">Start Date</div>
-            <div className="font-medium">{String(research.startDate)}</div>
+            <div className="font-medium">{formatDate(research.startDate)}</div>
           </div>
         </div>
 

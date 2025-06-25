@@ -2,8 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { PageContent } from "@/components/ui/structure";
 import { MASTER_DATA } from "@/config/constants";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  DocumentIcon,
+} from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router";
 import ResearchStepper from "./ResearchStepper";
@@ -19,8 +24,11 @@ import {
   type SurveySchema,
 } from "./survey.data";
 
+import { ConfirmationDialog } from "@/components/ui/alert-dialog";
+
 const MarketResearchCreate = () => {
   const { id } = useParams();
+  const [confirmation, setConfirmation] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<SurveyStep>(SurveyStep.BASICS);
 
   const form = useForm<SurveySchema>({
@@ -86,7 +94,9 @@ const MarketResearchCreate = () => {
 
   const { control, handleSubmit, trigger } = form;
 
-  const onNext = async () => {
+  const onNext = async (e: MouseEvent<HTMLButtonElement>) => {
+    // e.stopPropagation();
+    e.preventDefault();
     const fieldsToValidate = STEP_VALIDATION_FIELDS[currentStep];
     const isValid = await trigger(fieldsToValidate);
 
@@ -114,6 +124,7 @@ const MarketResearchCreate = () => {
 
   const onSubmit = (data: unknown) => {
     console.log("Final Submit:", data);
+    setConfirmation((val) => !val);
   };
 
   const renderStepContent = () => {
@@ -158,20 +169,46 @@ const MarketResearchCreate = () => {
                 className="bg-background"
                 type="button"
                 onClick={onBack}
+                startIcon={<ArrowLeftIcon />}
               >
                 Back
               </Button>
             )}
             {currentStep < SurveyStep.REVIEW ? (
-              <Button color="primary" type="button" onClick={onNext}>
+              <Button
+                color="primary"
+                type="button"
+                endIcon={<ArrowRightIcon />}
+                onClick={onNext}
+              >
                 Next
               </Button>
             ) : (
-              <Button color="primary" type="submit">
+              <Button
+                color="primary"
+                type="submit"
+                startIcon={<DocumentIcon />}
+              >
                 Submit
               </Button>
             )}
           </div>
+
+          <ConfirmationDialog
+            isOpen={confirmation}
+            onClose={() => setConfirmation(false)}
+            title="Confirm Action"
+            description="Are you sure you want to perform this action?"
+            actionButtons={[
+              {
+                label: "Confirm",
+                onClick: () => setConfirmation(false),
+                color: "primary",
+              },
+            ]}
+            showCancel={true}
+            cancelText="Back"
+          />
         </form>
       </Form>
     </PageContent>

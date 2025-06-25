@@ -288,12 +288,14 @@ export function DataGridView<TData>({
   className,
   ...props
 }: DataGridViewProps<TData>) {
+  const rowModel = table.getRowModel();
+
   const memoizedItems = useMemo(
     () =>
       renderGridItem
-        ? table.getRowModel().rows.map((row) => renderGridItem(row.original))
+        ? rowModel.rows.map((row) => renderGridItem(row.original))
         : [],
-    [table.getRowModel(), renderGridItem, table],
+    [rowModel, renderGridItem],
   );
 
   if (!renderGridItem) return <>Please provide grid layout</>;

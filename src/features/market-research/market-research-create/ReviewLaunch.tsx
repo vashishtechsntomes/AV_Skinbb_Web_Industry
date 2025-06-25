@@ -18,6 +18,7 @@ import {
   type FieldValues,
 } from "react-hook-form";
 import type { SurveySchema } from "./survey.data";
+import { formatDate } from "@/utils";
 
 interface ReviewLaunchProps<T extends FieldValues> {
   control: Control<T>;
@@ -58,7 +59,9 @@ function ReviewLaunch({ setCurrentStep }: ReviewLaunchProps<SurveySchema>) {
               </div>
               <div className="flex gap-2">
                 <p>Start Date: :</p>
-                <p className="text-foreground font-medium">{startDate}</p>
+                <p className="text-foreground font-medium">
+                  {formatDate(startDate)}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -87,16 +90,16 @@ function ReviewLaunch({ setCurrentStep }: ReviewLaunchProps<SurveySchema>) {
                     <p className="text-foreground font-medium">
                       {question.text} ({question.type} )
                     </p>
-                    {question.description && (
+                    {question?.description && (
                       <p className="my-1">
                         Description: {question.description}
                       </p>
                     )}
-                    {!!question.options.length && (
+                    {!!question?.options.length && (
                       <div className="mt-3 flex justify-between gap-2">
                         <div className="flex gap-2">
                           <p>Options:</p>
-                          {question.options.map((item) => (
+                          {question?.options?.map((item) => (
                             <Badge
                               key={item}
                               variant={"outline"}
@@ -110,7 +113,7 @@ function ReviewLaunch({ setCurrentStep }: ReviewLaunchProps<SurveySchema>) {
                     )}
                   </div>
                 </div>
-                {questions.length - 1 !== index && <hr />}
+                {questions?.length - 1 !== index && <hr />}
               </Fragment>
             ))}
           </CardContent>
@@ -147,7 +150,7 @@ function ReviewLaunch({ setCurrentStep }: ReviewLaunchProps<SurveySchema>) {
               <StatValue
                 title="Estimated Completion Date"
                 note="Available Respondents"
-                value={"03-May-25"}
+                value={formatDate("03-May-25")}
                 valueProps={{ className: "text-3xl" }}
               />
               <BlobIcon size="md" icon={<CalendarDaysIcon strokeWidth={1} />} />

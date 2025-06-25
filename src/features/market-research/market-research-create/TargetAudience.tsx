@@ -13,7 +13,7 @@ import {
   CalendarDaysIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, type ComponentProps } from "react";
+import { useEffect, useMemo, type ComponentProps } from "react";
 import {
   useFormContext,
   type Control,
@@ -28,36 +28,72 @@ interface TargetAudienceProps<T extends FieldValues> {
 
 function TargetAudience({ control }: TargetAudienceProps<SurveySchema>) {
   const { watch, setValue } = useFormContext();
-  const selectedCategories: (keyof typeof PERSONAL_CARE_DATA)[] =
-    watch("audience.skin") ?? [];
 
-  const selectedRespondents = watch("audience.respondents") ?? [];
+  // Extract watch calls to variables to simplify dependency arrays
+  const skinValue = watch("audience.skin");
+  const respondentsValue = watch("audience.respondents");
+  const concernValue = watch("audience.concern");
+  const skinTypeValue = watch("audience.skinType");
 
-  const allConcerns = selectedCategories
-    .flatMap((item) => PERSONAL_CARE_DATA[item]?.concerns || [])
-    .filter(Boolean);
+  const selectedCategories: (keyof typeof PERSONAL_CARE_DATA)[] = useMemo(
+    () => skinValue ?? [],
+    [skinValue],
+  );
 
-  const allTypes = selectedCategories
-    .flatMap((item) => PERSONAL_CARE_DATA[item]?.types || [])
-    .filter(Boolean);
+  const selectedRespondents: (keyof typeof PERSONAL_CARE_DATA)[] = useMemo(
+    () => respondentsValue ?? [],
+    [respondentsValue],
+  );
 
-  const selectedConcerns: string[] = watch("audience.concern") ?? [];
-  const selectedTypes: string[] = watch("audience.skinType") ?? [];
+  const allConcerns = useMemo(
+    () =>
+      selectedCategories
+        .flatMap((item) => PERSONAL_CARE_DATA[item]?.concerns || [])
+        .filter(Boolean),
+    [selectedCategories],
+  );
+
+  const allTypes = useMemo(
+    () =>
+      selectedCategories
+        .flatMap((item) => PERSONAL_CARE_DATA[item]?.types || [])
+        .filter(Boolean),
+    [selectedCategories],
+  );
+
+  const selectedConcerns = useMemo(() => concernValue ?? [], [concernValue]);
+  const selectedTypes = useMemo(() => skinTypeValue ?? [], [skinTypeValue]);
 
   // Clean up deselected concerns/types on category change
   useEffect(() => {
-    const filteredConcerns = selectedConcerns.filter((c) =>
-      allConcerns.includes(c),
-    );
-    const filteredTypes = selectedTypes.filter((t) => allTypes.includes(t));
+    // Only run cleanup if we have selected categories and either concerns or types
+    if (
+      selectedCategories.length > 0 &&
+      (selectedConcerns.length > 0 || selectedTypes.length > 0)
+    ) {
+      const filteredConcerns = selectedConcerns.filter((c: string) =>
+        allConcerns.includes(c),
+      );
+      const filteredTypes = selectedTypes.filter((t: string) =>
+        allTypes.includes(t),
+      );
 
-    setValue("audience.concern", filteredConcerns);
-    setValue("audience.skinType", filteredTypes);
+      // Only update if the filtered values are different from current values
+      if (
+        filteredConcerns.length !== selectedConcerns.length ||
+        filteredTypes.length !== selectedTypes.length
+      ) {
+        setValue("audience.concern", filteredConcerns);
+        setValue("audience.skinType", filteredTypes);
+      }
+    }
   }, [
-    selectedCategories.join(","),
-    setValue,
+    selectedCategories,
+    allConcerns,
+    allTypes,
     selectedConcerns,
     selectedTypes,
+    setValue,
   ]);
 
   return (

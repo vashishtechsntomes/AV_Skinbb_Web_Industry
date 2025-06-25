@@ -272,11 +272,7 @@ and performance`,
         ),
       }}
     >
-      {isFilter && (
-        <>
-          <AnalyticsFilterForm onSubmit={onSubmit} />
-        </>
-      )}
+      {isFilter && <AnalyticsFilterForm onSubmit={onSubmit} />}
 
       <div className="grid gap-2 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
         {statsData.map((item) => (
