@@ -10,7 +10,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, type MouseEvent } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import ResearchStepper from "./ResearchStepper";
 import ReviewLaunch from "./ReviewLaunch";
 import SurveyBasics from "./SurveyBasics";
@@ -25,9 +25,12 @@ import {
 } from "./survey.data";
 
 import { ConfirmationDialog } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
 
 const MarketResearchCreate = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [confirmation, setConfirmation] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<SurveyStep>(SurveyStep.BASICS);
 
@@ -82,7 +85,6 @@ const MarketResearchCreate = () => {
       audience: {
         location: [...MASTER_DATA.location],
         gender: [],
-        // interests: [],
         respondents: "",
         skin: [],
         concern: [],
@@ -125,6 +127,14 @@ const MarketResearchCreate = () => {
   const onSubmit = (data: unknown) => {
     console.log("Final Submit:", data);
     setConfirmation((val) => !val);
+  };
+
+  const onConfirm = () => {
+    setConfirmation(false);
+    toast.success(`Brand is saved successfully!`);
+    setTimeout(() => {
+      navigate(DASHBOARD_ROUTES.marketResearch);
+    }, 1000);
   };
 
   const renderStepContent = () => {
@@ -202,7 +212,7 @@ const MarketResearchCreate = () => {
             actionButtons={[
               {
                 label: "Confirm",
-                onClick: () => setConfirmation(false),
+                onClick: onConfirm,
                 color: "primary",
               },
             ]}
