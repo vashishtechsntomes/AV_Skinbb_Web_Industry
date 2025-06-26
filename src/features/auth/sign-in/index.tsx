@@ -1,8 +1,8 @@
 import logo from "@/assets/images/logo-white.png";
 import { Button } from "@/components/ui/button";
-import { Form, FormInput } from "@/components/ui/form";
-import { AUTH_ROUTES } from "@/routes/auth.routes";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
+import { Form } from "@/components/ui/form";
+import { FormInput } from "@/components/ui/form-input";
+import { ROUTES } from "@/routes/routes.constant";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router";
@@ -31,7 +31,7 @@ const SignIn = () => {
 
   function onSubmit(values: FormType) {
     console.log(values);
-    navigate(DASHBOARD_ROUTES.dashboard);
+    navigate(ROUTES.DASHBOARD);
   }
   return (
     <Form {...form}>
@@ -116,7 +116,7 @@ const SignIn = () => {
             />
 
             <NavLink
-              to={AUTH_ROUTES.FORGOT_PASSWORD}
+              to={ROUTES.FORGOT_PASSWORD}
               className="flex items-center gap-3"
             >
               Forgot password

@@ -46,6 +46,10 @@ reset: clean
 	rm -rf package-lock.json
 	make install
 
+fix: 
+	make format
+	make lint-fix
+
 # Run all code quality checks (typecheck, lint, format check)
 check:
 	make typecheck

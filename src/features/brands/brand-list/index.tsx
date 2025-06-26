@@ -9,7 +9,7 @@ import { EyeIcon } from "@heroicons/react/24/outline";
 import type { ColumnDef } from "@tanstack/react-table";
 import { BrandCard } from "./BrandCard";
 import { NavLink } from "react-router";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
+import { ROUTES } from "@/routes/routes.constant";
 
 const statsData = [
   {
@@ -207,7 +207,7 @@ const BrandList = () => {
         description: "Discover top brands from around the world.",
         actions: (
           <Button color={"primary"} asChild>
-            <NavLink to={DASHBOARD_ROUTES.addBrand}>Add Brand</NavLink>
+            <NavLink to={ROUTES.BRAND_CREATE}>Add Brand</NavLink>
           </Button>
         ),
       }}

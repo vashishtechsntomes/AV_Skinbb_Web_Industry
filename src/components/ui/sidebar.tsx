@@ -12,7 +12,7 @@ import { useTree } from "@headless-tree/react";
 import React, { useEffect, useMemo } from "react";
 import { NavLink, useLocation } from "react-router";
 import { Button } from "./button";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
+import { ROUTES } from "@/routes/routes.constant";
 const INDENT = 32;
 
 // const DASHBOARD_ROUTES = {
@@ -50,7 +50,7 @@ const items: () => Record<string, Item> = () => ({
   },
   dashboard: {
     name: "dashboard",
-    href: DASHBOARD_ROUTES.dashboard,
+    href: ROUTES.DASHBOARD,
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +69,7 @@ const items: () => Record<string, Item> = () => ({
   },
   brands: {
     name: "brands",
-    href: DASHBOARD_ROUTES.brandLists,
+    href: ROUTES.BRAND_LIST,
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +107,7 @@ const items: () => Record<string, Item> = () => ({
   },
   anyDashboard: {
     name: "Dashboard",
-    href: `${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}`,
+    href: `${ROUTES.ANALYTICS_PLATFORM}`,
     current: true,
   },
   "user insight": {

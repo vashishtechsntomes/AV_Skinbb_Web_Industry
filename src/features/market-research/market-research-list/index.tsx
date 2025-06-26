@@ -4,7 +4,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { StatCard } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
 import { DataTableToogle } from "@/components/ui/table/data-table";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
+import { ROUTES } from "@/routes/routes.constant";
 import type { Survey } from "@/types/research.type";
 import { formatCurrency, formatDate } from "@/utils";
 import { CalendarDateRangeIcon, EyeIcon } from "@heroicons/react/24/outline";
@@ -209,9 +209,7 @@ const columns: ColumnDef<Survey>[] = [
     cell: ({ row }) => {
       return (
         <Button variant="ghost" size="icon" asChild>
-          <NavLink
-            to={`${DASHBOARD_ROUTES.marketResearchEdit}/${row.original.id}`}
-          >
+          <NavLink to={`${ROUTES.MARKET_RESEARCH_EDIT}/${row.original.id}`}>
             <span className="sr-only">Open Survey Details</span>
             <EyeIcon />
           </NavLink>
@@ -235,9 +233,7 @@ const MarketResearchList = () => {
               mode="range"
             />
             <Button color={"primary"} asChild>
-              <NavLink to={DASHBOARD_ROUTES.marketResearchAdd}>
-                Add Research
-              </NavLink>
+              <NavLink to={ROUTES.MARKET_RESEARCH_CREATE}>Add Research</NavLink>
             </Button>
           </div>
         ),
@@ -268,7 +264,7 @@ const MarketResearchList = () => {
 
 function Card({ research }: { research: Survey }) {
   return (
-    <NavLink to={`${DASHBOARD_ROUTES.marketResearchEdit}/${research.id}`}>
+    <NavLink to={`${ROUTES.MARKET_RESEARCH_EDIT}/${research.id}`}>
       <article className="bg-card w-full rounded-xl p-5 shadow-md transition hover:shadow-md">
         <div className="text-muted-foreground mb-2 text-sm">{research.id}</div>
         <h3 className="text-lg leading-snug font-semibold text-gray-900">

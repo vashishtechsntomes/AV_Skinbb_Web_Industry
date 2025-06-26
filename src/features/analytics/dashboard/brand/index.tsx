@@ -11,7 +11,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { StatCard, StatValue, type StatValueProps } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
+import { ROUTES } from "@/routes/routes.constant";
 import { cn } from "@/utils";
 import {
   CalendarDateRangeIcon,
@@ -101,14 +101,14 @@ and performance`,
               >
                 <ToggleGroupItem
                   className="aspect-auto h-full flex-auto px-3"
-                  value={`${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}`}
+                  value={`${ROUTES.ANALYTICS_PLATFORM}`}
                   aria-label="Toggle Platform"
                 >
                   Platform
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   className="aspect-auto h-full flex-auto px-3"
-                  value={`${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsBrand}`}
+                  value={`${ROUTES.ANALYTICS_BRAND}`}
                   aria-label="Toggle Brand"
                 >
                   Brand

@@ -2,19 +2,7 @@
 import MainLayout from "@/layouts/MainLayout";
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
-
-export const DASHBOARD_ROUTES = {
-  dashboard: "/",
-  brandLists: "/brands",
-  addBrand: "/brand/create",
-  editBrand: "/brand/edit",
-  analytics: "/analytics",
-  analyticsPlatform: "/platform",
-  analyticsBrand: "/brand",
-  marketResearch: "/market-research",
-  marketResearchAdd: "/market-research/add",
-  marketResearchEdit: "/market-research/edit",
-};
+import { ROUTES } from "./routes.constant";
 
 export const dashboardRoutes: RouteObject[] = [
   {
@@ -25,29 +13,35 @@ export const dashboardRoutes: RouteObject[] = [
         Component: lazy(() => import("@/features/dashboard/index")),
       },
       {
-        path: DASHBOARD_ROUTES.brandLists,
+        path: ROUTES.BRAND_LIST,
         Component: lazy(() => import("@/features/brands/brand-list")),
       },
       {
-        path: DASHBOARD_ROUTES.addBrand,
+        path: ROUTES.BRAND_CREATE,
         Component: lazy(() => import("@/features/brands/brand-form")),
       },
       {
-        path: `${DASHBOARD_ROUTES.editBrand}/:id`,
+        path: `${ROUTES.BRAND_EDIT}/:id`,
         Component: lazy(() => import("@/features/brands/brand-form")),
       },
       {
-        path: DASHBOARD_ROUTES.analytics,
+        path: ROUTES.ANALYTICS_PLATFORM,
         Component: lazy(() => import("@/features/analytics/dashboard")),
         children: [
           {
-            path: DASHBOARD_ROUTES.analyticsPlatform.slice(1),
+            index: true,
             Component: lazy(
               () => import("@/features/analytics/dashboard/platform"),
             ),
           },
+        ],
+      },
+      {
+        path: ROUTES.ANALYTICS_BRAND,
+        Component: lazy(() => import("@/features/analytics/dashboard")),
+        children: [
           {
-            path: DASHBOARD_ROUTES.analyticsBrand.slice(1),
+            index: true,
             Component: lazy(
               () => import("@/features/analytics/dashboard/brand"),
             ),
@@ -55,19 +49,19 @@ export const dashboardRoutes: RouteObject[] = [
         ],
       },
       {
-        path: DASHBOARD_ROUTES.marketResearch,
+        path: ROUTES.MARKET_RESEARCH,
         Component: lazy(
           () => import("@/features/market-research/market-research-list"),
         ),
       },
       {
-        path: DASHBOARD_ROUTES.marketResearchAdd,
+        path: ROUTES.MARKET_RESEARCH_CREATE,
         Component: lazy(
           () => import("@/features/market-research/market-research-create"),
         ),
       },
       {
-        path: `${DASHBOARD_ROUTES.marketResearchEdit}/:id`,
+        path: `${ROUTES.MARKET_RESEARCH_EDIT}/:id`,
         Component: lazy(
           () => import("@/features/market-research/market-research-create"),
         ),

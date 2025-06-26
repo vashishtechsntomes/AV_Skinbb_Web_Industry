@@ -40,6 +40,7 @@ export default defineConfig([
         localStorage: true,
         sessionStorage: true,
         console: true,
+        setTimeout: true,
       },
     },
 
