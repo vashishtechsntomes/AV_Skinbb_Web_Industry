@@ -3,11 +3,13 @@ import { authRoutes } from "./auth.routes";
 import { dashboardRoutes } from "./dashboard.routes";
 import MainLayout from "@/layouts/MainLayout";
 import { PageContent } from "@/components/ui/structure";
+import { dummyRoutes } from "./dummy.routes";
 
 // later you can import dashboardRoutes, brandRoutes, etc.
 export const appRoutes = createBrowserRouter([
   ...dashboardRoutes,
   ...authRoutes,
+  ...dummyRoutes,
   {
     path: "*",
     element: (

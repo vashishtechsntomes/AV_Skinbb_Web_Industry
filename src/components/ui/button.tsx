@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         contained: "bg-background text-foreground hover:bg-foreground/5",
-        outlined: "border border-border shadow-none",
+        outlined: "border border-border shadow-none hover:bg-muted",
         ghost:
           "text-foreground shadow-none hover:bg-accent hover:text-foreground",
         text: "shadow-none cursor-auto hover:text-foreground",

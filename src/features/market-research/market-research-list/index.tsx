@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { StatCard } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
-import { DataTableToogle } from "@/components/ui/table/data-table";
+import { DataTableToogle } from "@/components/table/data-table";
 import { ROUTES } from "@/routes/routes.constant";
 import type { Survey } from "@/types/research.type";
 import { formatCurrency, formatDate } from "@/utils";
@@ -207,12 +207,20 @@ const columns: ColumnDef<Survey>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const isEdit = row.original.status === "draft";
       return (
         <Button variant="ghost" size="icon" asChild>
-          <NavLink to={`${ROUTES.MARKET_RESEARCH_EDIT}/${row.original.id}`}>
-            <span className="sr-only">Open Survey Details</span>
-            <EyeIcon />
-          </NavLink>
+          {isEdit ? (
+            <NavLink to={`${ROUTES.MARKET_RESEARCH_EDIT}/${row.original.id}`}>
+              <span className="sr-only">Open Survey Details</span>
+              <EyeIcon />
+            </NavLink>
+          ) : (
+            <NavLink to={`${ROUTES.MARKET_RESEARCH}/${row.original.id}`}>
+              <span className="sr-only">Open Survey Details</span>
+              <EyeIcon />
+            </NavLink>
+          )}
         </Button>
       );
     },
@@ -264,7 +272,13 @@ const MarketResearchList = () => {
 
 function Card({ research }: { research: Survey }) {
   return (
-    <NavLink to={`${ROUTES.MARKET_RESEARCH_EDIT}/${research.id}`}>
+    <NavLink
+      to={
+        research.status === "draft"
+          ? `${ROUTES.MARKET_RESEARCH_EDIT}/${research.id}`
+          : `${ROUTES.MARKET_RESEARCH}/${research.id}`
+      }
+    >
       <article className="bg-card w-full rounded-xl p-5 shadow-md transition hover:shadow-md">
         <div className="text-muted-foreground mb-2 text-sm">{research.id}</div>
         <h3 className="text-lg leading-snug font-semibold text-gray-900">

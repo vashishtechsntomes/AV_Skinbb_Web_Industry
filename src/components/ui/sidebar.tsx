@@ -350,6 +350,7 @@ function SidebarItemLabel({ item }: { item: ItemInstance<Item> }) {
 const Sidebar = () => {
   const { isSidebarOpen, isMobile } = useSidebar();
   const { showOverlay, handleOverlayClick } = useSidebarMobile();
+  const width = "w-[var(--sidebar-width)]";
   return (
     <>
       {showOverlay && (
@@ -361,7 +362,8 @@ const Sidebar = () => {
       )}
       <aside
         className={cn(
-          "bg-background fixed z-10 order-first h-screen w-60 overflow-y-auto px-2 transition-all",
+          "bg-background w1-60 fixed z-10 order-first h-screen overflow-y-auto px-2 transition-all",
+          width,
           isSidebarOpen && "-translate-x-100",
           isMobile
             ? isSidebarOpen
@@ -407,7 +409,8 @@ const Sidebar = () => {
 
       <div
         className={cn(
-          "hidden w-60 transition-all md:block",
+          "w1-60 hidden transition-all md:block",
+          width,
           isSidebarOpen && "w-0",
         )}
       ></div>

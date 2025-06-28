@@ -28,7 +28,7 @@ import {
 import { PageContent } from "@/components/ui/structure";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ROUTES } from "@/routes/routes.constant";
-import { cn } from "@/utils";
+import { capitalize, cn } from "@/utils";
 import {
   CalendarDaysIcon,
   FunnelIcon,
@@ -71,6 +71,7 @@ const ageChartConfig = {
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
+
 const stateChartData = [
   { key: "UP", value: 220 }, // Uttar Pradesh
   { key: "MH", value: 198 }, // Maharashtra
@@ -290,11 +291,12 @@ and performance`,
           />
         ))}
       </div>
-      <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
+      <div className="flex flex-col gap-2 sm:grid sm:grid-cols-2 md:grid-cols-3 md:gap-6">
         <StatChart
           name="Gender Distribution"
           config={genderConfig}
-          containerClassName="[&_.recharts-text]:fill-foreground mx-auto"
+          className="aspect-square"
+          // containerClassName="[&_.recharts-text]:fill-foreground mx-auto"
         >
           <PieChart>
             <ChartTooltip
@@ -312,7 +314,11 @@ and performance`,
             </Pie>
           </PieChart>
         </StatChart>
-        <StatChart name="Age Distribution" config={ageChartConfig}>
+        <StatChart
+          name="Age Distribution"
+          className="aspect-square"
+          config={ageChartConfig}
+        >
           <BarChart
             data={ageChartData}
             barGap={0}
@@ -340,6 +346,7 @@ and performance`,
           </BarChart>
         </StatChart>
         <StatChart
+          className="aspect-square"
           name="Skin Type Distribution"
           config={skinChartConfig}
           containerClassName="mx-auto !p-0 !m-0"
@@ -401,7 +408,7 @@ and performance`,
               verticalAlign="top"
               wrapperStyle={{ marginTop: 10 }}
               payload={Object.entries(skinChartConfig).map(([key, value]) => ({
-                value: key,
+                value: capitalize(key),
                 type: "circle",
                 color: value.color,
               }))}
@@ -409,6 +416,7 @@ and performance`,
           </RadialBarChart>
         </StatChart>
         <StatChart
+          className="aspect-square"
           name="Concern Distribution"
           config={concernChartConfig}
           containerClassName="mx-auto aspect-square w-full !p-0 !m-0"
@@ -431,7 +439,7 @@ and performance`,
               verticalAlign="top"
               payload={Object.entries(concernChartConfig).map(
                 ([key, value]) => ({
-                  value: key,
+                  value: capitalize(key),
                   type: "circle",
                   color: value.color,
                 }),
@@ -480,7 +488,7 @@ and performance`,
         <StatChart
           name="State Distribution"
           config={stateChartConfig}
-          className="col-span-2 md:aspect-auto"
+          className="col-span-2 aspect-square"
           containerClassName="mx-auto w-full overflow-auto !p-0 !m-0"
           responsiveProps={{}}
         >

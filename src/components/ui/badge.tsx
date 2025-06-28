@@ -43,7 +43,7 @@ function Badge({
   );
 }
 
-type StatusBadgeVariant = "default" | "label";
+type StatusBadgeVariant = "default" | "label" | "badge";
 
 interface StatusBadgeProps extends React.ComponentProps<"div"> {
   module: ModuleType;
@@ -60,7 +60,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({
 }) => {
   const statusInfo = STATUS_MAP[module]?.[status];
 
-  if (!statusInfo) return null;
+  if (!statusInfo) return "Not found";
 
   const { label, textColor, bgColor } = statusInfo;
   const colorClasses = cn(textColor, bgColor);
@@ -88,12 +88,29 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({
           className={cn(
             "text-sm font-medium capitalize",
             colorClasses,
+            "bg-transparent",
             className,
           )}
           {...props}
         >
           {label}
         </span>
+      );
+
+    case "badge":
+      return (
+        <Badge
+          variant={"outline"}
+          className={cn(
+            "capitalizela flex items-center gap-2",
+            colorClasses,
+            "bg-transparent",
+            className,
+          )}
+        >
+          <span className="h-2 w-2 rounded-full bg-current" />
+          {status}
+        </Badge>
       );
 
     default:

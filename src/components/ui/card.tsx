@@ -81,6 +81,30 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+const StatChartCard = ({
+  name,
+  children,
+  className,
+}: {
+  name: string;
+  className?: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <Card
+      className={cn("flex max-h-86 min-h-82 max-w-full flex-col", className)}
+    >
+      <CardHeader className="items-center pb-0">
+        <CardTitle className="text-muted-foreground text-lg leading-none">
+          {name}
+        </CardTitle>
+      </CardHeader>
+      <hr className="mx-4" />
+      <CardContent className="flex-1 overflow-x-auto">{children}</CardContent>
+    </Card>
+  );
+};
+
 export {
   Card,
   CardAction,
@@ -89,4 +113,5 @@ export {
   CardFooter,
   CardHeader,
   CardTitle,
+  StatChartCard,
 };

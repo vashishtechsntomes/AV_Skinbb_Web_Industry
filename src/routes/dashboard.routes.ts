@@ -66,6 +66,12 @@ export const dashboardRoutes: RouteObject[] = [
           () => import("@/features/market-research/market-research-create"),
         ),
       },
+      {
+        path: `${ROUTES.MARKET_RESEARCH}/:id`,
+        Component: lazy(
+          () => import("@/features/market-research/market-research-detail"),
+        ),
+      },
     ],
   },
 ];

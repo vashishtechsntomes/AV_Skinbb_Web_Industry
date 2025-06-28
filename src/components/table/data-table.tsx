@@ -402,21 +402,55 @@ export function DataPagination<TData>({
 interface DataTableActionProps<TData> extends ComponentProps<"div"> {
   tableState: UseTableResponse<TData>;
   children?: ReactNode;
+  showViewToggle?: boolean;
+  tableHeading?: string;
 }
 
 export function DataTableAction<TData>({
   tableState,
   children,
   className,
+  tableHeading = "",
+  showViewToggle = true,
   ...props
 }: DataTableActionProps<TData>) {
   const { table, viewMode, toggleViewMode } = tableState;
+
+  const columnFilter = () => {
+    if (viewMode === DataViewMode.grid) return;
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outlined" className="ml-auto">
+            Columns <ChevronDownIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {table
+            ?.getAllColumns()
+            .filter((column) => column.getCanHide())
+            .map((column) => {
+              return (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              );
+            })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
   return (
     <div
       className={cn("flex items-center justify-between", className)}
       {...props}
     >
-      <div></div>
+      <h5 className="table-heading text-2xl">{tableHeading}</h5>
       <div className="flex flex-wrap gap-2 md:gap-4">
         <Input
           startIcon={<MagnifyingGlassIcon />}
@@ -427,41 +461,17 @@ export function DataTableAction<TData>({
         />
 
         {children}
-        {viewMode === DataViewMode.list && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outlined" className="ml-auto">
-                Columns <ChevronDownIcon />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                ?.getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+        {columnFilter()}
+        {/* {viewMode === DataViewMode.list && } */}
+        {showViewToggle && (
+          <Button variant={"outlined"} size={"icon"} onClick={toggleViewMode}>
+            {viewMode !== DataViewMode.grid ? (
+              <TableCellsIcon />
+            ) : (
+              <Squares2X2Icon />
+            )}
+          </Button>
         )}
-        <Button variant={"outlined"} size={"icon"} onClick={toggleViewMode}>
-          {viewMode !== DataViewMode.grid ? (
-            <TableCellsIcon />
-          ) : (
-            <Squares2X2Icon />
-          )}
-        </Button>
       </div>
     </div>
   );
@@ -473,6 +483,7 @@ interface DataTableProps<TData extends object>
   actionProps?: Omit<DataTableActionProps<TData>, "tableState">; // Optional custom actions (e.g. filters, buttons)
   showPagination?: boolean;
   showAction?: boolean;
+  tableHeading?: string;
 }
 
 export function DataTable<TData extends object>({
@@ -483,6 +494,7 @@ export function DataTable<TData extends object>({
   actionProps,
   showAction = true,
   showPagination = true,
+  tableHeading,
   ...props
 }: DataTableProps<TData>) {
   const tableState = useTable({
@@ -498,7 +510,9 @@ export function DataTable<TData extends object>({
       {showAction && (
         <DataTableAction
           tableState={tableState}
+          showViewToggle={false}
           {...actionProps}
+          tableHeading={tableHeading}
         ></DataTableAction>
       )}
 
