@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Form, FormInput, type FormFieldConfig } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
+import { FormInput, type FormFieldConfig } from "@/components/ui/form-input";
 import { Container, PageContent } from "@/components/ui/structure";
 import { cn } from "@/utils";
 import {

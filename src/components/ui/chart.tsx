@@ -1,6 +1,11 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 import { cn } from "@/utils/index";
+import type {
+  NameType,
+  Payload,
+  ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
@@ -31,14 +36,7 @@ function useChart() {
   return context;
 }
 
-function ChartContainer({
-  id,
-  className,
-  children,
-  config,
-  responsiveProps,
-  ...props
-}: React.ComponentProps<"div"> & {
+type ChartContainerProps = React.ComponentProps<"div"> & {
   config: ChartConfig;
   children: React.ComponentProps<
     typeof RechartsPrimitive.ResponsiveContainer
@@ -47,7 +45,15 @@ function ChartContainer({
     React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>,
     "children"
   >;
-}) {
+};
+function ChartContainer({
+  id,
+  className,
+  children,
+  config,
+  responsiveProps,
+  ...props
+}: ChartContainerProps) {
   const uniqueId = React.useId();
   const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
 
@@ -106,6 +112,17 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
+type ChartTooltipContentProps = React.ComponentProps<
+  typeof RechartsPrimitive.Tooltip
+> &
+  React.ComponentProps<"div"> & {
+    hideLabel?: boolean;
+    hideIndicator?: boolean;
+    indicator?: "line" | "dot" | "dashed";
+    nameKey?: string;
+    labelKey?: string;
+  };
+
 function ChartTooltipContent({
   active,
   payload,
@@ -120,14 +137,7 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
-}: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
-  React.ComponentProps<"div"> & {
-    hideLabel?: boolean;
-    hideIndicator?: boolean;
-    indicator?: "line" | "dot" | "dashed";
-    nameKey?: string;
-    labelKey?: string;
-  }) {
+}: ChartTooltipContentProps) {
   const { config } = useChart();
 
   const tooltipLabel = React.useMemo(() => {
@@ -258,10 +268,16 @@ function ChartLegendContent({
   payload,
   verticalAlign = "bottom",
   nameKey,
+  onLegendHover,
+  percentagesByKey,
+  onLegendClick,
 }: React.ComponentProps<"div"> &
   Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
     hideIcon?: boolean;
     nameKey?: string;
+    onLegendHover?: (index: number | undefined) => void;
+    percentagesByKey?: Record<string, string>;
+    onLegendClick?: (key: string) => void;
   }) {
   const { config } = useChart();
 
@@ -277,15 +293,19 @@ function ChartLegendContent({
         className,
       )}
     >
-      {payload.map((item) => {
+      {payload.map((item, index) => {
         const key = `${nameKey || item.dataKey || "value"}`;
         const itemConfig = getPayloadConfigFromPayload(config, item, key);
-
         return (
           <div
+            role="button"
+            tabIndex={-1}
             key={item.value}
+            onMouseEnter={() => onLegendHover?.(index)}
+            onMouseLeave={() => onLegendHover?.(undefined)}
+            onClick={() => onLegendClick?.(item.value)}
             className={cn(
-              "[&>svg]:text-muted-foreground flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3",
+              "[&>svg]:text-muted-foreground flex cursor-pointer items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3",
             )}
           >
             {itemConfig?.icon && !hideIcon ? (
@@ -298,7 +318,10 @@ function ChartLegendContent({
                 }}
               />
             )}
-            {itemConfig?.label}
+            {itemConfig?.label}{" "}
+            {percentagesByKey?.[item.value] && (
+              <> ({percentagesByKey[item.value]}%)</>
+            )}
           </div>
         );
       })}
@@ -345,6 +368,39 @@ function getPayloadConfigFromPayload(
     : config[key as keyof typeof config];
 }
 
+// Tooltip formatter
+const formatChartTooltip = (
+  value: ValueType,
+  name: NameType,
+  entry: Payload<ValueType, NameType>,
+  percentages: Record<string, string>,
+): React.ReactNode => {
+  const key = entry?.payload?.key ?? name;
+  const percent = percentages[key] ?? "0.00";
+
+  return (
+    <>
+      <div
+        className="h-3 w-3 shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)"
+        style={
+          {
+            "--color-bg": entry.payload.fill,
+            "--color-border": entry.payload.stroke,
+          } as React.CSSProperties
+        }
+      />
+      <div className="flex flex-1 items-center justify-between leading-none">
+        <div className="grid gap-1 capitalize">
+          <span className="text-muted-foreground">{key}</span>
+          <span className="text-foreground font-mono font-medium tabular-nums">
+            {value.toLocaleString()} ({percent}%)
+          </span>
+        </div>
+      </div>
+    </>
+  );
+};
+
 export {
   ChartContainer,
   ChartTooltip,
@@ -352,4 +408,7 @@ export {
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
+  formatChartTooltip,
+  type ChartContainerProps,
+  type ChartTooltipContentProps,
 };

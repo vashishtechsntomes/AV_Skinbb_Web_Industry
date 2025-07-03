@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
 import { type VariantProps } from "class-variance-authority";
-
 import { cn } from "@/utils";
 import { toggleVariants } from "@/components/ui/toggle";
+import { buttonVariants } from "./button";
 
 const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleVariants>
@@ -68,4 +68,53 @@ function ToggleGroupItem({
   );
 }
 
-export { ToggleGroup, ToggleGroupItem };
+function ToggleButtonGroup({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof ToggleGroupPrimitive.Root>) {
+  return (
+    <ToggleGroupPrimitive.Root
+      data-slot="toggle-group"
+      className={cn(
+        "group/toggle-group flex w-fit flex-wrap items-center gap-3 rounded-md",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </ToggleGroupPrimitive.Root>
+  );
+}
+
+function ToggleButtonGroupItem({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof ToggleGroupPrimitive.Item>) {
+  return (
+    <ToggleGroupPrimitive.Item
+      data-slot="toggle-group-item"
+      className={cn(
+        buttonVariants({
+          className: cn(
+            "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground min-w-32 text-base font-normal",
+            className,
+          ),
+        }),
+        "",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </ToggleGroupPrimitive.Item>
+  );
+}
+
+export {
+  ToggleGroup,
+  ToggleGroupItem,
+  ToggleButtonGroup,
+  ToggleButtonGroupItem,
+};

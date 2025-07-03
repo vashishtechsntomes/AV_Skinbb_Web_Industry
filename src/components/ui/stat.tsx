@@ -42,21 +42,26 @@ export const StatCard: FC<StatCardProps> = ({
 
 export interface StatValueProps extends ComponentProps<"div"> {
   title?: string;
-  value?: string | number;
+  description?: string;
+  value?: string | number | ReactNode;
   icon?: ReactNode;
   change?: number;
   note?: string;
   titleProps?: ComponentProps<"p">;
   valueProps?: ComponentProps<"h4">;
+  descriptionProps?: ComponentProps<"p">;
 }
+
 export const StatValue: FC<StatValueProps> = ({
   title,
   value,
+  description,
   change,
   className,
   note,
   titleProps,
   valueProps,
+  descriptionProps,
   ...props
 }) => {
   const isPositive = typeof change === "number" && change > 0;
@@ -72,19 +77,19 @@ export const StatValue: FC<StatValueProps> = ({
         {title && (
           <p className={cn("text-base font-normal", titleClass)} {...titleRest}>
             {title}
+            {note && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="inline-block cursor-pointer ps-0.5 align-middle">
+                    <InformationCircleIcon className="size-4" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent align="center" className="w-fit p-1 px-3">
+                  {note}
+                </PopoverContent>
+              </Popover>
+            )}
           </p>
-        )}
-        {note && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <button className="cursor-pointer">
-                <InformationCircleIcon className="size-4" />
-              </button>
-            </PopoverTrigger>
-            <PopoverContent align="center" className="w-fit p-1 px-3">
-              {note}
-            </PopoverContent>
-          </Popover>
         )}
       </div>
       <div className="flex w-fit gap-2">
@@ -112,6 +117,7 @@ export const StatValue: FC<StatValueProps> = ({
           </div>
         )}
       </div>
+      {description && <p {...descriptionProps}>{description}</p>}
     </div>
   );
 };

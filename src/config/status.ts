@@ -1,4 +1,4 @@
-export type ModuleType = "brand" | "survey" | "product";
+export type ModuleType = "brand" | "survey" | "product" | "survey_user";
 
 export interface StatusStyle {
   label: string;
@@ -63,6 +63,34 @@ export const STATUS_MAP: Record<ModuleType, Record<string, StatusStyle>> = {
     },
     scheduled: {
       label: "Scheduled",
+      textColor: "text-blue-700",
+      bgColor: "bg-blue-100",
+    },
+    active: {
+      label: "Active",
+      textColor: "text-blue-700",
+      bgColor: "bg-blue-100",
+    },
+    inactive: {
+      label: "Inactive",
+      textColor: "text-gray-700",
+      bgColor: "bg-gray-200",
+    },
+    closed: {
+      label: "Closed",
+      textColor: "text-red-700",
+      bgColor: "bg-red-100",
+    },
+  },
+
+  survey_user: {
+    responded: {
+      label: "Responded",
+      textColor: "text-emerald-700",
+      bgColor: "bg-emerald-100",
+    },
+    opened: {
+      label: "Opened",
       textColor: "text-blue-700",
       bgColor: "bg-blue-100",
     },

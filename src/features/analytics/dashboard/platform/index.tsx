@@ -16,6 +16,7 @@ import {
   type ResponsiveContainerProps,
 } from "recharts";
 
+import { BlobIcon, Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
@@ -24,20 +25,18 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { cn } from "@/utils";
-import { useContext, useState, type ComponentProps } from "react";
-import { AnalysisContext } from "..";
-import { AnalyticsFilterForm } from "./AnalyticsFilterForm";
+import { PageContent } from "@/components/ui/structure";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ROUTES } from "@/routes/routes.constant";
+import { capitalize, cn } from "@/utils";
 import {
-  UserIcon,
   CalendarDaysIcon,
   FunnelIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
-import { BlobIcon, Button } from "@/components/ui/button";
-import { PageContent } from "@/components/ui/structure";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useState, type ComponentProps } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { AnalyticsFilterForm } from "./AnalyticsFilterForm";
 
 const genderData = [
   { key: "male", value: 275, fill: "var(--chart-1)" },
@@ -72,6 +71,7 @@ const ageChartConfig = {
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
+
 const stateChartData = [
   { key: "UP", value: 220 }, // Uttar Pradesh
   { key: "MH", value: 198 }, // Maharashtra
@@ -245,7 +245,7 @@ and performance`,
 
             <ToggleGroup
               type="single"
-              variant={"outline"}
+              variant={"outlined"}
               size={"lg"}
               className="bg-card h-10"
               value={pathname}
@@ -256,14 +256,14 @@ and performance`,
             >
               <ToggleGroupItem
                 className="aspect-auto h-full flex-auto px-3"
-                value={`${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}`}
+                value={`${ROUTES.ANALYTICS_PLATFORM}`}
                 aria-label="Toggle Platform"
               >
                 Platform
               </ToggleGroupItem>
               <ToggleGroupItem
                 className="aspect-auto h-full flex-auto px-3"
-                value={`${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsBrand}`}
+                value={`${ROUTES.ANALYTICS_BRAND}`}
                 aria-label="Toggle Brand"
               >
                 Brand
@@ -273,11 +273,7 @@ and performance`,
         ),
       }}
     >
-      {isFilter && (
-        <>
-          <AnalyticsFilterForm onSubmit={onSubmit} />
-        </>
-      )}
+      {isFilter && <AnalyticsFilterForm onSubmit={onSubmit} />}
 
       <div className="grid gap-2 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
         {statsData.map((item) => (
@@ -295,11 +291,12 @@ and performance`,
           />
         ))}
       </div>
-      <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
+      <div className="flex flex-col gap-2 sm:grid sm:grid-cols-2 md:grid-cols-3 md:gap-6">
         <StatChart
           name="Gender Distribution"
           config={genderConfig}
-          containerClassName="[&_.recharts-text]:fill-foreground mx-auto"
+          className="aspect-square"
+          // containerClassName="[&_.recharts-text]:fill-foreground mx-auto"
         >
           <PieChart>
             <ChartTooltip
@@ -317,7 +314,11 @@ and performance`,
             </Pie>
           </PieChart>
         </StatChart>
-        <StatChart name="Age Distribution" config={ageChartConfig}>
+        <StatChart
+          name="Age Distribution"
+          className="aspect-square"
+          config={ageChartConfig}
+        >
           <BarChart
             data={ageChartData}
             barGap={0}
@@ -345,6 +346,7 @@ and performance`,
           </BarChart>
         </StatChart>
         <StatChart
+          className="aspect-square"
           name="Skin Type Distribution"
           config={skinChartConfig}
           containerClassName="mx-auto !p-0 !m-0"
@@ -406,7 +408,7 @@ and performance`,
               verticalAlign="top"
               wrapperStyle={{ marginTop: 10 }}
               payload={Object.entries(skinChartConfig).map(([key, value]) => ({
-                value: key,
+                value: capitalize(key),
                 type: "circle",
                 color: value.color,
               }))}
@@ -414,6 +416,7 @@ and performance`,
           </RadialBarChart>
         </StatChart>
         <StatChart
+          className="aspect-square"
           name="Concern Distribution"
           config={concernChartConfig}
           containerClassName="mx-auto aspect-square w-full !p-0 !m-0"
@@ -436,7 +439,7 @@ and performance`,
               verticalAlign="top"
               payload={Object.entries(concernChartConfig).map(
                 ([key, value]) => ({
-                  value: key,
+                  value: capitalize(key),
                   type: "circle",
                   color: value.color,
                 }),
@@ -485,7 +488,7 @@ and performance`,
         <StatChart
           name="State Distribution"
           config={stateChartConfig}
-          className="col-span-2 md:aspect-auto"
+          className="col-span-2 aspect-square"
           containerClassName="mx-auto w-full overflow-auto !p-0 !m-0"
           responsiveProps={{}}
         >

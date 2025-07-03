@@ -111,6 +111,8 @@ export function DatePicker<M extends Mode = "single">({
             "focus-visible:border-ring focus-visible:border-primary h-10 border",
             "focus-visible:ring-primary/50 focus-visible:ring-[3px]",
             "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+            "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+            "aria-invalid:border-destructive",
             className,
           )}
           aria-haspopup="dialog"
@@ -147,7 +149,7 @@ export function DatePicker<M extends Mode = "single">({
                       }}
                     />
                   )}
-                  <ChevronDownIcon />
+                  <ChevronDownIcon className="opacity-50" />
                 </div>
               }
               position="right"

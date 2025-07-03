@@ -1,6 +1,8 @@
-import logo from "@/assets/images/logo-icon.png";
+// import logo from "@/assets/images/logo-icon.png";
 import { Tree, TreeItem, TreeItemLabel } from "@/components/ui/tree";
+import { SVGBiglogo } from "@/config/svg";
 import { useSidebar, useSidebarMobile } from "@/context/theme-provider";
+import { ROUTES } from "@/routes/routes.constant";
 import { camelToTitle, cn } from "@/utils";
 import {
   hotkeysCoreFeature,
@@ -11,8 +13,7 @@ import {
 import { useTree } from "@headless-tree/react";
 import React, { useEffect, useMemo } from "react";
 import { NavLink, useLocation } from "react-router";
-import { Button } from "./button";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
+import { Button } from "../../components/ui/button";
 const INDENT = 32;
 
 // const DASHBOARD_ROUTES = {
@@ -50,7 +51,7 @@ const items: () => Record<string, Item> = () => ({
   },
   dashboard: {
     name: "dashboard",
-    href: DASHBOARD_ROUTES.dashboard,
+    href: ROUTES.DASHBOARD,
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +70,7 @@ const items: () => Record<string, Item> = () => ({
   },
   brands: {
     name: "brands",
-    href: DASHBOARD_ROUTES.brandLists,
+    href: ROUTES.BRAND_LIST,
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +108,7 @@ const items: () => Record<string, Item> = () => ({
   },
   anyDashboard: {
     name: "Dashboard",
-    href: `${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}`,
+    href: `${ROUTES.ANALYTICS_PLATFORM}`,
     current: true,
   },
   "user insight": {
@@ -350,6 +351,7 @@ function SidebarItemLabel({ item }: { item: ItemInstance<Item> }) {
 const Sidebar = () => {
   const { isSidebarOpen, isMobile } = useSidebar();
   const { showOverlay, handleOverlayClick } = useSidebarMobile();
+  const width = "w-[var(--sidebar-width)]";
   return (
     <>
       {showOverlay && (
@@ -361,7 +363,8 @@ const Sidebar = () => {
       )}
       <aside
         className={cn(
-          "bg-background fixed z-10 order-first h-screen w-60 overflow-y-auto px-2 transition-all",
+          "bg-background w1-60 fixed z-10 order-first h-screen overflow-y-auto px-2 transition-all",
+          width,
           isSidebarOpen && "-translate-x-100",
           isMobile
             ? isSidebarOpen
@@ -373,10 +376,10 @@ const Sidebar = () => {
         <div className="bg-background sticky top-0 z-10 flex items-center justify-between border-b py-2">
           <NavLink
             to="/"
-            className="flex items-center no-underline transition-all active:scale-98"
+            className="data-[label=text]:text-primary flex h-10 items-center no-underline transition-all active:scale-98"
           >
-            <img src={logo} alt="logo" className="h-10" />
-            <h1 className="text-primary px-2 text-xl font-bold">Skinn BB</h1>
+            <SVGBiglogo className="h-7" />
+            {/* <h1 className="text-primary px-2 text-xl font-bold">Skinn BB</h1> */}
           </NavLink>
           <Button
             variant="ghost"
@@ -407,7 +410,8 @@ const Sidebar = () => {
 
       <div
         className={cn(
-          "hidden w-60 transition-all md:block",
+          "w1-60 hidden transition-all md:block",
+          width,
           isSidebarOpen && "w-0",
         )}
       ></div>

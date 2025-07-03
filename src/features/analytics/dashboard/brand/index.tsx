@@ -11,8 +11,8 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { StatCard, StatValue, type StatValueProps } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
-import { cn } from "@/utils";
+import { ROUTES } from "@/routes/routes.constant";
+import { capitalize, cn } from "@/utils";
 import {
   CalendarDateRangeIcon,
   ShoppingBagIcon,
@@ -24,11 +24,11 @@ import ActiveCarts from "./ActiveCarts";
 import Products from "./Products";
 
 const impressionChartData = [
-  { month: "1May", desktop: 186 },
-  { month: "8May", desktop: 305 },
-  { month: "15May", desktop: 237 },
-  { month: "22May", desktop: 73 },
-  { month: "29May", desktop: 209 },
+  { month: "1 May", desktop: 186 },
+  { month: "8 May", desktop: 305 },
+  { month: "15 May", desktop: 237 },
+  { month: "22 May", desktop: 73 },
+  { month: "29 May", desktop: 209 },
 ];
 const impressionChartConfig = {
   desktop: {
@@ -38,11 +38,11 @@ const impressionChartConfig = {
 } satisfies ChartConfig;
 
 const clickChartData = [
-  { month: "1May", desktop: 186 },
-  { month: "8May", desktop: 305 },
-  { month: "15May", desktop: 237 },
-  { month: "22May", desktop: 73 },
-  { month: "29May", desktop: 209 },
+  { month: "1 May", desktop: 186 },
+  { month: "8 May", desktop: 305 },
+  { month: "15 May", desktop: 237 },
+  { month: "22 May", desktop: 73 },
+  { month: "29 May", desktop: 209 },
 ];
 const clickChartConfig = {
   desktop: {
@@ -90,7 +90,7 @@ and performance`,
 
               <ToggleGroup
                 type="single"
-                variant={"outline"}
+                variant={"outlined"}
                 size={"lg"}
                 className="bg-card h-10"
                 value={pathname}
@@ -101,14 +101,14 @@ and performance`,
               >
                 <ToggleGroupItem
                   className="aspect-auto h-full flex-auto px-3"
-                  value={`${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}`}
+                  value={`${ROUTES.ANALYTICS_PLATFORM}`}
                   aria-label="Toggle Platform"
                 >
                   Platform
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   className="aspect-auto h-full flex-auto px-3"
-                  value={`${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsBrand}`}
+                  value={`${ROUTES.ANALYTICS_BRAND}`}
                   aria-label="Toggle Brand"
                 >
                   Brand
@@ -137,7 +137,7 @@ and performance`,
               value={"45,000"}
               change={20}
               className=""
-              contentProps={{ className: "px-0 max-h-45" }}
+              contentProps={{ className: "px-0" }}
             >
               <ChartContainer
                 config={impressionChartConfig}
@@ -158,7 +158,7 @@ and performance`,
                     dataKey="month"
                     tickLine={false}
                     axisLine={false}
-                    // tickMargin={8}
+                    tickMargin={8}
                   />
                   <ChartTooltip
                     cursor={false}
@@ -199,9 +199,7 @@ and performance`,
                   dataKey="month"
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={10}
-                  height={30}
-                  tickFormatter={(value) => value.slice(0, 3)}
+                  tickMargin={8}
                 />
                 <ChartTooltip
                   cursor={false}
@@ -235,21 +233,26 @@ and performance`,
               <StatValue title={"Returns / RTO"} value={"₹2.1L"} />
             </div>
 
-            <ChartContainer config={chartConfig}>
+            <ChartContainer
+              config={chartConfig}
+              responsiveProps={{ height: 223 }}
+            >
               <LineChart
                 accessibilityLayer
                 data={chartData}
-                margin={{
-                  left: 12,
-                  right: 12,
-                }}
+                margin={
+                  {
+                    // left: 12,
+                    // right: 12,
+                  }
+                }
               >
                 <CartesianGrid vertical={false} />
                 <XAxis
                   dataKey="month"
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={2}
+                  tickMargin={8}
                 />
                 <ChartTooltip
                   cursor={false}
@@ -271,7 +274,7 @@ and performance`,
                 />
                 <ChartLegend
                   payload={Object.entries(chartConfig).map(([key, value]) => ({
-                    value: key,
+                    value: capitalize(key),
                     type: "circle",
                     color: value.color,
                   }))}
@@ -314,7 +317,7 @@ interface StatChartProps extends ComponentProps<"div"> {
   value?: string;
   change?: number;
   children?: ReactNode;
-  contentProps?: React.ComponentProps<"div">;
+  contentProps?: ComponentProps<"div">;
   statValueProps?: StatValueProps;
 }
 

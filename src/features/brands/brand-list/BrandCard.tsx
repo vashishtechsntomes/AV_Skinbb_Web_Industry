@@ -1,5 +1,5 @@
 import { StatusBadge } from "@/components/ui/badge";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
+import { ROUTES } from "@/routes/routes.constant";
 import type { Brand } from "@/types/brand.type";
 import { memo, type FC } from "react";
 import { NavLink } from "react-router";
@@ -20,7 +20,7 @@ interface BrandCardProps {
 
 export const BrandCard: FC<BrandCardProps> = ({ brand }) => {
   return (
-    <NavLink to={`${DASHBOARD_ROUTES.editBrand}/${brand.id}`}>
+    <NavLink to={`${ROUTES.BRAND_EDIT}/${brand.id}`}>
       <article className="bg-background hover:ring-primary flex flex-col gap-4 rounded-md p-5 shadow-md hover:ring-3">
         <header className="flex items-center gap-2">
           <img

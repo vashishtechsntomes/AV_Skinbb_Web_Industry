@@ -1,6 +1,6 @@
 import { BlobIcon, Button } from "@/components/ui/button";
 import { PageContent } from "@/components/ui/structure";
-import { DASHBOARD_ROUTES } from "@/routes/dashboard.routes";
+import { ROUTES } from "@/routes/routes.constant";
 import { cn } from "@/utils";
 import { Fragment, type ReactElement, type SVGProps } from "react";
 import { NavLink } from "react-router";
@@ -32,11 +32,11 @@ const cardData = [
     buttons: [
       {
         name: "Platform",
-        href: `${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsPlatform}`,
+        href: `${ROUTES.ANALYTICS_PLATFORM}`,
       },
       {
         name: "Brand",
-        href: `${DASHBOARD_ROUTES.analytics}${DASHBOARD_ROUTES.analyticsBrand}`,
+        href: `${ROUTES.ANALYTICS_BRAND}`,
       },
     ],
     icon: (
@@ -59,7 +59,7 @@ const cardData = [
     title: "Market Research",
     description:
       "Explore trends, ingredient interest, and competitive landscape analysis",
-    buttons: [{ name: "Explore", href: "/brands" }],
+    buttons: [{ name: "Explore", href: ROUTES.MARKET_RESEARCH }],
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
