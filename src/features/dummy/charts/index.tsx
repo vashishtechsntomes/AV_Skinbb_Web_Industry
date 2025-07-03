@@ -2,21 +2,21 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import PieChart from "./pie";
 import { useState } from "react";
 import BarChart from "./bar";
-import RadialChart from "./radial";
+import DonutPie from "./donut-pie";
 
 enum CHARTTYPE {
   "pie" = "pie",
   "bar" = "bar",
-  "radial" = "radial",
+  "donutPie" = "donutPie",
 }
 const CHARTS: (keyof typeof CHARTTYPE)[] = [
   CHARTTYPE.bar,
   CHARTTYPE.pie,
-  CHARTTYPE.radial,
+  CHARTTYPE.donutPie,
 ];
 
 const DummyCharts = () => {
-  const [activeTab, setActiveTab] = useState<CHARTTYPE>(CHARTTYPE.radial);
+  const [activeTab, setActiveTab] = useState<CHARTTYPE>(CHARTTYPE.donutPie);
   return (
     <div className="">
       <br />
@@ -41,7 +41,7 @@ const DummyCharts = () => {
       <br />
       {activeTab === CHARTTYPE.pie && <PieChart />}
       {activeTab === CHARTTYPE.bar && <BarChart />}
-      {activeTab === CHARTTYPE.radial && <RadialChart />}
+      {activeTab === CHARTTYPE.donutPie && <DonutPie />}
     </div>
   );
 };

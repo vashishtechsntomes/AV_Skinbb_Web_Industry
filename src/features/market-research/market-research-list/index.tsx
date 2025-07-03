@@ -279,7 +279,7 @@ function Card({ research }: { research: Survey }) {
           : `${ROUTES.MARKET_RESEARCH}/${research.id}`
       }
     >
-      <article className="bg-card w-full rounded-xl p-5 shadow-md transition hover:shadow-md">
+      <article className="bg-card hover:ring-primary w-full rounded-xl p-5 shadow-md transition hover:ring-3">
         <div className="text-muted-foreground mb-2 text-sm">{research.id}</div>
         <h3 className="text-lg leading-snug font-semibold text-gray-900">
           {research.title}

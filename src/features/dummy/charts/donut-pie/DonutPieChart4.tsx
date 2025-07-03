@@ -1,4 +1,4 @@
-import HalfDonutChart from "@/components/charts/HalfDonutChart";
+import DonutPieChart from "@/components/charts/DonutPieChart";
 import { type ChartConfig } from "@/components/ui/chart";
 
 const chartData = [
@@ -39,20 +39,17 @@ const config = {
   },
 } satisfies ChartConfig;
 
-const RadialChart1 = () => {
+const DonutPieChart4 = () => {
   return (
-    <div>
-      <HalfDonutChart
-        // className="[&_.recharts-pie-label-text]:!fill-foreground"
-        config={config}
-        data={chartData}
-        // showLegend={false}
-        showTooltip={false}
-        // showLabels={false}
-        // showActive={false}
-      />
-    </div>
+    <DonutPieChart
+      config={config}
+      data={chartData}
+      showTooltip={false}
+      showOuterLabel={false}
+      showLabels={true}
+      showLegend={false}
+    />
   );
 };
 
-export default RadialChart1;
+export default DonutPieChart4;

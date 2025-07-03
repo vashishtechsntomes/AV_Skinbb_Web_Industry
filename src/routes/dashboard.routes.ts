@@ -1,5 +1,5 @@
 // routes/auth.routes.ts
-import MainLayout from "@/layouts/MainLayout";
+import MainLayout from "@/layouts/main-layout";
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
 import { ROUTES } from "./routes.constant";

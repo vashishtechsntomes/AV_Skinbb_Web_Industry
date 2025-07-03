@@ -1,6 +1,8 @@
-import logo from "@/assets/images/logo-icon.png";
+// import logo from "@/assets/images/logo-icon.png";
 import { Tree, TreeItem, TreeItemLabel } from "@/components/ui/tree";
+import { SVGBiglogo } from "@/config/svg";
 import { useSidebar, useSidebarMobile } from "@/context/theme-provider";
+import { ROUTES } from "@/routes/routes.constant";
 import { camelToTitle, cn } from "@/utils";
 import {
   hotkeysCoreFeature,
@@ -11,8 +13,7 @@ import {
 import { useTree } from "@headless-tree/react";
 import React, { useEffect, useMemo } from "react";
 import { NavLink, useLocation } from "react-router";
-import { Button } from "./button";
-import { ROUTES } from "@/routes/routes.constant";
+import { Button } from "../../components/ui/button";
 const INDENT = 32;
 
 // const DASHBOARD_ROUTES = {
@@ -375,10 +376,10 @@ const Sidebar = () => {
         <div className="bg-background sticky top-0 z-10 flex items-center justify-between border-b py-2">
           <NavLink
             to="/"
-            className="flex items-center no-underline transition-all active:scale-98"
+            className="data-[label=text]:text-primary flex h-10 items-center no-underline transition-all active:scale-98"
           >
-            <img src={logo} alt="logo" className="h-10" />
-            <h1 className="text-primary px-2 text-xl font-bold">Skinn BB</h1>
+            <SVGBiglogo className="h-7" />
+            {/* <h1 className="text-primary px-2 text-xl font-bold">Skinn BB</h1> */}
           </NavLink>
           <Button
             variant="ghost"

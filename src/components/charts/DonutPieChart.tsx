@@ -21,7 +21,7 @@ import type { PieSectorDataItem } from "recharts/types/polar/Pie";
 
 const RADIAN = Math.PI / 180;
 
-type HalfDonutChartComponentProps = {
+type DonutPieChartProps = {
   data: { key: string; value: number; fill?: string }[];
   config: ChartConfig;
   className?: string;
@@ -30,13 +30,14 @@ type HalfDonutChartComponentProps = {
   showLabels?: boolean;
   showOuterLabel?: boolean;
   showActive?: boolean;
+  showFullDonut?: boolean;
   chartProps?: ComponentProps<typeof Recharts.PieChart>;
-  pieProps?: Partial<Recharts.Pie>;
+  pieProps?: Omit<ComponentProps<typeof Recharts.Pie>, "ref" | "dataKey">;
   containerProps?: ComponentProps<typeof ChartContainer>;
   children?: ReactNode;
 } & Omit<ChartContainerProps, "children">;
 
-const HalfDonutChart: FC<HalfDonutChartComponentProps> = ({
+const DonutPieChart: FC<DonutPieChartProps> = ({
   data,
   config,
   className = "",
@@ -47,6 +48,7 @@ const HalfDonutChart: FC<HalfDonutChartComponentProps> = ({
   showActive = true,
   pieProps,
   chartProps,
+  showFullDonut = false,
   children,
   ...props
 }) => {
@@ -59,7 +61,7 @@ const HalfDonutChart: FC<HalfDonutChartComponentProps> = ({
 
   const totalValue =
     activeIndex !== undefined ? data[activeIndex]?.value : total;
-    
+
   const totalKey =
     activeIndex !== undefined
       ? capitalize(data[activeIndex]?.key)
@@ -88,7 +90,7 @@ const HalfDonutChart: FC<HalfDonutChartComponentProps> = ({
     >
       <Recharts.PieChart
         className="h-full w-full"
-        margin={{ top: -20, right: 0, bottom: 10, left: 0 }}
+        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
         {...chartProps}
       >
         {showTooltip && (
@@ -120,19 +122,19 @@ const HalfDonutChart: FC<HalfDonutChartComponentProps> = ({
           />
         )}
         <Recharts.Pie
-          startAngle={180}
+          startAngle={showFullDonut ? 360 : 180}
           endAngle={0}
-          cy="80%"
+          cy={showFullDonut ? "50%" : "75%"}
           paddingAngle={3}
           data={data}
           dataKey="value"
           nameKey="key"
-          innerRadius={60}
-          activeShape={showActive ? ActivePieShape : undefined}
+          innerRadius={65}
           activeIndex={activeIndex}
-          label={showOuterLabel ? LabelRenderer : undefined}
           onMouseEnter={(_, index) => handleLegendHover(index)}
+          label={showOuterLabel ? LabelRenderer : undefined}
           onMouseLeave={() => handleLegendHover(undefined)}
+          activeShape={showActive ? ActivePieShape : undefined}
           {...pieProps}
         >
           <Recharts.Label
@@ -141,21 +143,20 @@ const HalfDonutChart: FC<HalfDonutChartComponentProps> = ({
                 return (
                   <text
                     x={viewBox.cx}
-                    y={viewBox.cy ?? 0}
+                    y={(viewBox.cy ?? 0) - (showFullDonut ? 0 : 20)}
                     textAnchor="middle"
                     dominantBaseline="middle"
                   >
                     <tspan
                       x={viewBox.cx}
-                      y={viewBox.cy ?? 0}
+                      y={(viewBox.cy ?? 0) - (showFullDonut ? 0 : 20)}
                       className="fill-foreground text-3xl font-bold"
                     >
-                      {totalValue}
-                      {/* {totalVisitors.toLocaleString()} */}
+                      {String(totalValue)}
                     </tspan>
                     <tspan
                       x={viewBox.cx}
-                      y={(viewBox.cy ?? 0) + 24}
+                      y={(viewBox.cy ?? 0) - (showFullDonut ? 0 : 20) + 24}
                       className="fill-muted-foreground"
                     >
                       {totalKey}
@@ -168,7 +169,7 @@ const HalfDonutChart: FC<HalfDonutChartComponentProps> = ({
           {showLabels && (
             <Recharts.LabelList
               dataKey="key"
-              className="fill-background"
+              className="fill-foreground"
               stroke="none"
               fontSize={12}
               formatter={(value: keyof typeof config) => config[value]?.label}
@@ -184,44 +185,7 @@ const HalfDonutChart: FC<HalfDonutChartComponentProps> = ({
 const ActivePieShape = ({ outerRadius = 0, ...props }: PieSectorDataItem) => (
   <Recharts.Sector {...props} outerRadius={outerRadius + 8} />
 );
-// Custom active slice with center label and highlight ring
-const ActivePieLineShape = (props: PieSectorDataItem) => {
-  const {
-    cx,
-    cy,
-    innerRadius,
-    outerRadius = 0,
-    startAngle,
-    endAngle,
-    fill,
-    payload,
-  } = props;
-  return (
-    <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-        {payload.name}
-      </text>
-      <Recharts.Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-      <Recharts.Sector
-        cx={cx}
-        cy={cy}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        innerRadius={outerRadius + 6}
-        outerRadius={outerRadius + 10}
-        fill={fill}
-      />
-    </g>
-  );
-};
+
 const LabelRenderer = ({
   cx,
   cy,
@@ -282,4 +246,4 @@ const LabelRenderer = ({
   );
 };
 
-export default HalfDonutChart;
+export default DonutPieChart;
