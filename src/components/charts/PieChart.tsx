@@ -138,43 +138,43 @@ const ActivePieShape = ({ outerRadius = 0, ...props }: PieSectorDataItem) => (
   <Recharts.Sector {...props} outerRadius={outerRadius + 8} />
 );
 // Custom active slice with center label and highlight ring
-const ActivePieLineShape = (props: PieSectorDataItem) => {
-  const {
-    cx,
-    cy,
-    innerRadius,
-    outerRadius = 0,
-    startAngle,
-    endAngle,
-    fill,
-    payload,
-  } = props;
-  return (
-    <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-        {payload.name}
-      </text>
-      <Recharts.Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-      <Recharts.Sector
-        cx={cx}
-        cy={cy}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        innerRadius={outerRadius + 6}
-        outerRadius={outerRadius + 10}
-        fill={fill}
-      />
-    </g>
-  );
-};
+// const ActivePieLineShape = (props: PieSectorDataItem) => {
+//   const {
+//     cx,
+//     cy,
+//     innerRadius,
+//     outerRadius = 0,
+//     startAngle,
+//     endAngle,
+//     fill,
+//     payload,
+//   } = props;
+//   return (
+//     <g>
+//       <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
+//         {payload.name}
+//       </text>
+//       <Recharts.Sector
+//         cx={cx}
+//         cy={cy}
+//         innerRadius={innerRadius}
+//         outerRadius={outerRadius}
+//         startAngle={startAngle}
+//         endAngle={endAngle}
+//         fill={fill}
+//       />
+//       <Recharts.Sector
+//         cx={cx}
+//         cy={cy}
+//         startAngle={startAngle}
+//         endAngle={endAngle}
+//         innerRadius={outerRadius + 6}
+//         outerRadius={outerRadius + 10}
+//         fill={fill}
+//       />
+//     </g>
+//   );
+// };
 const LabelRenderer = ({
   cx,
   cy,

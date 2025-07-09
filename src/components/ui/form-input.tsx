@@ -40,6 +40,7 @@ import { Textarea, type TextareaProps } from "./textarea";
 
 const INPUT_TYPES = {
   TEXT: "text",
+  NUMBER: "number",
   TEXTAREA: "textarea",
   CHECKBOX: "checkbox",
   PASSWORD: "password",
@@ -108,6 +109,7 @@ type NonSelectProps<
 > = BaseInputProps<T, N> & {
   type:
     | typeof INPUT_TYPES.TEXT
+    | typeof INPUT_TYPES.NUMBER
     | typeof INPUT_TYPES.TEXTAREA
     | typeof INPUT_TYPES.CHECKBOX
     | typeof INPUT_TYPES.PASSWORD
@@ -162,14 +164,8 @@ function FormInput<T extends FieldValues, N extends FieldPath<T>>(
     type = INPUT_TYPES.TEXT,
     label = "",
     description = "",
-    // placeholder = "",
     rules,
-    // formControlProps,
-    // inputProps,
     className,
-    // disabled,
-    // transform,
-    // readOnly,
     ...rest
   } = props ?? {};
 

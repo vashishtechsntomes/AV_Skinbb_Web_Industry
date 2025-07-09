@@ -30,8 +30,8 @@ export function PageContent({
     <Tag
       aria-label={ariaLabel}
       className={cn(
-        "flex min-h-[calc(100vh-52.5px)] flex-col gap-2 rounded-t-md bg-linear-150 from-[#FFBCA850] via-[#FAFAFA70] to-[#DBD3FF70] inset-shadow-sm md:gap-6",
-        !noPadding && "p-2 md:p-6",
+        "flex min-h-[calc(100vh-52.5px)] flex-col gap-4 rounded-t-md bg-linear-150 from-[#FFBCA850] via-[#FAFAFA70] to-[#DBD3FF70] inset-shadow-sm md:gap-6",
+        !noPadding && "p-4 md:p-6",
         className,
       )}
     >

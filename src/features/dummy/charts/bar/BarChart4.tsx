@@ -1,7 +1,5 @@
 import BarChart from "@/components/charts/BarChart";
-import {
-  type ChartConfig
-} from "@/components/ui/chart";
+import { type ChartConfig } from "@/components/ui/chart";
 
 const chartData = [
   { key: "18–24", value: 141 },

@@ -1,47 +1,26 @@
 import { StatCard } from "@/components/ui/stat";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Label,
-  LabelList,
-  Pie,
-  PieChart,
-  PolarRadiusAxis,
-  RadialBar,
-  RadialBarChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  type ResponsiveContainerProps,
-} from "recharts";
-
+import BarChart from "@/components/charts/BarChart";
+import DonutPieChart from "@/components/charts/DonutPieChart";
+import PieChart from "@/components/charts/PieChart";
 import { BlobIcon, Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartLegend,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
+import { StatChartCard } from "@/components/ui/card";
+import { type ChartConfig } from "@/components/ui/chart";
 import { PageContent } from "@/components/ui/structure";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ROUTES } from "@/routes/routes.constant";
-import { capitalize, cn } from "@/utils";
 import {
   CalendarDaysIcon,
   FunnelIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { useState, type ComponentProps } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { AnalyticsFilterForm } from "./AnalyticsFilterForm";
 
 const genderData = [
-  { key: "male", value: 275, fill: "var(--chart-1)" },
-  { key: "female", value: 200, fill: "var(--chart-2)" },
-  { key: "unknown", value: 187, fill: "var(--chart-3)" },
+  { key: "male", value: 275, fill: "var(--chart-1)", showValue: false },
+  { key: "female", value: 200, fill: "var(--chart-2)", showValue: false },
+  { key: "unknown", value: 187, fill: "var(--chart-3)", showValue: false },
 ];
 const genderConfig = {
   value: {
@@ -67,7 +46,7 @@ const ageChartData = [
 ];
 const ageChartConfig = {
   value: {
-    label: "value",
+    label: "Age",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
@@ -119,35 +98,59 @@ const stateChartConfig = {
 } satisfies ChartConfig;
 
 const skinChartData = [
-  {
-    dry: 1260,
-    normal: 570,
-    oily: 890,
-    combination: 420,
-    unknown: 130,
-  },
+  { key: "dry", value: 1260, fill: "var(--chart-1)" },
+  { key: "normal", value: 570, fill: "var(--chart-2)" },
+  { key: "oily", value: 890, fill: "var(--chart-3)" },
+  { key: "combination", value: 420, fill: "var(--chart-4)" },
+  { key: "unknown", value: 130, fill: "var(--chart-5)" },
+  // {
+  //   dry: 1260,
+  //   normal: 570,
+  //   oily: 890,
+  //   combination: 420,
+  //   unknown: 130,
+  // },
 ];
 const skinChartConfig = {
-  dry: {
-    label: "Dry",
+  value: {
+    label: "Total Skin Type",
     color: "var(--chart-1)",
   },
+  dry: {
+    label: "Dry",
+  },
   normal: {
-    label: "Normal",
-    color: "var(--chart-2)",
+    label: "Nemale",
   },
   oily: {
     label: "Oily",
-    color: "var(--chart-3)",
   },
   combination: {
     label: "Combination",
-    color: "var(--chart-4)",
   },
   unknown: {
     label: "Unknown",
-    color: "var(--chart-5)",
   },
+  // dry: {
+  //   label: "Dry",
+  //   color: "var(--chart-1)",
+  // },
+  // normal: {
+  //   label: "Normal",
+  //   color: "var(--chart-2)",
+  // },
+  // oily: {
+  //   label: "Oily",
+  //   color: "var(--chart-3)",
+  // },
+  // combination: {
+  //   label: "Combination",
+  //   color: "var(--chart-4)",
+  // },
+  // unknown: {
+  //   label: "Unknown",
+  //   color: "var(--chart-5)",
+  // },
 } satisfies ChartConfig;
 
 const statsData = [
@@ -178,16 +181,24 @@ const statsData = [
 ];
 
 const concernChartData = [
-  {
-    // name: "Usage",
-    acne: 1260,
-    dullness: 570,
-    roughness: 890,
-    wrinkles: 420,
-    // "sagging skin": 130,
-  },
+  { key: "acne", value: 1260, fill: "var(--chart-1)" },
+  { key: "dullness", value: 570, fill: "var(--chart-2)" },
+  { key: "roughness", value: 890, fill: "var(--chart-3)" },
+  { key: "wrinkles", value: 420, fill: "var(--chart-4)" },
+
+  // {
+  //   // name: "Usage",
+  //   acne: 1260,
+  //   dullness: 570,
+  //   roughness: 890,
+  //   wrinkles: 420,
+  //   // "sagging skin": 130,
+  // },
 ];
 const concernChartConfig = {
+  value: {
+    label: "Total Concern",
+  },
   acne: {
     label: "acne",
     color: "var(--chart-1)",
@@ -214,7 +225,7 @@ const PlatformDashboard = () => {
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const totalVisitors = skinChartData[0].dry + skinChartData[0].normal;
+  // const totalVisitors = skinChartData[0].dry + skinChartData[0].normal;
 
   function onSubmit(data: {
     category: string;
@@ -292,279 +303,88 @@ and performance`,
         ))}
       </div>
       <div className="flex flex-col gap-2 sm:grid sm:grid-cols-2 md:grid-cols-3 md:gap-6">
-        <StatChart
-          name="Gender Distribution"
-          config={genderConfig}
-          className="aspect-square"
-          // containerClassName="[&_.recharts-text]:fill-foreground mx-auto"
-        >
-          <PieChart>
-            <ChartTooltip
-              content={<ChartTooltipContent nameKey="key" hideLabel />}
-            />
-            <Pie data={genderData} dataKey="value" label nameKey="key">
-              <LabelList
-                dataKey="key"
-                stroke="none"
-                fontSize={12}
-                formatter={(value: keyof typeof genderConfig) =>
-                  genderConfig[value]?.label
-                }
-              />
-            </Pie>
-          </PieChart>
-        </StatChart>
-        <StatChart
-          name="Age Distribution"
-          className="aspect-square"
-          config={ageChartConfig}
-        >
-          <BarChart
-            data={ageChartData}
-            barGap={0}
-            barCategoryGap="0"
-            margin={{ top: 10, right: 0, left: 0, bottom: 10 }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="key"
-              tickLine={false}
-              axisLine={false}
-              height={10}
-            />
-            <YAxis tickLine={false} axisLine={false} width={30} />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent nameKey="key" />}
-            />
-            <Bar
-              dataKey="value"
-              fill="var(--color-primary)"
-              barSize={20}
-              radius={[8, 8, 0, 0]}
-            />
-          </BarChart>
-        </StatChart>
-        <StatChart
-          className="aspect-square"
-          name="Skin Type Distribution"
-          config={skinChartConfig}
-          containerClassName="mx-auto !p-0 !m-0"
-        >
-          <RadialBarChart
+        <StatChartCard name="Gender Distribution">
+          <PieChart
+            config={genderConfig}
+            data={genderData}
+            showLegend={false}
+          />
+        </StatChartCard>
+        <StatChartCard name="Age Distribution">
+          <BarChart config={ageChartConfig} data={ageChartData} />
+        </StatChartCard>
+        <StatChartCard name="Skin Type Distribution">
+          <DonutPieChart
+            config={skinChartConfig}
             data={skinChartData}
-            cy="90%"
-            endAngle={180}
-            innerRadius={100}
-            outerRadius={150}
-            margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-          >
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-
-            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) - 16}
-                          className="fill-foreground text-2xl font-bold"
-                        >
-                          {totalVisitors.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 4}
-                          className="fill-muted-foreground"
-                        >
-                          Total Count
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </PolarRadiusAxis>
-
-            {Object.entries(skinChartConfig).map(([key, value]) => (
-              <RadialBar
-                key={key}
-                dataKey={key}
-                stackId="a"
-                cornerRadius={3}
-                fill={value?.color}
-                className="stroke-transparent stroke-2"
-              />
-            ))}
-
-            <ChartLegend
-              iconSize={15}
-              align="center"
-              verticalAlign="top"
-              wrapperStyle={{ marginTop: 10 }}
-              payload={Object.entries(skinChartConfig).map(([key, value]) => ({
-                value: capitalize(key),
-                type: "circle",
-                color: value.color,
-              }))}
-            />
-          </RadialBarChart>
-        </StatChart>
-        <StatChart
-          className="aspect-square"
-          name="Concern Distribution"
-          config={concernChartConfig}
-          containerClassName="mx-auto aspect-square w-full !p-0 !m-0"
-        >
-          <RadialBarChart
+            showLegend={false}
+            showOuterLabel={false}
+            showTooltip={false}
+            showFullDonut
+          />
+        </StatChartCard>
+        <StatChartCard name="Concern Distribution">
+          <DonutPieChart
+            config={concernChartConfig}
             data={concernChartData}
-            innerRadius={80}
-            outerRadius={130}
-            cy="60%"
-            margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-          >
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            showLegend={false}
+            showOuterLabel={false}
+            showTooltip={false}
+            showFullDonut
+          />
+        </StatChartCard>
 
-            <ChartLegend
-              iconSize={15}
-              align="center"
-              verticalAlign="top"
-              payload={Object.entries(concernChartConfig).map(
-                ([key, value]) => ({
-                  value: capitalize(key),
-                  type: "circle",
-                  color: value.color,
-                }),
-              )}
-            />
-
-            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy || 0}
-                          className="fill-foreground text-2xl font-bold"
-                        >
-                          {totalVisitors.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 16}
-                          className="fill-muted-foreground"
-                        >
-                          Total Count
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </PolarRadiusAxis>
-
-            {Object.entries(concernChartConfig).map(([key, value]) => (
-              <RadialBar
-                key={key}
-                dataKey={key}
-                stackId="a"
-                cornerRadius={3}
-                fill={value?.color}
-                className="stroke-transparent stroke-2"
-              />
-            ))}
-          </RadialBarChart>
-        </StatChart>
-        <StatChart
-          name="State Distribution"
-          config={stateChartConfig}
-          className="col-span-2 aspect-square"
-          containerClassName="mx-auto w-full overflow-auto !p-0 !m-0"
-          responsiveProps={{}}
-        >
+        <StatChartCard name="State Distribution" className="col-span-2">
           <BarChart
-            accessibilityLayer
-            barCategoryGap="20%"
+            config={stateChartConfig}
             data={stateChartData}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="key"
-              tickLine={false}
-              axisLine={false}
-              height={15}
-            />
-            <YAxis tickLine={false} axisLine={false} width={22} />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent nameKey="key" />}
-            />
-            <Bar
-              dataKey="value"
-              fill="var(--color-primary)"
-              barSize={10}
-              radius={[8, 8, 0, 0]}
-            >
-              {/* <LabelList
-                dataKey="value"
-                position="top"
-                offset={8}
-                className="fill-(--color-label)"
-              /> */}
-            </Bar>
-          </BarChart>
-        </StatChart>
+            barSize={15}
+            chartProps={{
+              barGap: 20,
+            }}
+          />
+        </StatChartCard>
       </div>
     </PageContent>
   );
 };
 
-const StatChart = ({
-  name,
-  children,
-  config,
-  containerClassName,
-  className,
-  responsiveProps,
-}: {
-  config: ChartConfig;
-  name: string;
-  containerClassName?: string;
-  className?: string;
-  children: ComponentProps<typeof ResponsiveContainer>["children"];
-  responsiveProps?: Omit<ResponsiveContainerProps, "children">;
-}) => {
-  return (
-    <Card
-      className={cn("flex max-h-86 min-h-82 max-w-full flex-col", className)}
-    >
-      <CardHeader className="items-center pb-0">
-        <CardTitle className="text-muted-foreground text-lg leading-none">
-          {name}
-        </CardTitle>
-      </CardHeader>
-      <hr className="mx-4" />
-      <CardContent className="flex-1 overflow-x-auto">
-        <ChartContainer
-          config={config}
-          className={cn("h-full w-full", containerClassName)}
-          responsiveProps={responsiveProps as ResponsiveContainerProps}
-        >
-          {children}
-        </ChartContainer>
-      </CardContent>
-    </Card>
-  );
-};
+// const StatChart = ({
+//   name,
+//   children,
+//   config,
+//   containerClassName,
+//   className,
+//   responsiveProps,
+// }: {
+//   config: ChartConfig;
+//   name: string;
+//   containerClassName?: string;
+//   className?: string;
+//   children: ComponentProps<typeof ResponsiveContainer>["children"];
+//   responsiveProps?: Omit<ResponsiveContainerProps, "children">;
+// }) => {
+//   return (
+//     <Card
+//       className={cn("flex max-h-86 min-h-82 max-w-full flex-col", className)}
+//     >
+//       <CardHeader className="items-center pb-0">
+//         <CardTitle className="text-muted-foreground text-lg leading-none">
+//           {name}
+//         </CardTitle>
+//       </CardHeader>
+//       <hr className="mx-4" />
+//       <CardContent className="flex-1 overflow-x-auto">
+//         <ChartContainer
+//           config={config}
+//           className={cn("h-full w-full", containerClassName)}
+//           responsiveProps={responsiveProps as ResponsiveContainerProps}
+//         >
+//           {children}
+//         </ChartContainer>
+//       </CardContent>
+//     </Card>
+//   );
+// };
 
 export default PlatformDashboard;

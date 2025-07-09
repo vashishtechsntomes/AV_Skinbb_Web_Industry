@@ -1,15 +1,25 @@
 import logo from "@/assets/images/logo-icon.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { logout } from "@/context/slices/authSlice";
 import { useSidebar } from "@/context/theme-provider";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/utils";
 import { BellIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router";
 
 const Header = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const dispatch = useDispatch();
+  const { role, user } = useAuth();
+  const fullName = user?.firstName || "";
+  const profile = user?.profilePic?.[0]?.url || "";
+  const fullNameInitial = `${user?.firstName?.charAt(0) || ""}${user?.lastName?.charAt(0) || ""}`;
+
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -120,20 +130,38 @@ const Header = () => {
               </svg>
             </Button>
           </div>
-          <div className="flex items-center gap-2">
-            <Avatar className="size-10 shadow">
-              <AvatarImage src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <div className="hidden space-y-0 leading-none md:block">
-              <p className="text-foreground">Anima Agrawal</p>
-              <p className="text-sm">Admin</p>
-            </div>
-          </div>
+          <DropdownMenu
+            items={[
+              {
+                children: "Account",
+                type: "item",
+              },
+              { type: "separator" },
+              {
+                children: "Logout",
+                type: "item",
+                onSelect: () => dispatch(logout()),
+              },
+            ]}
+            asChild
+          >
+            <Button
+              variant={"ghost"}
+              className="flex h-full items-center gap-2 p-1 focus-visible:outline-transparent"
+            >
+              <Avatar className="bg-primary/10 size-9 border font-medium tracking-wide uppercase">
+                <AvatarImage src={profile} />
+                <AvatarFallback>{fullNameInitial}</AvatarFallback>
+              </Avatar>
+              <div className="hidden space-y-0 leading-none md:block">
+                <p className="text-foreground">{fullName}</p>
+                <p className="text-sm capitalize">{role}</p>
+              </div>
+            </Button>
+          </DropdownMenu>
         </div>
       </div>
     </header>
   );
 };
-
 export default Header;

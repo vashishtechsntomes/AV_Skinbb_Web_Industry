@@ -52,7 +52,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import {
-  DropdownMenu,
+  DropdownMenuRoot,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
@@ -419,7 +419,7 @@ export function DataTableAction<TData>({
   const columnFilter = () => {
     if (viewMode === DataViewMode.grid) return;
     return (
-      <DropdownMenu>
+      <DropdownMenuRoot>
         <DropdownMenuTrigger asChild>
           <Button variant="outlined" className="ml-auto">
             Columns <ChevronDownIcon />
@@ -442,7 +442,7 @@ export function DataTableAction<TData>({
               );
             })}
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenuRoot>
     );
   };
   return (

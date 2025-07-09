@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
-import { cn } from "@/utils/index";
+import { capitalize, cn } from "@/utils/index";
 import type {
   NameType,
   Payload,
@@ -165,7 +165,11 @@ function ChartTooltipContent({
       return null;
     }
 
-    return <div className={cn("font-medium", labelClassName)}>{value}</div>;
+    return (
+      <div className={cn("font-medium", labelClassName)}>
+        {capitalize(String(value))}
+      </div>
+    );
   }, [
     label,
     labelFormatter,
@@ -241,12 +245,12 @@ function ChartTooltipContent({
                     <div className="grid gap-1.5">
                       {nestLabel ? tooltipLabel : null}
                       <span className="text-muted-foreground">
-                        {itemConfig?.label || item.name}
+                        {capitalize(String(itemConfig?.label || item.name))}
                       </span>
                     </div>
                     {item.value && (
                       <span className="text-foreground font-mono font-medium tabular-nums">
-                        {item.value.toLocaleString()}
+                        {String(item.value)}
                       </span>
                     )}
                   </div>
@@ -320,7 +324,7 @@ function ChartLegendContent({
             )}
             {itemConfig?.label}{" "}
             {percentagesByKey?.[item.value] && (
-              <> ({percentagesByKey[item.value]}%)</>
+              <> {percentagesByKey[item.value]}%</>
             )}
           </div>
         );

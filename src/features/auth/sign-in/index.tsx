@@ -2,37 +2,80 @@ import logo from "@/assets/images/logo-white.png";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/ui/form-input";
+import { setAuthData } from "@/context/slices/authSlice";
+import type { AppDispatch } from "@/context/store";
+import useMutation from "@/hooks/useMutation";
 import { ROUTES } from "@/routes/routes.constant";
+import { login } from "@/services";
+import { PhoneIcon } from "@heroicons/react/24/outline";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { NavLink } from "react-router";
+import { toast } from "sonner";
+import { z } from "zod";
+// type FormType = {
+//   phoneNumber: string;
+//   password: string;
+//   remember: boolean;
+// };
 
-type FormType = {
-  email: string;
-  password: string;
-  remember: boolean;
-};
+export const schema = z.object({
+  phoneNumber: z
+    .string()
+    .min(10, "Phone number must be at least 10 digits")
+    .max(10, "Phone number must be at most 10 digits")
+    .regex(/^[0-9]+$/, "Phone number must contain only digits"),
+
+  password: z.string().min(1, "Password is required"),
+  remember: z.boolean(),
+  // .max(32, "Password must be at most 32 characters"),
+});
+
+export type FormType = z.infer<typeof schema>;
 
 const SignIn = () => {
+  const { mutate, isLoading } = useMutation(login);
+  const dispatch = useDispatch<AppDispatch>();
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const navigate = useNavigate();
 
   const toggleMode = () => {
     setIsDarkMode((prev) => !prev);
   };
 
   const form = useForm<FormType>({
+    resolver: zodResolver(schema),
     defaultValues: {
-      email: "",
+      phoneNumber: "",
       password: "",
       remember: false,
     },
   });
 
-  function onSubmit(values: FormType) {
-    console.log(values);
-    navigate(ROUTES.DASHBOARD);
-  }
+  const onSubmit = async (values: FormType) => {
+    console.log("🚀 ~ onSubmit ~ values:", values);
+    await mutate(
+      {
+        password: values.password,
+        phoneNumber: values.phoneNumber,
+      },
+      {
+        onSuccess(data) {
+          toast.success("Login successfull!", {
+            duration: 1000,
+            id: "Login success",
+          });
+          setTimeout(() => {
+            dispatch(setAuthData(data.data));
+          }, 1000);
+        },
+        onError(error) {
+          toast.error(error ?? "Something went wrong!");
+        },
+      },
+    );
+  };
   return (
     <Form {...form}>
       <form
@@ -47,12 +90,15 @@ const SignIn = () => {
           <FormInput
             control={form.control}
             type="text"
-            name="email"
-            label="Email"
-            placeholder="Enter email"
-            inputProps={{ autoFocus: true }}
-            rules={{
-              required: "Email is required",
+            name="phoneNumber"
+            label="Phone Number"
+            placeholder="Enter phone number"
+            disabled={isLoading}
+            inputProps={{
+              autoFocus: true,
+              keyfilter: "num",
+              endIcon: <PhoneIcon className="size-5" />,
+              className: "py-6",
             }}
           />
 
@@ -62,10 +108,9 @@ const SignIn = () => {
             name="password"
             label="Password"
             placeholder="Enter password"
-            rules={{
-              required: "Password is required",
-            }}
+            disabled={isLoading}
             inputProps={{
+              className: "py-6",
               endIcon: isDarkMode ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -113,6 +158,7 @@ const SignIn = () => {
               type="checkbox"
               name="remember"
               label="Remember me"
+              disabled={isLoading}
             />
 
             <NavLink
@@ -124,7 +170,9 @@ const SignIn = () => {
           </div>
         </div>
 
-        <Button color={"primary"}>Sign In</Button>
+        <Button color={"primary"} className="h-13" loading={isLoading}>
+          Sign In
+        </Button>
 
         {/* <hr />
 

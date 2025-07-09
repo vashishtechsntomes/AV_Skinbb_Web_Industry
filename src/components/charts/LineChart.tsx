@@ -27,7 +27,7 @@ type BarChartDataItem = {
   fill?: string;
 };
 
-type BarChartProps = {
+type LineChartProps = {
   data: BarChartDataItem[];
   config: ChartConfig;
   className?: string;
@@ -45,7 +45,7 @@ type BarChartProps = {
   layout?: CategoricalChartProps["layout"];
 } & Omit<ChartContainerProps, "children">;
 
-const BarChart: FC<BarChartProps> = ({
+const LineChart: FC<LineChartProps> = ({
   layout = "horizontal",
   data,
   config,
@@ -111,4 +111,4 @@ const BarChart: FC<BarChartProps> = ({
   );
 };
 
-export default BarChart;
+export default LineChart;

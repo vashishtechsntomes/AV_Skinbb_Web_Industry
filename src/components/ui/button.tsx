@@ -5,7 +5,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/index";
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 cursor-pointer select-none flex-wrap items-center justify-center text-center leading-[1em] gap-2 no-underline duration-[0.2s] ease-out transition-[color,background-color,border-color,opacity,box-shadow,transform,scale] shadow border-transparent border-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:hidden active:scale-95 disabled:cursor-not-allowed disabled:scale-100 disabled:bg-muted disabled:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  [
+    "inline-flex shrink-0 cursor-pointer select-none flex-wrap items-center justify-center text-center leading-[1em] gap-2 no-underline duration-[0.2s] ease-out transition-[color,background-color,border-color,opacity,box-shadow,transform,scale] shadow border-transparent border-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:hidden active:scale-95 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+
+    "disabled:cursor-not-allowed disabled:scale-100 disabled:bg-muted1 disabled:opacity-70",
+  ],
   {
     variants: {
       variant: {
@@ -17,7 +21,7 @@ const buttonVariants = cva(
         link: "shadow-none underline-offset-4 hover:underline",
       },
       color: {
-        default: "focus-visible:outline-foreground",
+        default: "focus-visible:outline-muted",
         primary: "focus-visible:outline-primary",
         success: "focus-visible:outline-success",
         destructive: "focus-visible:outline-destructive",
@@ -48,18 +52,20 @@ const buttonVariants = cva(
       {
         variant: "contained",
         color: "primary",
-        className: "bg-primary text-primary-foreground hover:bg-primary/80",
+        className:
+          "bg-primary text-primary-foreground hover:bg-primary/80 disabled:hover:bg-primary",
       },
       {
         variant: "contained",
         color: "destructive",
         className:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/80",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/80 disabled:hover:bg-destructive",
       },
       {
         variant: "contained",
         color: "success",
-        className: "bg-success text-success-foreground hover:bg-success/80",
+        className:
+          "bg-success text-success-foreground hover:bg-success/80 disabled:hover:bg-success",
       },
 
       // Outlined

@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { cn } from "@/utils";
 import { cva, type VariantProps } from "class-variance-authority";
+import { KeyFilter, type KeyFilterType } from "./keyfilter";
 
 const inputVariants = cva(
   [
@@ -18,7 +19,7 @@ const inputVariants = cva(
     "file:border-border file:text-muted-foreground file:inline-flex file:border-0 file:border-e file:bg-transparent file:py-0 file:pe-1 file:font-normal",
 
     // Disabled state
-    "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+    "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-70",
 
     // Focus state
     "focus-visible:border-ring focus-visible:border-primary",
@@ -34,6 +35,11 @@ const inputVariants = cva(
         sm: "h-8 text-sm",
         md: "h-10 text-base", // default
         lg: "h-12 text-lg",
+      },
+      state: {
+        invalid: "ring-destructive/20 border-destructive",
+        valid: "border-green-500 ring-green-200 ring-[3px]",
+        default: "",
       },
       withStartIcon: {
         true: "ps-10 pe-4",
@@ -58,7 +64,7 @@ const inputVariants = cva(
 );
 
 export interface InputProps
-  extends Omit<React.ComponentProps<"input">, "size">,
+  extends Omit<React.ComponentProps<"input">, "size" | "onInput">,
     VariantProps<typeof inputVariants> {
   startIcon?: React.ReactElement<React.SVGProps<SVGSVGElement>>;
   endIcon?: React.ReactElement<React.SVGProps<SVGSVGElement>>;
@@ -66,61 +72,115 @@ export interface InputProps
   endIconProps?: React.HTMLAttributes<SVGSVGElement> & { className?: string };
   className?: string;
   containerProps?: React.ComponentProps<"div">;
+  keyfilter?: KeyFilterType;
+  invalid?: boolean;
+  valid?: boolean;
+  validateOnly?: boolean;
+  onInput?: (
+    event: React.FormEvent<HTMLInputElement>,
+    isValid: boolean,
+  ) => void;
 }
 
-function Input({
-  className,
-  startIcon,
-  endIcon,
-  startIconProps,
-  endIconProps,
-  containerProps,
-  size,
-  ...props
-}: InputProps) {
-  const { className: containerClassName, ...rest } = containerProps ?? {};
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      className,
+      startIcon,
+      endIcon,
+      startIconProps,
+      endIconProps,
+      containerProps,
+      state,
+      size,
+      keyfilter,
+      invalid = false,
+      valid = false,
+      validateOnly = false,
+      onInput,
+      disabled,
+      ...props
+    }: InputProps,
+    ref,
+  ) => {
+    const inputRef = React.useRef<HTMLInputElement | null>(null);
+    const { className: containerClassName, ...rest } = containerProps ?? {};
+    const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (keyfilter) {
+        KeyFilter.onKeyPress(event, keyfilter, validateOnly);
+      }
+    };
 
-  const inputElement = (
-    <input
-      data-slot="input"
-      className={cn(
-        inputVariants({
-          size,
-          withStartIcon: !!startIcon,
-          withEndIcon: !!endIcon,
-          className,
-        }),
-      )}
-      {...props}
-    />
-  );
+    const handleInput = (event: React.FormEvent<HTMLInputElement>) => {
+      let isValid = true;
+      if (keyfilter && validateOnly) {
+        isValid = KeyFilter.validate(event, keyfilter);
+      }
+      onInput?.(event, isValid);
+    };
 
-  // If no icons, return just the input
-  if (!startIcon && !endIcon) {
-    return inputElement;
-  }
+    const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+      if (keyfilter) {
+        KeyFilter.onPaste(event, keyfilter, validateOnly);
+      }
+    };
 
-  // Return wrapped input with icons
-  return (
-    <div
-      className={cn(
-        "relative flex items-center [&_svg]:size-5",
-        containerClassName,
-      )}
-      {...rest}
-    >
-      {startIcon && (
-        <InputIcon icon={startIcon} position="left" {...startIconProps} />
-      )}
+    const inputElement = (
+      <input
+        ref={(node) => {
+          inputRef.current = node;
+          if (typeof ref === "function") ref(node);
+          else if (ref) ref.current = node;
+        }}
+        data-slot="input"
+        className={cn(
+          inputVariants({
+            size,
+            withStartIcon: !!startIcon,
+            withEndIcon: !!endIcon,
+            state: (state ?? invalid) ? "invalid" : valid ? "valid" : "default",
+            className,
+          }),
+        )}
+        onKeyDown={onKeyDown}
+        onInput={handleInput}
+        onPaste={handlePaste}
+        aria-invalid={invalid}
+        disabled={disabled}
+        {...props}
+      />
+    );
 
-      {inputElement}
+    // If no icons, return just the input
+    if (!startIcon && !endIcon) {
+      return inputElement;
+    }
 
-      {endIcon && (
-        <InputIcon icon={endIcon} position="right" {...endIconProps} />
-      )}
-    </div>
-  );
-}
+    // Return wrapped input with icons
+    return (
+      <div
+        className={cn(
+          "relative flex items-center [&_svg]:size-5",
+          disabled && "[&_svg]:opacity-70",
+          containerClassName,
+        )}
+        {...rest}
+      >
+        {startIcon && (
+          <InputIcon icon={startIcon} position="left" {...startIconProps} />
+        )}
+
+        {inputElement}
+
+        {endIcon && (
+          <InputIcon icon={endIcon} position="right" {...endIconProps} />
+        )}
+      </div>
+    );
+  },
+);
+
+Input.displayName = "Input";
 
 export interface InputIconProps extends React.HTMLAttributes<SVGSVGElement> {
   // icon: React.ReactElement<React.SVGProps<SVGSVGElement>>;

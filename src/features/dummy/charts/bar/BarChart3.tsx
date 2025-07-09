@@ -1,10 +1,6 @@
 import BarChart from "@/components/charts/BarChart";
-import {
-  type ChartConfig
-} from "@/components/ui/chart";
-import {
-  LabelList
-} from "recharts";
+import { type ChartConfig } from "@/components/ui/chart";
+import { LabelList } from "recharts";
 
 const chartData = [
   { key: "18–24", value: 141 },

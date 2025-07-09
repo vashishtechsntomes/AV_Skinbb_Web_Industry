@@ -2,7 +2,6 @@ import { BlobIcon } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
-  ChartLegend,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
@@ -12,7 +11,7 @@ import { StatCard, StatValue, type StatValueProps } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ROUTES } from "@/routes/routes.constant";
-import { capitalize, cn } from "@/utils";
+import { cn } from "@/utils";
 import {
   CalendarDateRangeIcon,
   ShoppingBagIcon,
@@ -32,7 +31,7 @@ const impressionChartData = [
 ];
 const impressionChartConfig = {
   desktop: {
-    label: "Value",
+    label: "Impression",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
@@ -46,7 +45,7 @@ const clickChartData = [
 ];
 const clickChartConfig = {
   desktop: {
-    label: "Value",
+    label: "Clicks",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
@@ -81,7 +80,7 @@ const BrandDashboard = () => {
           description: `Dive into user behavior, demographics,
 and performance`,
           actions: (
-            <div className="flex gap-2">
+            <div className="flex gap-4">
               <DatePicker
                 className="max-w-69"
                 startIcon={<CalendarDateRangeIcon />}
@@ -118,8 +117,8 @@ and performance`,
           ),
         }}
       >
-        <div className="grid grid-cols-1 gap-2 md:gap-5 lg:grid-cols-3">
-          <div className="space-y-2 md:space-y-5">
+        <div className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-3">
+          <div className="max-h-115 space-y-2 overflow-hidden md:space-y-5">
             <StatCard
               title={"Listed Products"}
               value={"150"}
@@ -136,21 +135,23 @@ and performance`,
               name="Impressions"
               value={"45,000"}
               change={20}
-              className=""
-              contentProps={{ className: "px-0" }}
+              className="max-h-full"
+              contentProps={{ className: "px-0 w-full h-full" }}
             >
               <ChartContainer
                 config={impressionChartConfig}
                 className="h-full w-full"
-                responsiveProps={{ height: 160 }}
+                // responsiveProps={{ height: 160 }}
               >
                 <LineChart
                   accessibilityLayer
                   data={impressionChartData}
-                  margin={{
-                    left: 0,
-                    right: 0,
-                  }}
+                  margin={
+                    {
+                      // left: 0,
+                      // right: 0,
+                    }
+                  }
                   height={100}
                 >
                   <CartesianGrid vertical={false} />
@@ -169,7 +170,7 @@ and performance`,
                     type="linear"
                     stroke="var(--color-desktop)"
                     strokeWidth={2}
-                    dot={true}
+                    // dot={true}
                   />
                 </LineChart>
               </ChartContainer>
@@ -180,19 +181,25 @@ and performance`,
             value={"6,200"}
             change={1.3}
             className=""
-            contentProps={{ className: "px-0" }}
+            contentProps={{ className: "px-0 w-full h-full" }}
           >
             <ChartContainer
               config={clickChartConfig}
-              responsiveProps={{ height: 280 }}
+              responsiveProps={{
+                // height: 280
+                className: "h-full w-full",
+              }}
+              className="h-full w-full"
             >
               <LineChart
                 accessibilityLayer
                 data={clickChartData}
-                margin={{
-                  left: 0,
-                  right: 0,
-                }}
+                margin={
+                  {
+                    // left: 0,
+                    // right: 0,
+                  }
+                }
               >
                 <CartesianGrid vertical={false} />
                 <XAxis
@@ -203,18 +210,18 @@ and performance`,
                 />
                 <ChartTooltip
                   cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
+                  content={<ChartTooltipContent />}
                 />
                 <Line
                   dataKey="desktop"
                   type="linear"
                   stroke="var(--color-desktop)"
                   strokeWidth={2}
-                  dot={true}
+                  // dot={true}
                 />
                 <Area
-                  dataKey="desktop"
-                  type="natural"
+                  dataKey="value"
+                  type="basis"
                   fill="var(--color-desktop)"
                   fillOpacity={0.4}
                   stroke="var(--color-desktop)"
@@ -226,16 +233,17 @@ and performance`,
             name="Sales"
             value={"₹18.2L"}
             change={9.4}
-            contentProps={{ className: "px-0" }}
+            contentProps={{ className: "px-0 w-full h-full" }}
           >
-            <div className="mb-5 flex justify-between gap-2 px-5">
+            <div className="mb-5 flex justify-between gap-4 px-5">
               <StatValue title={"Net Sales"} value={"₹16.1L"} />
               <StatValue title={"Returns / RTO"} value={"₹2.1L"} />
             </div>
 
             <ChartContainer
               config={chartConfig}
-              responsiveProps={{ height: 223 }}
+              className=""
+              // responsiveProps={{ height: 223 }}
             >
               <LineChart
                 accessibilityLayer
@@ -263,27 +271,27 @@ and performance`,
                   type="monotone"
                   stroke="var(--color-desktop)"
                   strokeWidth={2}
-                  dot={false}
+                  // dot={false}
                 />
                 <Line
                   dataKey="mobile"
                   type="monotone"
                   stroke="var(--color-mobile)"
                   strokeWidth={2}
-                  dot={false}
+                  // dot={false}
                 />
-                <ChartLegend
+                {/* <ChartLegend
                   payload={Object.entries(chartConfig).map(([key, value]) => ({
                     value: capitalize(key),
                     type: "circle",
                     color: value.color,
                   }))}
-                />
+                /> */}
               </LineChart>
             </ChartContainer>
           </StatChart>
         </div>
-        <div className="grid grid-cols-1 gap-2 md:gap-5 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-3">
           <StatChart
             name="Active Carts"
             value={"1.2K"}
@@ -335,7 +343,7 @@ const StatChart = ({
   return (
     <Card
       className={cn(
-        "flex w-full max-w-full flex-col overflow-hidden",
+        "flex h-full max-h-115 w-full flex-col overflow-hidden",
         className,
       )}
       {...props}
@@ -351,7 +359,7 @@ const StatChart = ({
         </CardTitle>
       </CardHeader>
       <CardContent
-        className={cn("flex-1", contentClassNameProps)}
+        className={cn("h-full w-full flex-1", contentClassNameProps)}
         {...contentProps}
       >
         {children}
