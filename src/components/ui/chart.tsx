@@ -303,11 +303,17 @@ function ChartLegendContent({
         return (
           <div
             role="button"
-            tabIndex={-1}
+            tabIndex={0}
             key={item.value}
             onMouseEnter={() => onLegendHover?.(index)}
             onMouseLeave={() => onLegendHover?.(undefined)}
             onClick={() => onLegendClick?.(item.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault(); // prevent page scroll for Space
+                onLegendClick?.(item.value);
+              }
+            }}
             className={cn(
               "[&>svg]:text-muted-foreground flex cursor-pointer items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3",
             )}

@@ -1,3 +1,4 @@
+import type { AxiosError } from "axios";
 import { useEffect, useRef, useState } from "react";
 
 type ApiResponse<T> = {
@@ -84,7 +85,7 @@ function useMutation<T, V = void>(
           await new Promise((res) => setTimeout(res, retryDelay));
           return tryMutate();
         } else {
-          const msg = err?.message || "Unknown error";
+          const msg = (err as AxiosError)?.message || "Unknown error";
           if (isMountedRef.current) {
             setError(msg);
             globalOnError?.(msg);

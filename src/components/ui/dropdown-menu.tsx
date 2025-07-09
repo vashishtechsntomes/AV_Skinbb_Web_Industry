@@ -293,7 +293,9 @@ function renderMenuItems(items: DropdownMenuItemType[]): React.ReactNode {
       case "radioGroup":
         return (
           <DropdownMenuRadioGroup key={idx} {...item}>
-            {renderMenuItems((item as any).items)}
+            {renderMenuItems(
+              (item as unknown as { items: DropdownMenuItemType[] })?.items,
+            )}
           </DropdownMenuRadioGroup>
         );
       case "radio":
@@ -314,7 +316,9 @@ function renderMenuItems(items: DropdownMenuItemType[]): React.ReactNode {
       case "group":
         return (
           <DropdownMenuGroup key={idx} {...item}>
-            {renderMenuItems((item as any).items)}
+            {renderMenuItems(
+              (item as unknown as { items: DropdownMenuItemType[] })?.items,
+            )}
           </DropdownMenuGroup>
         );
       case "sub":
@@ -324,7 +328,9 @@ function renderMenuItems(items: DropdownMenuItemType[]): React.ReactNode {
               {item.children}
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
-              {renderMenuItems((item as any).items)}
+              {renderMenuItems(
+                (item as unknown as { items: DropdownMenuItemType[] })?.items,
+              )}
             </DropdownMenuSubContent>
           </DropdownMenuSub>
         );

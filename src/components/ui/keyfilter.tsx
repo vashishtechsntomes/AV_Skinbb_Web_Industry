@@ -42,12 +42,12 @@ export type KeyFilterUtility<T> = {
 const KeyFilter: KeyFilterUtility<HTMLInputElement | HTMLTextAreaElement> = {
   DEFAULT_MASKS: {
     pint: /[\d]/,
-    int: /[\d\-]/,
-    pnum: /[\d\.]/,
-    money: /[\d\.\s,]/,
-    num: /[\d\-\.]/,
+    int: /[\d-]/,
+    pnum: /[\d.]/,
+    money: /[\d.\s,]/,
+    num: /[\d-.]/,
     hex: /[0-9a-f]/i,
-    email: /[a-z0-9_\.\-@]/i,
+    email: /[a-z0-9_.\-@]/i,
     alpha: /[a-z_]/i,
     alphanum: /[a-z0-9_]/i,
   },

@@ -20,7 +20,7 @@ const config = {
   },
 } satisfies ChartConfig;
 
-const LineChart2 = () => {
+const LineChart3 = () => {
   return (
     <LineChart
       config={config}
@@ -36,8 +36,9 @@ const LineChart2 = () => {
       yAxisProps={{
         hide: true,
       }}
+      showLegends
     />
   );
 };
 
-export default LineChart2;
+export default LineChart3;

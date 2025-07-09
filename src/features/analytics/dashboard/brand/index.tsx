@@ -1,11 +1,9 @@
+import LineChart, {
+  type LineChartWrapperProps,
+} from "@/components/charts/LineChart";
 import { BlobIcon } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
+import { type ChartConfig } from "@/components/ui/chart";
 import { DatePicker } from "@/components/ui/date-picker";
 import { StatCard, StatValue, type StatValueProps } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
@@ -18,7 +16,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { type ComponentProps, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { Area, CartesianGrid, Line, LineChart, XAxis } from "recharts";
 import ActiveCarts from "./ActiveCarts";
 import Products from "./Products";
 
@@ -51,12 +48,12 @@ const clickChartConfig = {
 } satisfies ChartConfig;
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
+  { month: "Jan", desktop: 186, mobile: 80 },
+  { month: "Feb", desktop: 305, mobile: 200 },
+  { month: "Mar", desktop: 237, mobile: 120 },
+  { month: "Apr", desktop: 73, mobile: 190 },
   { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { month: "Jun", desktop: 214, mobile: 140 },
 ];
 const chartConfig = {
   desktop: {
@@ -72,6 +69,27 @@ const chartConfig = {
 const BrandDashboard = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+
+  const SharedLineProps: LineChartWrapperProps = {
+    data: [],
+    config: {},
+    lineProps: [],
+    xAxisProps: {
+      // height: 20,
+      // axisLine: true,
+    },
+    yAxisProps: {
+      hide: true,
+    },
+    chartProps: {
+      margin: { left: 0, right: 0 },
+    },
+    cartesianGridProps: {
+      vertical: true,
+      horizontal: false,
+      strokeDasharray: "3 3",
+    },
+  };
   return (
     <div>
       <PageContent
@@ -118,7 +136,7 @@ and performance`,
         }}
       >
         <div className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-3">
-          <div className="max-h-115 space-y-2 overflow-hidden md:space-y-5">
+          <div className="space-y-2 md:space-y-5">
             <StatCard
               title={"Listed Products"}
               value={"150"}
@@ -135,45 +153,18 @@ and performance`,
               name="Impressions"
               value={"45,000"}
               change={20}
-              className="max-h-full"
-              contentProps={{ className: "px-0 w-full h-full" }}
+              contentProps={{ className: "px-0" }}
             >
-              <ChartContainer
+              <LineChart
+                {...SharedLineProps}
                 config={impressionChartConfig}
-                className="h-full w-full"
-                // responsiveProps={{ height: 160 }}
-              >
-                <LineChart
-                  accessibilityLayer
-                  data={impressionChartData}
-                  margin={
-                    {
-                      // left: 0,
-                      // right: 0,
-                    }
-                  }
-                  height={100}
-                >
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="month"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="line" />}
-                  />
-                  <Line
-                    dataKey="desktop"
-                    type="linear"
-                    stroke="var(--color-desktop)"
-                    strokeWidth={2}
-                    // dot={true}
-                  />
-                </LineChart>
-              </ChartContainer>
+                data={impressionChartData}
+                lineProps={[
+                  {
+                    dataKey: "desktop",
+                  },
+                ]}
+              />
             </StatChart>
           </div>
           <StatChart
@@ -183,69 +174,50 @@ and performance`,
             className=""
             contentProps={{ className: "px-0 w-full h-full" }}
           >
-            <ChartContainer
+            <LineChart
+              {...SharedLineProps}
               config={clickChartConfig}
-              responsiveProps={{
-                // height: 280
-                className: "h-full w-full",
-              }}
-              className="h-full w-full"
-            >
-              <LineChart
-                accessibilityLayer
-                data={clickChartData}
-                margin={
-                  {
-                    // left: 0,
-                    // right: 0,
-                  }
-                }
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent />}
-                />
-                <Line
-                  dataKey="desktop"
-                  type="linear"
-                  stroke="var(--color-desktop)"
-                  strokeWidth={2}
-                  // dot={true}
-                />
-                <Area
-                  dataKey="value"
-                  type="basis"
-                  fill="var(--color-desktop)"
-                  fillOpacity={0.4}
-                  stroke="var(--color-desktop)"
-                />
-              </LineChart>
-            </ChartContainer>
+              data={clickChartData}
+              lineProps={[
+                {
+                  dataKey: "desktop",
+                },
+              ]}
+            />
           </StatChart>
           <StatChart
             name="Sales"
             value={"₹18.2L"}
             change={9.4}
-            contentProps={{ className: "px-0 w-full h-full" }}
+            contentProps={{ className: "px-0 flex-1 flex flex-col" }}
           >
             <div className="mb-5 flex justify-between gap-4 px-5">
               <StatValue title={"Net Sales"} value={"₹16.1L"} />
               <StatValue title={"Returns / RTO"} value={"₹2.1L"} />
             </div>
 
-            <ChartContainer
+            <div className="flex-1">
+              <LineChart
+                {...SharedLineProps}
+                config={chartConfig}
+                data={chartData}
+                lineProps={[
+                  {
+                    dataKey: "desktop",
+                  },
+                  {
+                    dataKey: "mobile",
+                  },
+                ]}
+              ></LineChart>
+            </div>
+
+            {/* <ChartContainer
               config={chartConfig}
               className=""
               // responsiveProps={{ height: 223 }}
             >
-              <LineChart
+              <ReLineChart
                 accessibilityLayer
                 data={chartData}
                 margin={
@@ -280,15 +252,15 @@ and performance`,
                   strokeWidth={2}
                   // dot={false}
                 />
-                {/* <ChartLegend
+                <ChartLegend
                   payload={Object.entries(chartConfig).map(([key, value]) => ({
                     value: capitalize(key),
                     type: "circle",
                     color: value.color,
                   }))}
-                /> */}
-              </LineChart>
-            </ChartContainer>
+                />
+              </ReLineChart>
+            </ChartContainer> */}
           </StatChart>
         </div>
         <div className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-3">
@@ -339,13 +311,12 @@ const StatChart = ({
   statValueProps,
   ...props
 }: StatChartProps) => {
-  const { className: contentClassNameProps } = contentProps ?? {};
+  console.log("🚀 ~ contentProps:", contentProps);
+  const { className: contentClassNameProps, ...contextPropsReset } =
+    contentProps ?? {};
   return (
     <Card
-      className={cn(
-        "flex h-full max-h-115 w-full flex-col overflow-hidden",
-        className,
-      )}
+      className={cn("flex w-full flex-col overflow-hidden", className)}
       {...props}
     >
       <CardHeader className="items-center pb-0">
@@ -359,8 +330,8 @@ const StatChart = ({
         </CardTitle>
       </CardHeader>
       <CardContent
-        className={cn("h-full w-full flex-1", contentClassNameProps)}
-        {...contentProps}
+        className={cn("h-full w-full", contentClassNameProps)}
+        {...contextPropsReset}
       >
         {children}
       </CardContent>

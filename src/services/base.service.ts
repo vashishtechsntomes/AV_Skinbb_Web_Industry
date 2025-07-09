@@ -42,7 +42,9 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest: any = error.config;
+    const originalRequest = error.config as AxiosRequestConfig & {
+      _retry?: boolean;
+    };
     const refreshToken = store.getState().auth.refreshToken;
     // const refreshToken = tokenService.getRefreshToken();
 
@@ -57,7 +59,7 @@ axiosInstance.interceptors.response.use(
         isRefreshing = true;
 
         try {
-          const { data }: any = await axios.post(
+          const { data } = await axios.post(
             `${baseApiUrl}/api/v1/users/refresh-token`,
             { refreshToken },
           );
@@ -76,7 +78,7 @@ axiosInstance.interceptors.response.use(
 
           onTokenRefreshed(newAccessToken);
           isRefreshing = false;
-        } catch (refreshError: any) {
+        } catch (refreshError) {
           store.dispatch(logout());
           isRefreshing = false;
           return Promise.reject(refreshError);
@@ -86,7 +88,9 @@ axiosInstance.interceptors.response.use(
       // Queue failed requests until token is refreshed
       return new Promise((resolve) => {
         subscribeTokenRefresh((token: string) => {
-          originalRequest.headers["Authorization"] = `Bearer ${token}`;
+          if (originalRequest.headers) {
+            originalRequest.headers["Authorization"] = `Bearer ${token}`;
+          }
           resolve(axiosInstance(originalRequest));
         });
       });
@@ -106,10 +110,11 @@ export interface ApiResponse<T> {
   data: T | null;
   error: string | null;
 }
+
 const handleRequest = async <T>(
   method: "get" | "post" | "put" | "patch" | "delete",
   url: string,
-  data?: any,
+  data?: unknown,
   headers: Headers = {},
 ): Promise<ApiResponse<T>> => {
   try {
@@ -128,11 +133,12 @@ const handleRequest = async <T>(
         : await axiosInstance[method](url, data, config);
 
     return { data: response.data, error: null };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err as AxiosError;
     const message =
-      err?.response?.data?.message ||
-      err?.response?.data?.errors ||
-      err.message ||
+      (error?.response?.data as { message: string })?.message ||
+      (error?.response?.data as { errors: string })?.errors ||
+      error.message ||
       "Unknown error";
     return { data: null, error: message };
   }
@@ -142,13 +148,13 @@ const handleRequest = async <T>(
 export const get = <T>(url: string, headers?: Headers) =>
   handleRequest<T>("get", url, null, headers);
 
-export const post = <T>(url: string, data: any, headers?: Headers) =>
+export const post = <T>(url: string, data: unknown, headers?: Headers) =>
   handleRequest<T>("post", url, data, headers);
 
-export const put = <T>(url: string, data: any, headers?: Headers) =>
+export const put = <T>(url: string, data: unknown, headers?: Headers) =>
   handleRequest<T>("put", url, data, headers);
 
-export const patch = <T>(url: string, data: any, headers?: Headers) =>
+export const patch = <T>(url: string, data: unknown, headers?: Headers) =>
   handleRequest<T>("patch", url, data, headers);
 
 export const remove = <T>(url: string, headers?: Headers) =>

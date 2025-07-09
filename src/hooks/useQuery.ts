@@ -1,5 +1,5 @@
 import type { ApiResponse } from "@/services";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type UseQueryOptions = {
   enabled?: boolean;
@@ -36,7 +36,7 @@ function useQuery<T>(
     abortControllerRef.current?.abort();
   };
 
-  const fetchData = async (): Promise<T | null> => {
+  const fetchData = useCallback(async (): Promise<T | null> => {
     abort();
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
@@ -83,7 +83,7 @@ function useQuery<T>(
     };
 
     return tryFetch();
-  };
+  }, [retries, retryDelay]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -96,7 +96,7 @@ function useQuery<T>(
       isMountedRef.current = false;
       abort();
     };
-  }, [enabled]);
+  }, [enabled, fetchData]);
 
   return {
     data,

@@ -21,13 +21,13 @@ const PrivateRoute = ({
   }
 
   // Role check
-  if (requiredRole && user.roleValue !== requiredRole) {
+  if (requiredRole && user[0].roleValue !== requiredRole) {
     return <Navigate to="/unauthorized" replace />;
   }
 
   // Permission check
   if (requiredPage && requiredAction) {
-    const hasPermission = user.permissions.some(
+    const hasPermission = user[0].permissions.some(
       (perm) =>
         perm.page === requiredPage && perm.action.includes(requiredAction),
     );

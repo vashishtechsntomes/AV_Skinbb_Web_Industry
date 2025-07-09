@@ -1,3 +1,4 @@
+// components/charts/LineChartWrapper.tsx
 import {
   ChartContainer,
   ChartTooltip,
@@ -6,107 +7,143 @@ import {
   type ChartContainerProps,
   type ChartTooltipContentProps,
 } from "@/components/ui/chart";
-import { cn } from "@/utils";
-import { type ComponentProps, type FC, type ReactNode } from "react";
+import { capitalize, cn } from "@/utils";
+import { useState, type ComponentProps, type ReactNode } from "react";
 import {
-  Bar,
   CartesianGrid,
-  BarChart as RechartsBarChart,
+  Legend,
+  Line,
+  LineChart as ReLineChart,
   XAxis,
   YAxis,
-  type BarProps,
   type CartesianGridProps,
+  type LineProps,
   type XAxisProps,
   type YAxisProps,
 } from "recharts";
-import type { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
+import type { Payload } from "recharts/types/component/DefaultLegendContent";
 
-type BarChartDataItem = {
-  key: string;
-  value: number;
-  fill?: string;
-};
-
-type LineChartProps = {
-  data: BarChartDataItem[];
+export type LineChartWrapperProps = {
+  data: Record<string, string | number>[];
   config: ChartConfig;
-  className?: string;
-  showTooltip?: boolean;
-  showGrid?: boolean;
-  barSize?: number;
-  barRadius?: [number, number, number, number];
-  chartProps?: Omit<ComponentProps<typeof RechartsBarChart>, "data">;
-  cartesianGridProps?: CartesianGridProps;
+  lineProps: Omit<LineProps, "ref">[]; // Multiple line configurations
+  chartProps?: Omit<ComponentProps<typeof ReLineChart>, "data" | "children">;
   xAxisProps?: XAxisProps;
   yAxisProps?: YAxisProps;
-  barProps?: Omit<BarProps, "dataKey" | "ref">;
+  showTooltip?: boolean;
+  cartesianGridProps?: CartesianGridProps;
+  tooltipProps?: ChartTooltipContentProps;
   children?: ReactNode;
-  toolContentProps?: ChartTooltipContentProps;
-  layout?: CategoricalChartProps["layout"];
+  legendProps?: Omit<ComponentProps<typeof Legend>, "ref">;
+  showLegends?: boolean;
 } & Omit<ChartContainerProps, "children">;
 
-const LineChart: FC<LineChartProps> = ({
-  layout = "horizontal",
+const LineChart = ({
   data,
   config,
-  className,
+  lineProps,
+  chartProps = {},
+  xAxisProps = {},
+  yAxisProps = {},
   showTooltip = true,
-  showGrid = true,
-  barSize = 20,
-  barRadius = [8, 8, 2, 2],
-  chartProps,
+  tooltipProps = {},
   cartesianGridProps,
-  xAxisProps,
-  yAxisProps,
-  barProps,
+  showLegends = false,
+  legendProps = {},
+  className,
   children,
-  toolContentProps,
   ...props
-}) => {
+}: LineChartWrapperProps) => {
+  const [hoveringDataKey, setHoveringDataKey] = useState<string | null>(null);
+
+  const handleMouseEnter = (payload: Payload) => {
+    setHoveringDataKey(
+      typeof payload?.dataKey === "string" ? payload.dataKey : null,
+    );
+  };
+
+  const handleMouseLeave = () => {
+    setHoveringDataKey(null);
+  };
+
   return (
     <ChartContainer
       config={config}
-      className={cn("aspect-square h-full w-full", className)}
+      className={cn("h-full w-full", className)}
       {...props}
     >
-      <RechartsBarChart
-        data={data}
-        layout={layout}
-        margin={{ left: -20 }}
-        {...chartProps}
-      >
-        {showGrid && (
-          <CartesianGrid
-            vertical={false}
-            strokeDasharray="3 3"
-            {...cartesianGridProps}
-          />
-        )}
+      <ReLineChart data={data} {...chartProps}>
+        <CartesianGrid vertical={false} {...cartesianGridProps} />
+
         <XAxis
-          dataKey="key"
+          dataKey="month"
           tickLine={false}
           axisLine={false}
-          tickMargin={10}
+          tickMargin={8}
+          padding={{ left: 20, right: 20 }}
           {...xAxisProps}
         />
-        <YAxis tickLine={false} axisLine={false} width={45} {...yAxisProps} />
+
+        {<YAxis tickLine={false} axisLine={false} {...yAxisProps} />}
+
         {showTooltip && (
           <ChartTooltip
-            content={
-              <ChartTooltipContent nameKey="value" {...toolContentProps} />
-            }
+            cursor={false}
+            content={<ChartTooltipContent indicator="line" {...tooltipProps} />}
           />
         )}
-        <Bar
-          dataKey="value"
-          barSize={barSize}
-          radius={barRadius}
-          fill={config?.value?.color ?? "var(--color-primary)"}
-          {...barProps}
-        >
-          {children}
-        </Bar>
-      </RechartsBarChart>
+
+        {lineProps?.map((line, index) => {
+          const findIndex = lineProps.findIndex(
+            (val) => val.dataKey === hoveringDataKey,
+          );
+
+          let opacity = 1;
+
+          if (hoveringDataKey) {
+            if (findIndex === index) {
+              opacity = 1;
+            } else {
+              opacity = 0.2;
+            }
+          } else {
+            opacity = 1;
+          }
+          return (
+            <Line
+              strokeOpacity={opacity}
+              key={index}
+              type="linear"
+              strokeWidth={2}
+              stroke={`var(--color-${line.dataKey})`}
+              height={20}
+              {...line}
+            />
+          );
+        })}
+
+        {showLegends && (
+          <Legend
+            formatter={(value) => capitalize(value)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            {...legendProps}
+          />
+        )}
+
+        {/* <ChartLegend
+          content={
+            <ChartLegendContent
+              nameKey="months"
+              hideIcon
+              // onLegendHover={handleMouseEnter}
+              // percentagesByKey={percentagesByKey}
+            />
+          }
+        /> */}
+
+        {children}
+      </ReLineChart>
     </ChartContainer>
   );
 };

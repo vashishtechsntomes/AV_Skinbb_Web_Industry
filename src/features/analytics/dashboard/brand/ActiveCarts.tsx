@@ -88,7 +88,7 @@ const columns: ColumnDef<Carts>[] = [
   },
   {
     accessorKey: "abandonmentRate",
-    header: "Abandonment Rate",
+    header: "Aban Rate",
   },
   {
     accessorKey: "price",
