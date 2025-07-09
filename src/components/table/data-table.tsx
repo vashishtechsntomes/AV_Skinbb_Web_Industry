@@ -60,8 +60,8 @@ import {
 import { Input } from "@/components/ui/input";
 
 export enum DataViewMode {
-  "list",
-  "grid",
+  "list" = "list",
+  "grid" = "grid",
 }
 
 export const DEFAULT_PAGE_SIZES = [5, 10, 20, 50];
@@ -156,7 +156,7 @@ export function useTable<TData extends object>({
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("viewMode", LOCAL_STORAGE_VIEW_MODE_KEY.toString());
+    localStorage.setItem(LOCAL_STORAGE_VIEW_MODE_KEY, viewMode);
   }, [viewMode]);
 
   return {
@@ -167,7 +167,7 @@ export function useTable<TData extends object>({
       setViewMode((prev) =>
         prev === DataViewMode.list ? DataViewMode.grid : DataViewMode.list,
       ),
-    viewMode,
+    viewMode: viewMode,
     setViewMode,
   };
 }
@@ -503,7 +503,6 @@ export function DataTable<TData extends object>({
     defaultViewMode: DataViewMode.list,
     ...props,
   });
-
   const { table } = tableState;
   return (
     <div className="space-y-5">
@@ -548,7 +547,6 @@ export function DataTableToogle<TData extends object>({
     defaultViewMode: DataViewMode.grid,
     ...props,
   });
-
   const { table, viewMode } = tableState;
   return (
     <div className="space-y-5">
