@@ -302,7 +302,7 @@ and performance`,
           />
         ))}
       </div>
-      <div className="flex flex-col gap-2 sm:grid sm:grid-cols-2 md:grid-cols-3 md:gap-6">
+      <div className="flex grid-cols-1 flex-col gap-4 sm:grid sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
         <StatChartCard name="Gender Distribution">
           <PieChart
             config={genderConfig}

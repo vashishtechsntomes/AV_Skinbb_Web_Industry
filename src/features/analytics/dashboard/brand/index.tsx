@@ -135,43 +135,44 @@ and performance`,
           ),
         }}
       >
-        <div className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-3">
-          <div className="space-y-2 md:space-y-5">
-            <StatCard
-              title={"Listed Products"}
-              value={"150"}
-              barColor={"bg-primary"}
-              className="relative"
-              icon={
-                <BlobIcon
-                  className="absolute right-3"
-                  icon={<ShoppingBagIcon />}
-                />
-              }
-            />
-            <StatChart
-              name="Impressions"
-              value={"45,000"}
-              change={20}
-              contentProps={{ className: "px-0" }}
-            >
-              <LineChart
-                {...SharedLineProps}
-                config={impressionChartConfig}
-                data={impressionChartData}
-                lineProps={[
-                  {
-                    dataKey: "desktop",
-                  },
-                ]}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
+          {/* <div className="grid grid-cols-1 gap-4"> */}
+          <StatCard
+            title={"Listed Products"}
+            value={"150"}
+            barColor={"bg-primary"}
+            className="relative md:col-span-1 md:row-span-1"
+            icon={
+              <BlobIcon
+                className="absolute right-3"
+                icon={<ShoppingBagIcon />}
               />
-            </StatChart>
-          </div>
+            }
+          />
+          <StatChart
+            className="md:col-span-1 md:row-start-2"
+            name="Impressions"
+            value={"45,000"}
+            change={20}
+            contentProps={{ className: "px-0 h-full" }}
+          >
+            <LineChart
+              {...SharedLineProps}
+              config={impressionChartConfig}
+              data={impressionChartData}
+              lineProps={[
+                {
+                  dataKey: "desktop",
+                },
+              ]}
+            />
+          </StatChart>
+          {/* </div> */}
           <StatChart
             name="Clicks"
             value={"6,200"}
+            className="md:col-span-1 md:col-start-2 md:row-span-2 lg:col-span-1 lg:col-start-2 lg:row-span-2"
             change={1.3}
-            className=""
             contentProps={{ className: "px-0 w-full h-full" }}
           >
             <LineChart
@@ -189,6 +190,7 @@ and performance`,
             name="Sales"
             value={"₹18.2L"}
             change={9.4}
+            className="lg:col-span-1 lg:col-start-3 lg:row-span-2"
             contentProps={{ className: "px-0 flex-1 flex flex-col" }}
           >
             <div className="mb-5 flex justify-between gap-4 px-5">
@@ -211,56 +213,6 @@ and performance`,
                 ]}
               ></LineChart>
             </div>
-
-            {/* <ChartContainer
-              config={chartConfig}
-              className=""
-              // responsiveProps={{ height: 223 }}
-            >
-              <ReLineChart
-                accessibilityLayer
-                data={chartData}
-                margin={
-                  {
-                    // left: 12,
-                    // right: 12,
-                  }
-                }
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent />}
-                />
-                <Line
-                  dataKey="desktop"
-                  type="monotone"
-                  stroke="var(--color-desktop)"
-                  strokeWidth={2}
-                  // dot={false}
-                />
-                <Line
-                  dataKey="mobile"
-                  type="monotone"
-                  stroke="var(--color-mobile)"
-                  strokeWidth={2}
-                  // dot={false}
-                />
-                <ChartLegend
-                  payload={Object.entries(chartConfig).map(([key, value]) => ({
-                    value: capitalize(key),
-                    type: "circle",
-                    color: value.color,
-                  }))}
-                />
-              </ReLineChart>
-            </ChartContainer> */}
           </StatChart>
         </div>
         <div className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-3">
@@ -311,14 +263,10 @@ const StatChart = ({
   statValueProps,
   ...props
 }: StatChartProps) => {
-  console.log("🚀 ~ contentProps:", contentProps);
   const { className: contentClassNameProps, ...contextPropsReset } =
     contentProps ?? {};
   return (
-    <Card
-      className={cn("flex w-full flex-col overflow-hidden", className)}
-      {...props}
-    >
+    <Card className={cn("h-full w-full overflow-auto", className)} {...props}>
       <CardHeader className="items-center pb-0">
         <CardTitle className="">
           <StatValue

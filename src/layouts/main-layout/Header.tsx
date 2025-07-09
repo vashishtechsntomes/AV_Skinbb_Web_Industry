@@ -140,7 +140,8 @@ const Header = () => {
               {
                 children: "Logout",
                 type: "item",
-                onSelect: () => dispatch(logout()),
+                className: "cursor-pointer",
+                onClick: () => dispatch(logout()),
               },
             ]}
             asChild
