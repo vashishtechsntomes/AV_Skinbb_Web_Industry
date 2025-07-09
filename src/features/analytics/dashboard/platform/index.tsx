@@ -62,37 +62,37 @@ const stateChartData = [
   { key: "KA", value: 118 }, // Karnataka
   { key: "GJ", value: 115 }, // Gujarat
   { key: "AP", value: 110 }, // Andhra Pradesh
-  { key: "TG", value: 105 }, // Telangana
-  { key: "OD", value: 98 }, // Odisha
-  { key: "KL", value: 92 }, // Kerala
-  { key: "JH", value: 89 }, // Jharkhand
-  { key: "AS", value: 87 }, // Assam
-  { key: "PB", value: 82 }, // Punjab
-  { key: "CT", value: 78 }, // Chhattisgarh
-  { key: "HR", value: 76 }, // Haryana
-  { key: "DL", value: 70 }, // Delhi
-  { key: "JK", value: 60 }, // Jammu & Kashmir
-  { key: "UK", value: 55 }, // Uttarakhand
-  { key: "HP", value: 47 }, // Himachal Pradesh
-  { key: "TR", value: 42 }, // Tripura
-  { key: "ML", value: 35 }, // Meghalaya
-  { key: "MN", value: 30 }, // Manipur
-  { key: "NL", value: 25 }, // Nagaland
-  { key: "GA", value: 22 }, // Goa
-  { key: "AR", value: 20 }, // Arunachal Pradesh
-  { key: "MZ", value: 18 }, // Mizoram
-  { key: "SK", value: 12 }, // Sikkim
-  { key: "PY", value: 10 }, // Puducherry
-  { key: "CH", value: 9 }, // Chandigarh
-  { key: "AN", value: 6 }, // Andaman & Nicobar Islands
-  { key: "LA", value: 5 }, // Ladakh
-  { key: "DN", value: 4 }, // Dadra & Nagar Haveli and Daman & Diu
-  { key: "LD", value: 2 }, // Lakshadweep
-  { key: "Unknown", value: 1 },
+  { key: "TG", value: 80 }, // Telangana
+  // { key: "OD", value: 98 }, // Odisha
+  // { key: "KL", value: 92 }, // Kerala
+  // { key: "JH", value: 89 }, // Jharkhand
+  // { key: "AS", value: 87 }, // Assam
+  // { key: "PB", value: 82 }, // Punjab
+  // { key: "CT", value: 78 }, // Chhattisgarh
+  // { key: "HR", value: 76 }, // Haryana
+  // { key: "DL", value: 70 }, // Delhi
+  // { key: "JK", value: 60 }, // Jammu & Kashmir
+  // { key: "UK", value: 55 }, // Uttarakhand
+  // { key: "HP", value: 47 }, // Himachal Pradesh
+  // { key: "TR", value: 42 }, // Tripura
+  // { key: "ML", value: 35 }, // Meghalaya
+  // { key: "MN", value: 30 }, // Manipur
+  // { key: "NL", value: 25 }, // Nagaland
+  // { key: "GA", value: 22 }, // Goa
+  // { key: "AR", value: 20 }, // Arunachal Pradesh
+  // { key: "MZ", value: 18 }, // Mizoram
+  // { key: "SK", value: 12 }, // Sikkim
+  { key: "PY", value: 50 }, // Puducherry
+  { key: "CH", value: 39 }, // Chandigarh
+  { key: "AN", value: 36 }, // Andaman & Nicobar Islands
+  { key: "LA", value: 25 }, // Ladakh
+  { key: "DN", value: 22 }, // Dadra & Nagar Haveli and Daman & Diu
+  { key: "LD", value: 10 }, // Lakshadweep
+  { key: "Unknown", value: 5 },
 ];
 const stateChartConfig = {
   value: {
-    label: "value",
+    label: "State",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
@@ -157,25 +157,25 @@ const statsData = [
   {
     title: "Active Users",
     value: 1250,
-    barColor: "bg-primary",
+    barColor: "bg-chart-1",
     icon: <UserIcon />,
   },
   {
     title: "Number of Routines",
     value: 3400,
-    barColor: "bg-blue-300",
+    barColor: "bg-chart-2",
     icon: <CalendarDaysIcon />,
   },
   {
     title: "Avg Routines per User",
     value: 1.7,
-    barColor: "bg-violet-300",
+    barColor: "bg-chart-3",
     icon: <UserIcon />,
   },
   {
     title: "Avg Products of Routine",
     value: 4.3,
-    barColor: "bg-red-300",
+    barColor: "bg-chart-4",
     icon: <CalendarDaysIcon />,
   },
 ];
