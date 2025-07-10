@@ -13,6 +13,5 @@ createRoot(document.getElementById("root") as HTMLElement).render(
         <RouterProvider router={appRoutes} />
       </Suspense>
     </Provider>
-    ,
   </StrictMode>,
 );

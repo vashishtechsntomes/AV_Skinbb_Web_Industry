@@ -373,7 +373,7 @@ const Sidebar = () => {
         className={cn(
           "bg-background w1-60 fixed z-10 order-first h-screen overflow-y-auto px-2 transition-all",
           width,
-          isSidebarOpen && "-translate-x-100",
+          !isSidebarOpen && "-translate-x-100",
           isMobile
             ? isSidebarOpen
               ? "translate-x-0"
@@ -420,7 +420,7 @@ const Sidebar = () => {
         className={cn(
           "w1-60 hidden transition-all md:block",
           width,
-          isSidebarOpen && "w-0",
+          !isSidebarOpen && "w-0",
         )}
       ></div>
     </>
