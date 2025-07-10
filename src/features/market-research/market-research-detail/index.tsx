@@ -104,7 +104,7 @@ const MarketResearchDetail = () => {
     const currentParams = new URLSearchParams(location.search);
     currentParams.set("step", activeTab);
     navigate({ search: currentParams.toString() }, { replace: true });
-  }, [activeTab]);
+  }, [activeTab, location, navigate]);
 
   return (
     <PageContent

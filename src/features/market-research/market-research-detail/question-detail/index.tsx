@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import type { SurveyQuestion } from "@/types/research.type";
 import { EyeIcon } from "@heroicons/react/24/outline";
-import { createContext } from "react";
 import QuestionModalBody from "./QuestionModalBody";
 
 const QuestionDetailModal = ({

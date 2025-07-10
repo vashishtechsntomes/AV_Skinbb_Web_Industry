@@ -91,9 +91,7 @@ const StatChartCard = ({
   children: React.ReactNode;
 }) => {
   return (
-    <Card
-      className={cn("flex max-h-86 min-h-82 max-w-full flex-col", className)}
-    >
+    <Card className={cn("md:max-h-86", className)}>
       <CardHeader className="items-center pb-0">
         <CardTitle className="text-muted-foreground text-lg leading-none">
           {name}

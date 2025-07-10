@@ -22,6 +22,7 @@ const OptionsToggle = ({
     >
       {options.map((radio) => (
         <ToggleGroupPrimitive.Item
+          key={radio}
           value={radio}
           data-slot="toggle-group-item"
           className="data-[state=on]:border-primary data-[state=on]:[&_svg]:fill-primary data-[state=on]:ring-primary relative flex w-full items-center justify-start gap-2 rounded-lg border px-3 py-2 text-left transition-all active:scale-98 data-[state=on]:ring-2 [&>svg]:fill-transparent"

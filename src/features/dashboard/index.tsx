@@ -143,6 +143,8 @@ const cardData = [
 ];
 
 const Dashboard = () => {
+  // const authHook = useAuth();
+  // console.log("🚀 ~ Dashboard ~ authHook:", authHook);
   return (
     <PageContent
       ariaLabel="dashboard"
@@ -158,7 +160,7 @@ const Dashboard = () => {
         hasBack: false,
       }}
     >
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
         {cardData.map(({ title, description, buttons, icon }) => (
           <Card
             key={title}
@@ -202,7 +204,11 @@ const Card = ({ title, description, buttons, icon }: CardProps) => {
                 variant={"link"}
                 asChild
               >
-                <NavLink to={link.href}>{link.name}</NavLink>
+                {buttons.length !== 1 ? (
+                  <NavLink to={link.href}>{link.name}</NavLink>
+                ) : (
+                  <span>{link.name}</span>
+                )}
               </Button>
               {buttons.length - 1 !== index && (
                 <hr className="bg-border h-5 w-0.5" />

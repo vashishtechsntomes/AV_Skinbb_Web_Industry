@@ -44,6 +44,7 @@ type BarChartProps = {
   toolContentProps?: ChartTooltipContentProps;
   layout?: CategoricalChartProps["layout"];
 } & Omit<ChartContainerProps, "children">;
+
 const BarChart: FC<BarChartProps> = ({
   layout = "horizontal",
   data,
@@ -65,7 +66,7 @@ const BarChart: FC<BarChartProps> = ({
   return (
     <ChartContainer
       config={config}
-      className={cn("aspect-square w-full", className)}
+      className={cn("aspect-square h-full w-full", className)}
       {...props}
     >
       <RechartsBarChart

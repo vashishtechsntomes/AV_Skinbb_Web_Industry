@@ -104,12 +104,20 @@ const items: () => Record<string, Item> = () => ({
         />
       </svg>
     ),
-    children: ["anyDashboard", "user insight", "market trends"],
+    children: [
+      "platform analysis",
+      "brand analysis",
+      "user insight",
+      "market trends",
+    ],
   },
-  anyDashboard: {
-    name: "Dashboard",
-    href: `${ROUTES.ANALYTICS_PLATFORM}`,
-    current: true,
+  "platform analysis": {
+    name: "Platform insight",
+    href: ROUTES.ANALYTICS_PLATFORM,
+  },
+  "brand analysis": {
+    name: "Brand insight",
+    href: ROUTES.ANALYTICS_BRAND,
   },
   "user insight": {
     name: "user insight",
@@ -121,7 +129,7 @@ const items: () => Record<string, Item> = () => ({
   },
   "market research": {
     name: "market research",
-    href: "market-research",
+    href: "/market-research",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -3,20 +3,23 @@ import PieChart from "./pie";
 import { useState } from "react";
 import BarChart from "./bar";
 import DonutPie from "./donut-pie";
+import LineChart from "./line";
 
 enum CHARTTYPE {
   "pie" = "pie",
   "bar" = "bar",
   "donutPie" = "donutPie",
+  "line" = "line",
 }
 const CHARTS: (keyof typeof CHARTTYPE)[] = [
   CHARTTYPE.bar,
   CHARTTYPE.pie,
   CHARTTYPE.donutPie,
+  CHARTTYPE.line,
 ];
 
 const DummyCharts = () => {
-  const [activeTab, setActiveTab] = useState<CHARTTYPE>(CHARTTYPE.donutPie);
+  const [activeTab, setActiveTab] = useState<CHARTTYPE>(CHARTTYPE.line);
   return (
     <div className="">
       <br />
@@ -42,6 +45,7 @@ const DummyCharts = () => {
       {activeTab === CHARTTYPE.pie && <PieChart />}
       {activeTab === CHARTTYPE.bar && <BarChart />}
       {activeTab === CHARTTYPE.donutPie && <DonutPie />}
+      {activeTab === CHARTTYPE.line && <LineChart />}
     </div>
   );
 };

@@ -102,6 +102,7 @@ const DonutPieChart: FC<DonutPieChartProps> = ({
                 nameKey="key"
                 labelKey="key"
                 hideLabel
+                // hideLabel
                 formatter={(val, name, entry) =>
                   formatChartTooltip(val, name, entry, percentagesByKey)
                 }

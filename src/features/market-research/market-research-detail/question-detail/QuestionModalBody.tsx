@@ -1,16 +1,15 @@
-import type { SurveyQuestion } from "@/types/research.type";
-import OptionsToggle from "./OptionsToggle";
+import { Button } from "@/components/ui/button";
 import {
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import type { SurveyQuestion } from "@/types/research.type";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { createContext, useState } from "react";
 import OptionCharts from "./OptionCharts";
+import OptionsToggle from "./OptionsToggle";
 
 interface QuestionContext {
   question?: SurveyQuestion;
@@ -68,7 +67,7 @@ const QuestionModalBody = ({
           </DialogTitle>
         </DialogHeader>
         <hr />
-        <div className="grid grid-cols-10 px-5 pt-3 pb-5 gap-2 md:gap-5">
+        <div className="grid grid-cols-10 gap-2 px-5 pt-3 pb-5 md:gap-5">
           <div className="col-span-2">
             Options
             <div className="mt-2 flex flex-col gap-5">
