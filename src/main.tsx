@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router";
 import Provider from "./Provider";
@@ -7,11 +7,12 @@ import { appRoutes } from "./routes";
 import "./styles/index.css";
 
 createRoot(document.getElementById("root") as HTMLElement).render(
-  // <StrictMode>
-  <Provider>
-    <Suspense fallback={<FullLoader />}>
-      <RouterProvider router={appRoutes} />
-    </Suspense>
-  </Provider>,
-  // </StrictMode>,
+  <StrictMode>
+    <Provider>
+      <Suspense fallback={<FullLoader />}>
+        <RouterProvider router={appRoutes} />
+      </Suspense>
+    </Provider>
+    ,
+  </StrictMode>,
 );
