@@ -14,7 +14,7 @@ export const authRoutes: RouteObject[] = [
         Component: AuthLayout,
         children: [
           {
-            path: ROUTES.SIGN_IN,
+            path: `${ROUTES.SIGN_IN}/-main`,
             Component: lazy(() => import("@/features/auth/sign-in")),
           },
           {
@@ -22,6 +22,10 @@ export const authRoutes: RouteObject[] = [
             Component: lazy(() => import("@/features/auth/sign-up")),
           },
         ],
+      },
+      {
+        path: `${ROUTES.SIGN_IN}`,
+        Component: lazy(() => import("@/features/auth/sign-in-simple")),
       },
     ],
   },

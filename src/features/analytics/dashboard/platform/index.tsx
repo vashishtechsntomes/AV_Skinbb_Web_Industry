@@ -156,13 +156,13 @@ const skinChartConfig = {
 const statsData = [
   {
     title: "Active Users",
-    value: 1250,
+    value: 111250,
     barColor: "bg-chart-1",
     icon: <UserIcon />,
   },
   {
     title: "Number of Routines",
-    value: 3400,
+    value: 317400,
     barColor: "bg-chart-2",
     icon: <CalendarDaysIcon />,
   },
