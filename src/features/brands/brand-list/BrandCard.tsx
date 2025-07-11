@@ -1,6 +1,7 @@
 import { StatusBadge } from "@/components/ui/badge";
 import { ROUTES } from "@/routes/routes.constant";
 import type { Brand } from "@/types/brand.type";
+import { formatCurrency, formatNumber } from "@/utils";
 import { memo, type FC } from "react";
 import { NavLink } from "react-router";
 
@@ -37,9 +38,9 @@ export const BrandCard: FC<BrandCardProps> = ({ brand }) => {
         <hr />
 
         <section className="flex justify-around gap-2 text-center">
-          <Stat label="Products" value={brand.products} />
-          <Stat label="Surveys" value={brand.surveys} />
-          <Stat label="Promotions" value={brand.promotions} />
+          <Stat label="Products" value={formatNumber(brand.products)} />
+          <Stat label="Surveys" value={formatNumber(brand.surveys)} />
+          <Stat label="Promotions" value={formatNumber(brand.promotions)} />
         </section>
 
         <hr />
@@ -47,7 +48,7 @@ export const BrandCard: FC<BrandCardProps> = ({ brand }) => {
         <section className="flex justify-around gap-2 text-center">
           <Stat
             label="Earnings"
-            value={`₹${brand.earnings.toLocaleString()}`}
+            value={`${formatCurrency(brand.earnings, { useAbbreviation: false })}`}
           />
           <div>
             <p className="text-sm">Status</p>

@@ -4,7 +4,7 @@ import { StatCard } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
 import { DataTableToogle } from "@/components/table/data-table";
 import type { Brand } from "@/types/brand.type";
-import { formatCurrency } from "@/utils";
+import { formatCurrency, formatNumber } from "@/utils";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import type { ColumnDef } from "@tanstack/react-table";
 import { BrandCard } from "./BrandCard";
@@ -217,7 +217,7 @@ const BrandList = () => {
           <StatCard
             key={item.title}
             title={item.title}
-            value={item.value}
+            value={formatNumber(item.value)}
             barColor={item.barColor}
           />
         ))}

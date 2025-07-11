@@ -8,7 +8,7 @@ import {
   type ChartConfig,
   type ChartContainerProps,
 } from "@/components/ui/chart";
-import { capitalize, cn } from "@/utils";
+import { capitalize, cn, formatNumber } from "@/utils";
 import {
   useMemo,
   useState,
@@ -153,7 +153,9 @@ const DonutPieChart: FC<DonutPieChartProps> = ({
                       y={(viewBox.cy ?? 0) - (showFullDonut ? 0 : 20)}
                       className="fill-foreground text-3xl font-bold"
                     >
-                      {String(totalValue)}
+                      {typeof totalValue === "number"
+                        ? formatNumber(totalValue)
+                        : String(totalValue)}
                     </tspan>
                     <tspan
                       x={viewBox.cx}

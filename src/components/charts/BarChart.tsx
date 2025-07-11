@@ -6,7 +6,7 @@ import {
   type ChartContainerProps,
   type ChartTooltipContentProps,
 } from "@/components/ui/chart";
-import { cn } from "@/utils";
+import { cn, formatNumber } from "@/utils";
 import { type ComponentProps, type FC, type ReactNode } from "react";
 import {
   Bar,
@@ -89,7 +89,15 @@ const BarChart: FC<BarChartProps> = ({
           tickMargin={10}
           {...xAxisProps}
         />
-        <YAxis tickLine={false} axisLine={false} width={45} {...yAxisProps} />
+        <YAxis
+          tickLine={false}
+          axisLine={false}
+          tickFormatter={(label) =>
+            typeof label === "number" ? formatNumber(label) : label
+          }
+          width={45}
+          {...yAxisProps}
+        />
         {showTooltip && (
           <ChartTooltip
             content={

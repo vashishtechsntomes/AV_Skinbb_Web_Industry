@@ -6,7 +6,7 @@ import { PageContent } from "@/components/ui/structure";
 import { DataTableToogle } from "@/components/table/data-table";
 import { ROUTES } from "@/routes/routes.constant";
 import type { Survey } from "@/types/research.type";
-import { formatCurrency, formatDate } from "@/utils";
+import { formatCurrency, formatDate, formatNumber } from "@/utils";
 import { CalendarDateRangeIcon, EyeIcon } from "@heroicons/react/24/outline";
 import type { ColumnDef } from "@tanstack/react-table";
 import { NavLink } from "react-router";
@@ -252,7 +252,11 @@ const MarketResearchList = () => {
           <StatCard
             key={item.title}
             title={item.title}
-            value={item.value}
+            value={
+              typeof item.value === "number"
+                ? formatNumber(item.value)
+                : item.value
+            }
             barColor={item.barColor}
           />
         ))}

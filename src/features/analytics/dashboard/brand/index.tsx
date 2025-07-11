@@ -9,7 +9,7 @@ import { StatCard, StatValue, type StatValueProps } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ROUTES } from "@/routes/routes.constant";
-import { cn } from "@/utils";
+import { cn, formatCurrency, formatNumber } from "@/utils";
 import {
   CalendarDateRangeIcon,
   ShoppingBagIcon,
@@ -139,7 +139,7 @@ and performance`,
           {/* <div className="grid grid-cols-1 gap-4"> */}
           <StatCard
             title={"Listed Products"}
-            value={"150"}
+            value={formatNumber(150)}
             barColor={"bg-primary"}
             className="relative md:col-span-1 md:row-span-1"
             icon={
@@ -152,7 +152,7 @@ and performance`,
           <StatChart
             className="md:col-span-1 md:row-start-2"
             name="Impressions"
-            value={"45,000"}
+            value={formatNumber(45000)}
             change={20}
             contentProps={{ className: "px-0 h-full" }}
           >
@@ -170,7 +170,7 @@ and performance`,
           {/* </div> */}
           <StatChart
             name="Clicks"
-            value={"6,200"}
+            value={formatNumber(6200)}
             className="md:col-span-1 md:col-start-2 md:row-span-2 lg:col-span-1 lg:col-start-2 lg:row-span-2"
             change={1.3}
             contentProps={{ className: "px-0 w-full h-full" }}
@@ -188,13 +188,16 @@ and performance`,
           </StatChart>
           <StatChart
             name="Sales"
-            value={"₹18.2L"}
+            value={formatCurrency(1820000, { useAbbreviation: true })}
             change={9.4}
             className="lg:col-span-1 lg:col-start-3 lg:row-span-2"
             contentProps={{ className: "px-0 flex-1 flex flex-col" }}
           >
             <div className="mb-5 flex justify-between gap-4 px-5">
-              <StatValue title={"Net Sales"} value={"₹16.1L"} />
+              <StatValue
+                title={"Net Sales"}
+                value={formatCurrency(1620000, { useAbbreviation: true })}
+              />
               <StatValue title={"Returns / RTO"} value={"₹2.1L"} />
             </div>
 
@@ -218,7 +221,7 @@ and performance`,
         <div className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-3">
           <StatChart
             name="Active Carts"
-            value={"1.2K"}
+            value={formatCurrency(1200, { useAbbreviation: true })}
             change={3.2}
             className="col-span-3"
             contentProps={{ className: "px-0" }}

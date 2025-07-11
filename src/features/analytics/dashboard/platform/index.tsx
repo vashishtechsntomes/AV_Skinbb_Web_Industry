@@ -16,6 +16,7 @@ import {
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { AnalyticsFilterForm } from "./AnalyticsFilterForm";
+import { formatNumber } from "@/utils";
 
 const genderData = [
   { key: "male", value: 275, fill: "var(--chart-1)", showValue: false },
@@ -38,11 +39,11 @@ const genderConfig = {
 } satisfies ChartConfig;
 
 const ageChartData = [
-  { key: "18–24", value: 141 },
-  { key: "25–32", value: 159 },
-  { key: "33–50", value: 126 },
-  { key: "51–More", value: 147 },
-  { key: "Unknown", value: 38 },
+  { key: "18–24", value: 8860 },
+  { key: "25–32", value: 11582 },
+  { key: "33–50", value: 28001 },
+  { key: "51–More", value: 17802 },
+  { key: "Unknown", value: 55005 },
 ];
 const ageChartConfig = {
   value: {
@@ -52,44 +53,26 @@ const ageChartConfig = {
 } satisfies ChartConfig;
 
 const stateChartData = [
-  { key: "UP", value: 220 }, // Uttar Pradesh
-  { key: "MH", value: 198 }, // Maharashtra
-  { key: "BR", value: 174 }, // Bihar
-  { key: "WB", value: 150 }, // West Bengal
-  { key: "MP", value: 139 }, // Madhya Pradesh
-  { key: "TN", value: 127 }, // Tamil Nadu
-  { key: "RJ", value: 120 }, // Rajasthan
-  { key: "KA", value: 118 }, // Karnataka
-  { key: "GJ", value: 115 }, // Gujarat
-  { key: "AP", value: 110 }, // Andhra Pradesh
-  { key: "TG", value: 80 }, // Telangana
-  // { key: "OD", value: 98 }, // Odisha
-  // { key: "KL", value: 92 }, // Kerala
-  // { key: "JH", value: 89 }, // Jharkhand
-  // { key: "AS", value: 87 }, // Assam
-  // { key: "PB", value: 82 }, // Punjab
-  // { key: "CT", value: 78 }, // Chhattisgarh
-  // { key: "HR", value: 76 }, // Haryana
-  // { key: "DL", value: 70 }, // Delhi
-  // { key: "JK", value: 60 }, // Jammu & Kashmir
-  // { key: "UK", value: 55 }, // Uttarakhand
-  // { key: "HP", value: 47 }, // Himachal Pradesh
-  // { key: "TR", value: 42 }, // Tripura
-  // { key: "ML", value: 35 }, // Meghalaya
-  // { key: "MN", value: 30 }, // Manipur
-  // { key: "NL", value: 25 }, // Nagaland
-  // { key: "GA", value: 22 }, // Goa
-  // { key: "AR", value: 20 }, // Arunachal Pradesh
-  // { key: "MZ", value: 18 }, // Mizoram
-  // { key: "SK", value: 12 }, // Sikkim
-  { key: "PY", value: 50 }, // Puducherry
-  { key: "CH", value: 39 }, // Chandigarh
-  { key: "AN", value: 36 }, // Andaman & Nicobar Islands
-  { key: "LA", value: 25 }, // Ladakh
-  { key: "DN", value: 22 }, // Dadra & Nagar Haveli and Daman & Diu
-  { key: "LD", value: 10 }, // Lakshadweep
-  { key: "Unknown", value: 5 },
+  { key: "UP", value: 14317 }, // Uttar Pradesh
+  { key: "MH", value: 12885 }, // Maharashtra
+  { key: "BR", value: 11332 }, // Bihar
+  { key: "WB", value: 9779 }, // West Bengal
+  { key: "MP", value: 9013 }, // Madhya Pradesh
+  { key: "TN", value: 8187 }, // Tamil Nadu
+  { key: "RJ", value: 7663 }, // Rajasthan
+  { key: "KA", value: 7492 }, // Karnataka
+  { key: "GJ", value: 7261 }, // Gujarat
+  { key: "AP", value: 6908 }, // Andhra Pradesh
+  { key: "TG", value: 5042 }, // Telangana
+  { key: "PY", value: 3176 }, // Puducherry
+  { key: "CH", value: 2460 }, // Chandigarh
+  { key: "AN", value: 2259 }, // Andaman & Nicobar Islands
+  { key: "LA", value: 1573 }, // Ladakh
+  { key: "DN", value: 1381 }, // Dadra & Nagar Haveli and Daman & Diu
+  { key: "LD", value: 635 }, // Lakshadweep
+  { key: "Unknown", value: 317 },
 ];
+
 const stateChartConfig = {
   value: {
     label: "State",
@@ -98,11 +81,11 @@ const stateChartConfig = {
 } satisfies ChartConfig;
 
 const skinChartData = [
-  { key: "dry", value: 1260, fill: "var(--chart-1)" },
-  { key: "normal", value: 570, fill: "var(--chart-2)" },
-  { key: "oily", value: 890, fill: "var(--chart-3)" },
-  { key: "combination", value: 420, fill: "var(--chart-4)" },
-  { key: "unknown", value: 130, fill: "var(--chart-5)" },
+  { key: "dry", value: 17232, fill: "var(--chart-1)" },
+  { key: "normal", value: 7796, fill: "var(--chart-2)" },
+  { key: "oily", value: 12172, fill: "var(--chart-3)" },
+  { key: "combination", value: 5747, fill: "var(--chart-4)" },
+  { key: "unknown", value: 68303, fill: "var(--chart-5)" },
   // {
   //   dry: 1260,
   //   normal: 570,
@@ -181,11 +164,16 @@ const statsData = [
 ];
 
 const concernChartData = [
-  { key: "acne", value: 1260, fill: "var(--chart-1)" },
-  { key: "dullness", value: 570, fill: "var(--chart-2)" },
-  { key: "roughness", value: 890, fill: "var(--chart-3)" },
+  { key: "acne", value: 5201, fill: "var(--chart-1)" },
+  { key: "dullness", value: 3440, fill: "var(--chart-2)" },
+  { key: "roughness", value: 2101, fill: "var(--chart-3)" },
   { key: "wrinkles", value: 420, fill: "var(--chart-4)" },
-
+  { key: "undereye darkcircles", value: 989, fill: "var(--chart-5)" },
+  { key: "oily skin", value: 2558, fill: "var(--chart-4)" },
+  { key: "dark spots", value: 4303, fill: "var(--chart-4)" },
+  { key: "photodamage", value: 321, fill: "var(--chart-4)" },
+  { key: "melasma", value: 643, fill: "var(--chart-4)" },
+  { key: "Unknown", value: 91274, fill: "var(--chart-4)" },
   // {
   //   // name: "Usage",
   //   acne: 1260,
@@ -291,7 +279,7 @@ and performance`,
           <StatCard
             key={item.title}
             title={item.title}
-            value={item.value}
+            value={formatNumber(item.value)}
             barColor={item.barColor}
             className="relative md:flex-1"
             icon={
@@ -311,7 +299,13 @@ and performance`,
           />
         </StatChartCard>
         <StatChartCard name="Age Distribution">
-          <BarChart config={ageChartConfig} data={ageChartData} />
+          <BarChart
+            config={ageChartConfig}
+            data={ageChartData}
+            yAxisProps={{
+              width: 65,
+            }}
+          />
         </StatChartCard>
         <StatChartCard name="Skin Type Distribution">
           <DonutPieChart
@@ -339,6 +333,9 @@ and performance`,
             config={stateChartConfig}
             data={stateChartData}
             barSize={15}
+            yAxisProps={{
+              width: 65,
+            }}
             chartProps={{
               barGap: 20,
             }}

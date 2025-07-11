@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
-import { capitalize, cn } from "@/utils/index";
+import { capitalize, cn, formatNumber } from "@/utils/index";
 import type {
   NameType,
   Payload,
@@ -250,7 +250,9 @@ function ChartTooltipContent({
                     </div>
                     {item.value && (
                       <span className="text-foreground font-mono font-medium tabular-nums">
-                        {String(item.value)}
+                        {typeof item.value === "number"
+                          ? formatNumber(item.value)
+                          : String(item.value)}
                       </span>
                     )}
                   </div>
