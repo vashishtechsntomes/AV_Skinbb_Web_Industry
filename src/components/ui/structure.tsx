@@ -16,6 +16,7 @@ type PageContentProps = {
   ariaLabel?: string;
   noPadding?: boolean;
   header?: PageHeaderProps;
+  hideGradient?: boolean;
 };
 
 export function PageContent({
@@ -25,13 +26,16 @@ export function PageContent({
   header,
   ariaLabel = "Page content",
   noPadding,
+  hideGradient = false,
 }: PageContentProps) {
   return (
     <Tag
       aria-label={ariaLabel}
       className={cn(
-        "flex min-h-[calc(100vh-52.5px)] flex-col gap-4 rounded-t-md bg-linear-150 from-[#FFBCA850] via-[#FAFAFA70] to-[#DBD3FF70] inset-shadow-sm md:gap-6",
+        "flex min-h-[calc(100vh-52.5px)] flex-col gap-4 rounded-t-md inset-shadow-sm md:gap-6",
         !noPadding && "p-4 md:p-6",
+        !hideGradient &&
+          "bg-linear-150 from-[#FFBCA850] via-[#FAFAFA70] to-[#DBD3FF70]",
         className,
       )}
     >

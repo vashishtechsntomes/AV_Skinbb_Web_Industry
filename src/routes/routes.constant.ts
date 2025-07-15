@@ -9,6 +9,8 @@ export const ROUTES = {
   ANALYTIC: "/analytic",
   PLATFORM: "/platform",
   INGREDIENT: "/ingredient",
+  CHAT: "/chat",
+
   get PLATFORM_ANALYTIC() {
     return `${this.ANALYTIC}${this.PLATFORM}`;
   },

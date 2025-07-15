@@ -1,4 +1,5 @@
 // routes/auth.routes.ts
+import Chat from "@/features/chat";
 import MainLayout from "@/layouts/main-layout";
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
@@ -76,6 +77,7 @@ export const dashboardRoutes: RouteObject[] = [
               () => import("@/features/market-research/market-research-detail"),
             ),
           },
+          { path: "chat", Component: Chat },
         ],
       },
     ],
