@@ -292,3 +292,4 @@ const IngredientProductMap = () => {
 };
 
 export default IngredientProductMap;
+
