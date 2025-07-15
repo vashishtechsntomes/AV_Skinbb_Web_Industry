@@ -242,6 +242,47 @@ function SelectScrollDownButton({
   );
 }
 
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+interface CustomSelectProps {
+  options: SelectOption[];
+  optionsLabel: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  className?: string;
+}
+
+// const CustomSelect: React.FC<CustomSelectProps> = ({
+//   options,
+//   optionsLabel,
+//   value,
+//   onChange,
+//   placeholder = "Select...",
+//   className = "w-[180px]",
+// }) => {
+//   return (
+//     <Select value={value} onValueChange={onChange}>
+//       <SelectTrigger className={className}>
+//         <SelectValue placeholder={placeholder} />
+//       </SelectTrigger>
+//       <SelectContent>
+//         <SelectGroup>
+//           {optionsLabel && <SelectLabel>{optionsLabel}</SelectLabel>}
+//           {options.map((option) => (
+//             <SelectItem key={option.value} value={option.value}>
+//               {option.label}
+//             </SelectItem>
+//           ))}
+//         </SelectGroup>
+//       </SelectContent>
+//     </Select>
+//   );
+// };
+
 export {
   Select,
   SelectContent,

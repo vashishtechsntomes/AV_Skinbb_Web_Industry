@@ -35,6 +35,8 @@ type DonutPieChartProps = {
   pieProps?: Omit<ComponentProps<typeof Recharts.Pie>, "ref" | "dataKey">;
   containerProps?: ComponentProps<typeof ChartContainer>;
   children?: ReactNode;
+  activeIndex?: number;
+  setActiveIndex?: (index: number | undefined) => void;
 } & Omit<ChartContainerProps, "children">;
 
 const DonutPieChart: FC<DonutPieChartProps> = ({
@@ -50,10 +52,22 @@ const DonutPieChart: FC<DonutPieChartProps> = ({
   chartProps,
   showFullDonut = false,
   children,
+  activeIndex: pActiveIndex,
+  setActiveIndex: pSetActiveIndex,
   ...props
 }) => {
-  const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
+  const isControlled =
+    pActiveIndex !== undefined && pSetActiveIndex !== undefined;
 
+  const [internalActiveIndex, internalSetActiveIndex] = useState<
+    number | undefined
+  >(undefined);
+
+  // Use either controlled or internal state
+  const activeIndex = isControlled ? pActiveIndex : internalActiveIndex;
+  const setActiveIndex = isControlled
+    ? pSetActiveIndex
+    : internalSetActiveIndex;
   const total = useMemo(
     () => data.reduce((sum, d) => sum + d.value, 0),
     [data],

@@ -153,7 +153,7 @@ const IngredientProductMap = () => {
       setTimeout(() => animateIn(edgeId), 50);
       return true;
     },
-    [setElements, animateIn],
+    [animateIn],
   );
 
   const handleNodeClick = (id: string): boolean => {
@@ -187,6 +187,8 @@ const IngredientProductMap = () => {
       <CytoscapeComponent
         elements={CytoscapeComponent.normalizeElements(elements)}
         zoom={1}
+        zoomingEnabled={false}
+        panningEnabled={true}
         cy={(cy: Core) => {
           cyRef.current = cy;
 
@@ -195,24 +197,33 @@ const IngredientProductMap = () => {
             const id = node.id();
 
             const didAddSomething = handleNodeClick(id);
-            if (!didAddSomething) {
-              // nothing new—skip layout/center/animation
-              return;
+            if (didAddSomething) {
+              cy.layout({
+                name: "breadthfirst",
+                fit: false,
+                animate: false,
+              }).run();
+
+              animateIn(id);
+              setTimeout(() => {
+                cy.animate(
+                  {
+                    center: { eles: node },
+                  },
+                  {
+                    duration: 500,
+                    easing: "ease-in-out",
+                  },
+                );
+              }, 300);
+              // cy.stop(true);
+              // cy.animate(
+              //   {
+              //     center: { eles: node },
+              //   },
+              //   { duration: 300 },
+              // );
             }
-            cy.layout({
-              name: "breadthfirst",
-              fit: false,
-              animate: false,
-            }).run();
-            cy.center(node);
-            animateIn(id);
-            // cy.stop(true);
-            // cy.animate(
-            //   {
-            //     center: { eles: node },
-            //   },
-            //   { duration: 300 },
-            // );
           });
 
           cy.layout({
@@ -292,4 +303,3 @@ const IngredientProductMap = () => {
 };
 
 export default IngredientProductMap;
-

@@ -1,8 +1,21 @@
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PageContent } from "@/components/ui/structure";
-import { ROUTES } from "@/routes/routes.constant";
-import { NavLink } from "react-router";
+import FocusIngredients from "./FocusIngredients";
 import FunctionalTrends from "./FunctionalTrends";
+import IngredientOvertime from "./IngredientOvertime";
+import TopPreservativeTrends from "./TopPreservativeTrends";
+import { StatChartCard } from "@/components/ui/card";
+import IngredientProductMap from "@/components/cytoscape/IngredientProductMap";
 // import FunctionalTrends from "./FunctionalTrends";
 
 const Ingredient = () => {
@@ -12,16 +25,61 @@ const Ingredient = () => {
         title: "Ingredients",
         description: "Discover top brands from around the world.",
         actions: (
-          <Button color={"primary"} asChild>
-            <NavLink to={ROUTES.BRAND_CREATE}>Ingredients</NavLink>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2">
+              <Label>Age</Label>
+              <Select defaultValue="All">
+                <SelectTrigger className="bg-background w-full truncate">
+                  <SelectValue placeholder="Select a age" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Age</SelectLabel>
+                    {["All", "18–24", "25–32", "33–50", "51+", "Unknown"].map(
+                      (item) => (
+                        <SelectItem key={item} value={item}>
+                          {item}
+                        </SelectItem>
+                      ),
+                    )}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center gap-2">
+              <Label>Gender</Label>
+              <Select defaultValue="All">
+                <SelectTrigger className="bg-background w-full truncate">
+                  <SelectValue placeholder="Select a gender" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Gender</SelectLabel>
+                    {["All", "Male", "Female", "Unknown"].map((item) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button type="submit" variant={"outlined"} color={"primary"}>
+              Apply
+            </Button>
+          </div>
         ),
       }}
     >
-      <FunctionalTrends  />
-      {/* <StatChartCard name="Top Ingredients" className="md:max-h-full">
+      <IngredientOvertime />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <FocusIngredients />
+        <TopPreservativeTrends />
+      </div>
+      <FunctionalTrends />
+      <StatChartCard name="Top Ingredients" className="md:max-h-full">
         <IngredientProductMap />
-      </StatChartCard> */}
+      </StatChartCard>
     </PageContent>
   );
 };

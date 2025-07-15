@@ -92,8 +92,11 @@ const BarChart: FC<BarChartProps> = ({
         <YAxis
           tickLine={false}
           axisLine={false}
+          className="capitalize"
           tickFormatter={(label) =>
-            typeof label === "number" ? formatNumber(label) : label
+            typeof label === "number"
+              ? formatNumber(label)
+              : (config[label]?.label ?? label)
           }
           width={45}
           {...yAxisProps}

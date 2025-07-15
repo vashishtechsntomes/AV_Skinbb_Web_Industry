@@ -124,9 +124,24 @@ const LineChart = ({
 
         {showLegends && (
           <Legend
-            formatter={(value) => capitalize(value)}
+            // formatter={(value) => capitalize(value)}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            iconSize={0}
+            formatter={(value: string) => {
+              return (
+                <div className="text-muted-foreground flex items-center gap-2 text-sm capitalize">
+                  <div
+                    className="h-2 w-2 shrink-0 rounded-[2px]"
+                    style={{
+                      backgroundColor:
+                        config?.[value]?.color ?? "var(--color-primary)",
+                    }}
+                  />
+                  {config?.[value]?.label ?? value}
+                </div>
+              );
+            }}
             {...legendProps}
           />
         )}
