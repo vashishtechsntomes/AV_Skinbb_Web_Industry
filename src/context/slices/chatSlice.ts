@@ -1,3 +1,4 @@
+import { basePythonApiUrl } from "@/config/baseUrls";
 import {
   createAsyncThunk,
   createSlice,
@@ -46,7 +47,7 @@ export const sendMessageAsync = createAsyncThunk<
   //     }, 1000); // Simulate network delay)
   //   });
   try {
-    const res = await fetch("http://localhost:8000/chat", {
+    const res = await fetch(`${basePythonApiUrl}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query }),
