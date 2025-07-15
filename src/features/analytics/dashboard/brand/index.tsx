@@ -118,14 +118,14 @@ and performance`,
               >
                 <ToggleGroupItem
                   className="aspect-auto h-full flex-auto px-3"
-                  value={`${ROUTES.ANALYTICS_PLATFORM}`}
+                  value={`${ROUTES.PLATFORM_ANALYTIC}`}
                   aria-label="Toggle Platform"
                 >
                   Platform
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   className="aspect-auto h-full flex-auto px-3"
-                  value={`${ROUTES.ANALYTICS_BRAND}`}
+                  value={`${ROUTES.BRAND_ANALYTIC}`}
                   aria-label="Toggle Brand"
                 >
                   Brand

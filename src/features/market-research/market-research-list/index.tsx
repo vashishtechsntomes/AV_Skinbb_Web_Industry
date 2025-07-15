@@ -14,25 +14,25 @@ import { NavLink } from "react-router";
 const statsData = [
   {
     title: "Total Survey",
-    value: 380,
+    value: 38,
     barColor: "bg-primary",
     icon: true,
   },
   {
     title: "Active Survey",
-    value: 350,
+    value: 35,
     barColor: "bg-blue-300",
     icon: false,
   },
   {
     title: "Total Responded",
-    value: 18000,
+    value: 1330,
     barColor: "bg-violet-300",
     icon: false,
   },
   {
     title: "Total cost till now",
-    value: formatCurrency(4300000),
+    value: formatCurrency(17689),
     barColor: "bg-red-300",
     icon: true,
   },
@@ -247,7 +247,7 @@ const MarketResearchList = () => {
         ),
       }}
     >
-      <section className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">
+      <section className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">
         {statsData.map((item) => (
           <StatCard
             key={item.title}

@@ -303,7 +303,7 @@ export function DataGridView<TData>({
   return table.getRowModel().rows.length ? (
     <section
       className={cn(
-        "grid grid-cols-1 gap-2 sm:grid-cols-2 md:gap-5 lg:grid-cols-3",
+        "grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-3",
         className,
       )}
       {...props}

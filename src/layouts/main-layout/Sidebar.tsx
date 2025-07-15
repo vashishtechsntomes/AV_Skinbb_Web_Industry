@@ -109,15 +109,16 @@ const items: () => Record<string, Item> = () => ({
       "brand analysis",
       "user insight",
       "market trends",
+      "ingredient analysis",
     ],
   },
   "platform analysis": {
     name: "Platform insight",
-    href: ROUTES.ANALYTICS_PLATFORM,
+    href: ROUTES.PLATFORM_ANALYTIC,
   },
   "brand analysis": {
     name: "Brand insight",
-    href: ROUTES.ANALYTICS_BRAND,
+    href: ROUTES.BRAND_ANALYTIC,
   },
   "user insight": {
     name: "user insight",
@@ -126,6 +127,10 @@ const items: () => Record<string, Item> = () => ({
   "market trends": {
     name: "market trends",
     href: "market-trends",
+  },
+  "ingredient analysis": {
+    name: "ingredient analysis",
+    href: ROUTES.INGREDIENT_ANALYTIC,
   },
   "market research": {
     name: "market research",
@@ -371,7 +376,7 @@ const Sidebar = () => {
       )}
       <aside
         className={cn(
-          "bg-background w1-60 fixed z-10 order-first h-screen overflow-y-auto px-2 transition-all",
+          "bg-background w1-60 fixed z-10 order-first h-dvh overflow-y-auto px-2 transition-all",
           width,
           !isSidebarOpen && "-translate-x-100",
           isMobile

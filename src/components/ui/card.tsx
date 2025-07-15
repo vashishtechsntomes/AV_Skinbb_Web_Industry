@@ -85,11 +85,15 @@ const StatChartCard = ({
   name,
   children,
   className,
+  contentProps,
 }: {
   name: string;
   className?: string;
   children: React.ReactNode;
+  contentProps?: React.ComponentProps<"div">;
 }) => {
+  const { className: contentClassName, ...contentPropsRest } =
+    contentProps ?? {};
   return (
     <Card className={cn("md:max-h-86", className)}>
       <CardHeader className="items-center pb-0">
@@ -98,7 +102,12 @@ const StatChartCard = ({
         </CardTitle>
       </CardHeader>
       <hr className="mx-4" />
-      <CardContent className="flex-1 overflow-x-auto">{children}</CardContent>
+      <CardContent
+        className={cn("flex-1 overflow-x-auto", contentClassName)}
+        {...contentPropsRest}
+      >
+        {children}
+      </CardContent>
     </Card>
   );
 };

@@ -32,11 +32,11 @@ const cardData = [
     buttons: [
       {
         name: "Platform",
-        href: `${ROUTES.ANALYTICS_PLATFORM}`,
+        href: `${ROUTES.PLATFORM_ANALYTIC}`,
       },
       {
         name: "Brand",
-        href: `${ROUTES.ANALYTICS_BRAND}`,
+        href: `${ROUTES.BRAND_ANALYTIC}`,
       },
     ],
     icon: (

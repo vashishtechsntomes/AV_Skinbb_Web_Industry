@@ -42,7 +42,7 @@ const ageChartData = [
   { key: "18–24", value: 8860 },
   { key: "25–32", value: 11582 },
   { key: "33–50", value: 28001 },
-  { key: "51–More", value: 17802 },
+  { key: "51+", value: 17802 },
   { key: "Unknown", value: 55005 },
 ];
 const ageChartConfig = {
@@ -169,11 +169,11 @@ const concernChartData = [
   { key: "roughness", value: 2101, fill: "var(--chart-3)" },
   { key: "wrinkles", value: 420, fill: "var(--chart-4)" },
   { key: "undereye darkcircles", value: 989, fill: "var(--chart-5)" },
-  { key: "oily skin", value: 2558, fill: "var(--chart-4)" },
-  { key: "dark spots", value: 4303, fill: "var(--chart-4)" },
-  { key: "photodamage", value: 321, fill: "var(--chart-4)" },
+  { key: "oily skin", value: 2558, fill: "var(--chart-1)" },
+  { key: "dark spots", value: 4303, fill: "var(--chart-2)" },
+  { key: "photodamage", value: 321, fill: "var(--chart-3)" },
   { key: "melasma", value: 643, fill: "var(--chart-4)" },
-  { key: "Unknown", value: 91274, fill: "var(--chart-4)" },
+  { key: "Unknown", value: 91274, fill: "var(--chart-5)" },
   // {
   //   // name: "Usage",
   //   acne: 1260,
@@ -255,14 +255,14 @@ and performance`,
             >
               <ToggleGroupItem
                 className="aspect-auto h-full flex-auto px-3"
-                value={`${ROUTES.ANALYTICS_PLATFORM}`}
+                value={`${ROUTES.PLATFORM_ANALYTIC}`}
                 aria-label="Toggle Platform"
               >
                 Platform
               </ToggleGroupItem>
               <ToggleGroupItem
                 className="aspect-auto h-full flex-auto px-3"
-                value={`${ROUTES.ANALYTICS_BRAND}`}
+                value={`${ROUTES.BRAND_ANALYTIC}`}
                 aria-label="Toggle Brand"
               >
                 Brand
@@ -274,7 +274,7 @@ and performance`,
     >
       {isFilter && <AnalyticsFilterForm onSubmit={onSubmit} />}
 
-      <div className="grid gap-2 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
         {statsData.map((item) => (
           <StatCard
             key={item.title}
@@ -296,6 +296,12 @@ and performance`,
             config={genderConfig}
             data={genderData}
             showLegend={false}
+            chartProps={{
+              margin: { top: 0, right: 15, bottom: 0, left: 15 },
+            }}
+            // pieProps={{
+            //   paddingAngle: 0,
+            // }}
           />
         </StatChartCard>
         <StatChartCard name="Age Distribution">
@@ -313,7 +319,7 @@ and performance`,
             data={skinChartData}
             showLegend={false}
             showOuterLabel={false}
-            showTooltip={false}
+            showTooltip={true}
             showFullDonut
           />
         </StatChartCard>
@@ -323,8 +329,11 @@ and performance`,
             data={concernChartData}
             showLegend={false}
             showOuterLabel={false}
-            showTooltip={false}
+            showTooltip={true}
             showFullDonut
+            pieProps={{
+              paddingAngle: 0,
+            }}
           />
         </StatChartCard>
 

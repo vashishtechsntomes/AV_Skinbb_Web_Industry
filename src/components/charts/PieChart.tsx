@@ -78,7 +78,7 @@ const PieChart: FC<PieChartComponentProps> = ({
       )}
       {...props}
     >
-      <Recharts.PieChart className="h-full w-full" {...chartProps}>
+      <Recharts.PieChart className="h-full w-full"  {...chartProps}>
         {showTooltip && (
           <ChartTooltip
             active={activeIndex !== undefined}
