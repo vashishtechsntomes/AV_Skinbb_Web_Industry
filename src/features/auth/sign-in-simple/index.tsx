@@ -77,11 +77,11 @@ const SignIn = () => {
     );
   };
   return (
-    <div className="bg-muted ">
+    <div className="bg-muted p-4">
       <Form {...form}>
-        <div className=" min-h-dvh mx-auto flex  max-w-lg flex-col justify-center">
+        <div className="mx-auto flex min-h-dvh max-w-lg flex-col justify-center">
           <form
-            className="flex bg-background h-full w-full flex-col items-center justify-center gap-8 rounded-lg border p-4 shadow-lg sm:p-10"
+            className="bg-background flex h-full w-full flex-col items-center justify-center gap-8 rounded-lg border p-4 shadow-lg sm:p-10"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <img src={logo} alt="Logo" className="w-32" />
