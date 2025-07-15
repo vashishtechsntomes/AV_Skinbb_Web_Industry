@@ -47,13 +47,13 @@ export const sendMessageAsync = createAsyncThunk<
   //     }, 1000); // Simulate network delay)
   //   });
   try {
-    const res = await fetch(`${basePythonApiUrl}/chat`, {
+    const res = await fetch(`${basePythonApiUrl}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query }),
     });
     const data = await res.json();
-    return data.result;
+    return data.answer;
   } catch {
     return rejectWithValue("Failed to contact server.");
   }

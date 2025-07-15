@@ -34,9 +34,11 @@ export default function ChatBox() {
   };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    textareaRef.current?.focus();
   }, [messages]);
 
   return (
@@ -80,6 +82,7 @@ export default function ChatBox() {
               onChange={(e) => dispatch(setInput(e.target.value))}
               onKeyDown={handleKeyDown}
               disabled={loading}
+              ref={textareaRef}
             />
             <div className="flex items-center justify-end gap-2 p-3">
               <Button
