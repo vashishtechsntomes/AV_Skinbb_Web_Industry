@@ -376,7 +376,7 @@ const Sidebar = () => {
       )}
       <aside
         className={cn(
-          "bg-background w1-60 fixed z-10 order-first h-screen overflow-y-auto px-2 transition-all",
+          "bg-background w1-60 fixed z-10 order-first h-dvh overflow-y-auto px-2 transition-all",
           width,
           !isSidebarOpen && "-translate-x-100",
           isMobile

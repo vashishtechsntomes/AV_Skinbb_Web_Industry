@@ -5,9 +5,9 @@ import Header from "./Header";
 
 const MainLayout = ({ children }: { children?: ReactNode }) => {
   return (
-    <div className="bg-background flex min-h-screen flex-1 flex-row">
+    <div className="bg-background flex min-h-dvh flex-1 flex-row">
       <Sidebar />
-      <main className="h-screen w-full flex-1 overflow-auto">
+      <main className="h-dvh w-full flex-1 overflow-auto">
         <Header />
         {children ?? <Outlet />}
       </main>
