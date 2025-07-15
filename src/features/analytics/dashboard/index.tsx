@@ -1,5 +1,7 @@
+import { FullLoader } from "@/components/ui/loader";
 import {
   createContext,
+  Suspense,
   useState,
   type Dispatch,
   type SetStateAction,
@@ -72,7 +74,9 @@ and performance`,
           ),
         }}
       > */}
-      <Outlet />
+      <Suspense fallback={<FullLoader />}>
+        <Outlet />
+      </Suspense>
       {/* </PageContent> */}
     </AnalysisContext>
   );

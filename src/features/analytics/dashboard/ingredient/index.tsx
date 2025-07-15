@@ -1,9 +1,9 @@
-import IngredientProductMap from "@/components/cytoscape/IngredientProductMap";
 import { Button } from "@/components/ui/button";
-import { StatChartCard } from "@/components/ui/card";
 import { PageContent } from "@/components/ui/structure";
 import { ROUTES } from "@/routes/routes.constant";
 import { NavLink } from "react-router";
+import FunctionalTrends from "./FunctionalTrends";
+// import FunctionalTrends from "./FunctionalTrends";
 
 const Ingredient = () => {
   return (
@@ -18,9 +18,10 @@ const Ingredient = () => {
         ),
       }}
     >
-      <StatChartCard name="Top Ingredients" className="md:max-h-full">
+      <FunctionalTrends  />
+      {/* <StatChartCard name="Top Ingredients" className="md:max-h-full">
         <IngredientProductMap />
-      </StatChartCard>
+      </StatChartCard> */}
     </PageContent>
   );
 };

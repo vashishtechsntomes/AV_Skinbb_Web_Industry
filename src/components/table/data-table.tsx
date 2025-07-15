@@ -484,6 +484,7 @@ interface DataTableProps<TData extends object>
   showPagination?: boolean;
   showAction?: boolean;
   tableHeading?: string;
+  className?: string;
 }
 
 export function DataTable<TData extends object>({
@@ -495,6 +496,7 @@ export function DataTable<TData extends object>({
   showAction = true,
   showPagination = true,
   tableHeading,
+  className,
   ...props
 }: DataTableProps<TData>) {
   const tableState = useTable({
@@ -505,7 +507,7 @@ export function DataTable<TData extends object>({
   });
   const { table } = tableState;
   return (
-    <div className="space-y-5">
+    <div className={cn("space-y-5", className)}>
       {showAction && (
         <DataTableAction
           tableState={tableState}

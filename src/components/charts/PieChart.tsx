@@ -34,6 +34,8 @@ type PieChartComponentProps = {
   pieProps?: Partial<Recharts.Pie>;
   containerProps?: ComponentProps<typeof ChartContainer>;
   children?: ReactNode;
+  activeIndex?: number;
+  setActiveIndex?: (index: number | undefined) => void;
 } & Omit<ChartContainerProps, "children">;
 
 const PieChart: FC<PieChartComponentProps> = ({
@@ -48,9 +50,22 @@ const PieChart: FC<PieChartComponentProps> = ({
   pieProps,
   chartProps,
   children,
+  activeIndex: pActiveIndex,
+  setActiveIndex: pSetActiveIndex,
   ...props
 }) => {
-  const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
+  const isControlled =
+    pActiveIndex !== undefined && pSetActiveIndex !== undefined;
+
+  const [internalActiveIndex, internalSetActiveIndex] = useState<
+    number | undefined
+  >(undefined);
+
+  // Use either controlled or internal state
+  const activeIndex = isControlled ? pActiveIndex : internalActiveIndex;
+  const setActiveIndex = isControlled
+    ? pSetActiveIndex
+    : internalSetActiveIndex;
 
   const total = useMemo(
     () => data.reduce((sum, d) => sum + d.value, 0),

@@ -86,20 +86,33 @@ const StatChartCard = ({
   children,
   className,
   contentProps,
+  headerProps,
+  actions,
 }: {
   name: string;
   className?: string;
   children: React.ReactNode;
   contentProps?: React.ComponentProps<"div">;
+  headerProps?: React.ComponentProps<"div">;
+  actions?: React.ReactNode;
 }) => {
   const { className: contentClassName, ...contentPropsRest } =
     contentProps ?? {};
+  const { className: headerClassName, ...headerPropsRest } = headerProps ?? {};
+
   return (
     <Card className={cn("md:max-h-86", className)}>
-      <CardHeader className="items-center pb-0">
+      <CardHeader
+        className={cn(
+          "flex items-center justify-between pb-0",
+          headerClassName,
+        )}
+        {...headerPropsRest}
+      >
         <CardTitle className="text-muted-foreground text-lg leading-none">
           {name}
         </CardTitle>
+        {actions}
       </CardHeader>
       <hr className="mx-4" />
       <CardContent
