@@ -2,8 +2,8 @@
 import MainLayout from "@/layouts/main-layout";
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
-import { ROUTES } from "./routes.constant";
 import PrivateRoute from "./PrivateRoute";
+import { ROUTES } from "./routes.constant";
 
 export const dashboardRoutes: RouteObject[] = [
   {
@@ -29,25 +29,25 @@ export const dashboardRoutes: RouteObject[] = [
             Component: lazy(() => import("@/features/brands/brand-form")),
           },
           {
-            path: ROUTES.ANALYTICS_PLATFORM,
+            path: ROUTES.ANALYTIC,
             Component: lazy(() => import("@/features/analytics/dashboard")),
             children: [
               {
-                index: true,
+                path: ROUTES.PLATFORM.slice(1),
                 Component: lazy(
                   () => import("@/features/analytics/dashboard/platform"),
                 ),
               },
-            ],
-          },
-          {
-            path: ROUTES.ANALYTICS_BRAND,
-            Component: lazy(() => import("@/features/analytics/dashboard")),
-            children: [
               {
-                index: true,
+                path: ROUTES.BRAND.slice(1),
                 Component: lazy(
                   () => import("@/features/analytics/dashboard/brand"),
+                ),
+              },
+              {
+                path: ROUTES.INGREDIENT.slice(1),
+                Component: lazy(
+                  () => import("@/features/analytics/dashboard/ingredient"),
                 ),
               },
             ],

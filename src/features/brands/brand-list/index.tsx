@@ -10,6 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { BrandCard } from "./BrandCard";
 import { NavLink } from "react-router";
 import { ROUTES } from "@/routes/routes.constant";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const statsData = [
   {
@@ -141,14 +142,19 @@ const columns: ColumnDef<Brand>[] = [
     accessorKey: "name",
     header: "Name",
     cell: ({ row, getValue }) => (
-      <div className="flex items-center gap-2">
-        <img
-          src={row.original.image}
-          alt={`${row.original.name} logo`}
-          className="size-10 rounded-md border object-contain p-1"
-        />
-        {getValue() as string}
-      </div>
+      <ul className="flex min-w-40 items-center gap-2">
+        <Avatar className="size-10 rounded-md border">
+          <AvatarImage
+            className="object-contain"
+            src={row.original.image}
+            alt={`${row.original.name} logo`}
+          />
+          <AvatarFallback className="rounded-md capitalize">
+            {(getValue() as string)?.charAt(1)}
+          </AvatarFallback>
+        </Avatar>
+        <span> {getValue() as string}</span>
+      </ul>
     ),
   },
   {
@@ -212,7 +218,7 @@ const BrandList = () => {
         ),
       }}
     >
-      <section className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">
+      <section className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">
         {statsData.map((item) => (
           <StatCard
             key={item.title}

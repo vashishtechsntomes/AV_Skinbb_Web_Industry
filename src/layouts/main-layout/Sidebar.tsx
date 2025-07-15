@@ -109,15 +109,16 @@ const items: () => Record<string, Item> = () => ({
       "brand analysis",
       "user insight",
       "market trends",
+      "ingredient analysis",
     ],
   },
   "platform analysis": {
     name: "Platform insight",
-    href: ROUTES.ANALYTICS_PLATFORM,
+    href: ROUTES.PLATFORM_ANALYTIC,
   },
   "brand analysis": {
     name: "Brand insight",
-    href: ROUTES.ANALYTICS_BRAND,
+    href: ROUTES.BRAND_ANALYTIC,
   },
   "user insight": {
     name: "user insight",
@@ -126,6 +127,10 @@ const items: () => Record<string, Item> = () => ({
   "market trends": {
     name: "market trends",
     href: "market-trends",
+  },
+  "ingredient analysis": {
+    name: "ingredient analysis",
+    href: ROUTES.INGREDIENT_ANALYTIC,
   },
   "market research": {
     name: "market research",

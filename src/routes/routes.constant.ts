@@ -1,12 +1,23 @@
 export const ROUTES = {
   // Dashboard routes
   DASHBOARD: "/",
+  BRAND: "/brand",
   BRAND_LIST: "/brands",
   BRAND_CREATE: "/brand/create",
   BRAND_EDIT: "/brand/edit",
   ANALYTICS: "/analytics",
-  ANALYTICS_PLATFORM: "/platform",
-  ANALYTICS_BRAND: "/brand",
+  ANALYTIC: "/analytic",
+  PLATFORM: "/platform",
+  INGREDIENT: "/ingredient",
+  get PLATFORM_ANALYTIC() {
+    return `${this.ANALYTIC}${this.PLATFORM}`;
+  },
+  get BRAND_ANALYTIC() {
+    return `${this.ANALYTIC}${this.BRAND}`;
+  },
+  get INGREDIENT_ANALYTIC() {
+    return `${this.ANALYTIC}${this.INGREDIENT}`;
+  },
   MARKET_RESEARCH: "/market-research",
   MARKET_RESEARCH_CREATE: "/market-research/add",
   MARKET_RESEARCH_EDIT: "/market-research/edit",
