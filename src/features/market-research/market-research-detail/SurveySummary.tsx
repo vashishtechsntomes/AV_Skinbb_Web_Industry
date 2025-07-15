@@ -1,20 +1,7 @@
+import BarChart from "@/components/charts/BarChart";
+import PieChart from "@/components/charts/PieChart";
 import { StatChartCard } from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  LabelList,
-  Pie,
-  PieChart,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { type ChartConfig } from "@/components/ui/chart";
 
 const genderData = [
   { key: "male", value: 275, fill: "var(--chart-1)" },
@@ -56,94 +43,36 @@ const surveyProgressionChartData = [
 ];
 const surveyProgressionChartConfig = {
   value: {
-    label: "value",
+    label: "Progression",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
 
 const SurveySummary = () => {
   return (
-    <div className="grid grid-cols-3 gap-5">
+    <div className="flex grid-cols-1 flex-col gap-4 sm:grid sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
       <StatChartCard name="Survey Progression">
-        <ChartContainer
+        <BarChart
           config={surveyProgressionChartConfig}
-          className={"h-full w-full"}
-        >
-          <BarChart
-            data={surveyProgressionChartData}
-            barGap={0}
-            barCategoryGap="20%"
-            margin={{ top: 10, right: 0, left: 0, bottom: 10 }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="key"
-              tickLine={false}
-              axisLine={false}
-              height={10}
-            />
-            <YAxis tickLine={false} axisLine={false} width={30} />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent nameKey="key" />}
-            />
-            <Bar
-              dataKey="value"
-              fill="var(--color-primary)"
-              //   barSize={40}
-              radius={[8, 8, 0, 0]}
-            />
-          </BarChart>
-        </ChartContainer>
-      </StatChartCard>
-      <StatChartCard name="Gender Distribution">
-        <ChartContainer config={genderConfig} className={"h-full w-full"}>
-          <PieChart>
-            <ChartTooltip
-              content={<ChartTooltipContent nameKey="key" hideLabel />}
-            />
-            <Pie data={genderData} dataKey="value" label nameKey="key">
-              <LabelList
-                dataKey="key"
-                stroke="none"
-                fontSize={12}
-                formatter={(value: keyof typeof genderConfig) =>
-                  genderConfig[value]?.label
-                }
-              />
-            </Pie>
-          </PieChart>
-        </ChartContainer>
+          data={surveyProgressionChartData}
+          barSize={50}
+        />
       </StatChartCard>
 
       <StatChartCard name="Gender Distribution">
-        <ChartContainer config={ageChartConfig} className={"h-full w-full"}>
-          <BarChart
-            data={ageChartData}
-            barGap={0}
-            barCategoryGap="0"
-            margin={{ top: 10, right: 0, left: 0, bottom: 10 }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="key"
-              tickLine={false}
-              axisLine={false}
-              height={10}
-            />
-            <YAxis tickLine={false} axisLine={false} width={30} />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent nameKey="key" />}
-            />
-            <Bar
-              dataKey="value"
-              fill="var(--color-primary)"
-              barSize={20}
-              radius={[8, 8, 0, 0]}
-            />
-          </BarChart>
-        </ChartContainer>
+        <PieChart
+          config={genderConfig}
+          data={genderData}
+          showLegend={false}
+          showTooltip={true}
+          showLabels={true}
+          showOuterLabel={false}
+          showActive={true}
+        />
+      </StatChartCard>
+
+      <StatChartCard name="Age Distribution">
+        <BarChart config={ageChartConfig} data={ageChartData} />
       </StatChartCard>
     </div>
   );

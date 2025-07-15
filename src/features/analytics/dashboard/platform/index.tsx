@@ -1,13 +1,14 @@
-import { StatCard } from "@/components/ui/stat";
 import BarChart from "@/components/charts/BarChart";
 import DonutPieChart from "@/components/charts/DonutPieChart";
 import PieChart from "@/components/charts/PieChart";
 import { BlobIcon, Button } from "@/components/ui/button";
 import { StatChartCard } from "@/components/ui/card";
 import { type ChartConfig } from "@/components/ui/chart";
+import { StatCard } from "@/components/ui/stat";
 import { PageContent } from "@/components/ui/structure";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ROUTES } from "@/routes/routes.constant";
+import { formatNumber } from "@/utils";
 import {
   CalendarDaysIcon,
   FunnelIcon,
@@ -16,7 +17,6 @@ import {
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { AnalyticsFilterForm } from "./AnalyticsFilterForm";
-import { formatNumber } from "@/utils";
 
 const genderData = [
   { key: "male", value: 275, fill: "var(--chart-1)", showValue: false },
@@ -296,12 +296,10 @@ and performance`,
             config={genderConfig}
             data={genderData}
             showLegend={false}
-            chartProps={{
-              margin: { top: 0, right: 15, bottom: 0, left: 15 },
-            }}
-            // pieProps={{
-            //   paddingAngle: 0,
-            // }}
+            showTooltip={true}
+            showLabels={true}
+            showOuterLabel={false}
+            showActive={true}
           />
         </StatChartCard>
         <StatChartCard name="Age Distribution">
@@ -309,7 +307,7 @@ and performance`,
             config={ageChartConfig}
             data={ageChartData}
             yAxisProps={{
-              width: 65,
+              width: 68,
             }}
           />
         </StatChartCard>
@@ -343,7 +341,7 @@ and performance`,
             data={stateChartData}
             barSize={15}
             yAxisProps={{
-              width: 65,
+              width: 68,
             }}
             chartProps={{
               barGap: 20,

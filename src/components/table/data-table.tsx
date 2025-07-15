@@ -252,7 +252,7 @@ export function DataTableBody<TData>({
       <TableBody>
         {table.getRowModel().rows.length ? (
           table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow key={row.id} className="hover:bg-accent">
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -558,7 +558,11 @@ export function DataTableToogle<TData extends object>({
       )}
 
       {viewMode === DataViewMode.list ? (
-        <DataTableBody table={table} {...bodyProps} />
+        <DataTableBody
+          table={table}
+          className="overflow-hidden rounded-md shadow-md"
+          {...bodyProps}
+        />
       ) : (
         <DataGridView table={table} {...gridProps} />
       )}

@@ -25,7 +25,7 @@ export const StatCard: FC<StatCardProps> = ({
   return (
     <div
       className={cn(
-        "bg-background flex items-center gap-4 rounded-md px-4 py-6 shadow-md",
+        "bg-background flex items-center gap-4 rounded-md p-4 shadow-md md:px-4 md:py-6",
         className,
       )}
       {...props}

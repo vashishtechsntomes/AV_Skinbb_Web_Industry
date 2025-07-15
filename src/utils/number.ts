@@ -46,10 +46,15 @@ export function formatCurrency(
   }).format(amount);
 }
 
-export function formatNumber(amount: number, locale = "en-IN") {
+export function formatNumber(
+  amount: number,
+  options?: { locale?: string } & Intl.NumberFormatOptions,
+) {
+  const { locale = "en-IN", ...rest } = options ?? {};
   return new Intl.NumberFormat(locale, {
     style: "decimal",
     maximumFractionDigits: 2,
+    ...rest,
   }).format(amount);
 }
 

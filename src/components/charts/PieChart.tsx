@@ -78,7 +78,7 @@ const PieChart: FC<PieChartComponentProps> = ({
       )}
       {...props}
     >
-      <Recharts.PieChart className="h-full w-full"  {...chartProps}>
+      <Recharts.PieChart className="h-full w-full" {...chartProps}>
         {showTooltip && (
           <ChartTooltip
             active={activeIndex !== undefined}
@@ -121,7 +121,7 @@ const PieChart: FC<PieChartComponentProps> = ({
           {showLabels && (
             <Recharts.LabelList
               dataKey="key"
-              className="fill-background"
+              className="fill-foreground"
               stroke="none"
               fontSize={12}
               formatter={(value: keyof typeof config) => config[value]?.label}
@@ -187,6 +187,7 @@ const LabelRenderer = ({
   const {
     showKey = true,
     showValue = true,
+    fillColor = false,
     key,
     value,
   } = (payload as Recharts.PieLabelRenderProps["payload"]) ?? {};
@@ -202,9 +203,10 @@ const LabelRenderer = ({
 
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
-  const mx = cx + (outerRadius + 0) * cos;
-  const my = cy + (outerRadius + 20) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 5;
+  const mx = cx + (outerRadius + 5) * cos;
+  const my = cy + (outerRadius + 5) * sin;
+  // const ex = mx + (cos >= 0 ? 1 : -1) * 3;
+  const ex = mx;
   const ey = my;
   const textAnchor = cos >= 0 ? "start" : "end";
 
@@ -212,21 +214,21 @@ const LabelRenderer = ({
     <>
       {showKey && (
         <text
-          className="recharts-pie-label-text"
+          className="recharts-pie-label-text truncate"
           x={ex + (cos >= 0 ? 1 : -1) * 12}
           y={ey}
           textAnchor={textAnchor}
-          fill={fill}
+          fill={!fillColor ? undefined : fill}
         >{`${capitalize(key)}`}</text>
       )}
       {showValue && (
         <text
-          className="recharts-pie-label-text"
+          className="recharts-pie-label-text truncate"
           x={ex + (cos >= 0 ? 1 : -1) * 12}
           y={ey}
           dy={showKey ? 18 : 0}
           textAnchor={textAnchor}
-          fill={fill}
+          fill={!fillColor ? undefined : fill}
         >
           {`${value} (${(percent * 100).toFixed(2)}%)`}
         </text>

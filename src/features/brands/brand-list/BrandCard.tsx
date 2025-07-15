@@ -22,7 +22,7 @@ interface BrandCardProps {
 export const BrandCard: FC<BrandCardProps> = ({ brand }) => {
   return (
     <NavLink to={`${ROUTES.BRAND_EDIT}/${brand.id}`}>
-      <article className="bg-background hover:ring-primary flex flex-col gap-4 rounded-md p-5 shadow-md hover:ring-3">
+      <article className="bg-background hover:ring-primary flex flex-col gap-4 rounded-md p-4 shadow-md hover:ring-3 md:p-5">
         <header className="flex items-center gap-2">
           <img
             src={brand.image}
