@@ -71,7 +71,7 @@ export default function ChatBox() {
           </div>
         </div>
       )}
-      <div className="sticky bottom-0 z-50 pt-4 md:pt-8">
+      <div className="sticky bottom-0 pt-4 md:pt-8">
         <div className="bg-background mx-auto max-w-3xl rounded-[20px] pb-4">
           <div className="bg-muted focus-within:bg-muted/50 focus-within:border-input relative rounded-[20px] border transition-colors has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 [&:has(input:is(:disabled))_*]:pointer-events-none">
             <textarea

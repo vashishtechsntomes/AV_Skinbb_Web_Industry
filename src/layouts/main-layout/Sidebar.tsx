@@ -1,7 +1,10 @@
 // import logo from "@/assets/images/logo-icon.png";
 import { Tree, TreeItem, TreeItemLabel } from "@/components/ui/tree";
 import { SVGBiglogo } from "@/config/svg";
-import { useSidebar, useSidebarMobile } from "@/context/theme-provider";
+import {
+  useSidebar,
+  useSidebarMobile
+} from "@/context/theme-provider";
 import { ROUTES } from "@/routes/routes.constant";
 import { camelToTitle, cn } from "@/utils";
 import {
@@ -11,10 +14,10 @@ import {
   type ItemInstance,
 } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
+import { BoltIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useMemo } from "react";
 import { NavLink, useLocation } from "react-router";
 import { Button } from "../../components/ui/button";
-import { BoltIcon } from "@heroicons/react/24/outline";
 const INDENT = 32;
 
 // const DASHBOARD_ROUTES = {
@@ -213,9 +216,7 @@ const items: () => Record<string, Item> = () => ({
   chat: {
     name: "chat",
     href: ROUTES.CHAT,
-    icon: (
-      <BoltIcon/>
-    ),
+    icon: <BoltIcon />,
   },
 });
 
@@ -315,6 +316,8 @@ function SidebarNavigation() {
 
 function SidebarItemLabel({ item }: { item: ItemInstance<Item> }) {
   const location = useLocation();
+  const { closeSidebar } = useSidebar();
+  // const dispatch = useDispatch();
   const { href, icon, children } = item.getItemData();
 
   // Check if current item or any of its children are active
@@ -364,6 +367,9 @@ function SidebarItemLabel({ item }: { item: ItemInstance<Item> }) {
     <NavLink
       to={href}
       className={cn("no-underline focus-visible:outline-none")}
+      onClick={() => {
+        closeSidebar();
+      }}
     >
       {labelContent}
     </NavLink>
