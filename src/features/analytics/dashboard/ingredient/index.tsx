@@ -13,7 +13,7 @@ import { PageContent } from "@/components/ui/structure";
 import FocusIngredients from "./FocusIngredients";
 import FunctionalTrends from "./FunctionalTrends";
 import IngredientOvertime from "./IngredientOvertime";
-import TopPreservativeTrends from "./TopPreservativeTrends";
+import TopCategoryTrends from "./TopCategoryTrends";
 import { StatChartCard } from "@/components/ui/card";
 import IngredientProductMap from "@/components/cytoscape/IngredientProductMap";
 // import FunctionalTrends from "./FunctionalTrends";
@@ -72,9 +72,9 @@ const Ingredient = () => {
       }}
     >
       <IngredientOvertime />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid  grid-cols-1 gap-4 md:grid-cols-2">
         <FocusIngredients />
-        <TopPreservativeTrends />
+        <TopCategoryTrends />
       </div>
       <FunctionalTrends />
       <StatChartCard name="Top Ingredients" className="md:max-h-full">

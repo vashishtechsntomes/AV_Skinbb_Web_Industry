@@ -7,7 +7,7 @@ import {
   type ChartContainerProps,
   type ChartTooltipContentProps,
 } from "@/components/ui/chart";
-import { capitalize, cn } from "@/utils";
+import { cn } from "@/utils";
 import { useState, type ComponentProps, type ReactNode } from "react";
 import {
   CartesianGrid,

@@ -206,9 +206,14 @@ const trendingIngredientConfig = {
 
 const IngredientOvertime = () => {
   return (
-    <StatChartCard name="Top 10 Ingredients OverTime" className="md:max-h-full">
+    <StatChartCard
+      name="Top 10 Ingredients OverTime"
+      className="md:max-h-full"
+      headerProps={{className: "md:h-[40px]"}}
+      contentProps={{ className: "pt-5" }}
+    >
       <LineChart
-        className="max-h-100"
+        className="min-h-100 md:max-h-100 md:min-h-full"
         config={trendingIngredientConfig}
         data={trendingIngredientData}
         lineProps={Object.keys(trendingIngredientConfig).map((item) => ({

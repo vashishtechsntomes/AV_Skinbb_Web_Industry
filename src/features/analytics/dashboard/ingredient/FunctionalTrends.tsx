@@ -664,7 +664,7 @@ const FunctionalTrends = () => {
         </ToggleGroup>
       }
     >
-      <div className="overflow-auto py-1">
+      <div className="w-full overflow-auto py-1">
         <ToggleGroup
           type="single"
           variant={"outlined"}
@@ -695,7 +695,7 @@ const FunctionalTrends = () => {
           className="col-span-4 space-y-3"
           bodyProps={{
             containerProps: {
-              className: "overflow-hidden rounded-lg border",
+              className: "rounded-lg border",
             },
           }}
           rows={

@@ -1,7 +1,6 @@
 import DonutPieChart from "@/components/charts/DonutPieChart";
 import { StatChartCard } from "@/components/ui/card";
 import type { ChartConfig } from "@/components/ui/chart";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -17,61 +16,61 @@ const preservativeData = [
   {
     key: "phenoxyethanol",
     value: 420,
-    fill: "oklch(0.7317 0.1325 20.8/0.1)",
+    fill: "oklch(0.7317 0.1325 20.8)",
     showValue: false,
   },
   {
     key: "ethylhexylglycerin",
     value: 360,
-    fill: "oklch(0.7317 0.1325 20.8/0.2)",
+    fill: "oklch(0.7317 0.1325 20.8/0.9)",
     showValue: false,
   },
   {
     key: "sodium_benzoate",
     value: 310,
-    fill: "oklch(0.7317 0.1325 20.8/0.3)",
+    fill: "oklch(0.7317 0.1325 20.8/0.8)",
     showValue: false,
   },
   {
     key: "potassium_sorbate",
     value: 290,
-    fill: "oklch(0.7317 0.1325 20.8/0.4)",
+    fill: "oklch(0.7317 0.1325 20.8/0.7)",
     showValue: false,
   },
   {
     key: "benzyl_alcohol",
     value: 265,
-    fill: "oklch(0.7317 0.1325 20.8/0.5)",
+    fill: "oklch(0.7317 0.1325 20.8/0.6)",
     showValue: false,
   },
   {
     key: "caprylyl_glycol",
     value: 250,
-    fill: "oklch(0.7317 0.1325 20.8/0.6)",
+    fill: "oklch(0.7317 0.1325 20.8/0.5)",
     showValue: false,
   },
   {
     key: "chlorphenesin",
     value: 230,
-    fill: "oklch(0.7317 0.1325 20.8/0.7)",
+    fill: "oklch(0.7317 0.1325 20.8/0.4)",
     showValue: false,
   },
   {
     key: "dehydroacetic_acid",
     value: 210,
-    fill: "oklch(0.7317 0.1325 20.8/0.8)",
+    fill: "oklch(0.7317 0.1325 20.8/0.3)",
     showValue: false,
   },
   {
     key: "methylparaben",
     value: 180,
-    fill: "oklch(0.7317 0.1325 20.8/0.9)",
+    fill: "oklch(0.7317 0.1325 20.8/0.2)",
     showValue: false,
   },
   {
     key: "sorbic_acid",
     value: 160,
-    fill: "oklch(0.7317 0.1325 20.8/1)",
+    fill: "oklch(0.7317 0.1325 20.8/0.1)",
     showValue: false,
   },
 ];
@@ -90,7 +89,7 @@ const preservativeConfig = {
   sorbic_acid: { label: "Sorbic Acid" },
 } satisfies ChartConfig;
 
-const TopPreservativeTrends = () => {
+const TopCategoryTrends = () => {
   const [activeIndex, setActiveIndex] = useState<number>();
   const handleLegendHover = (index: number | undefined) =>
     setActiveIndex(index);
@@ -98,7 +97,8 @@ const TopPreservativeTrends = () => {
   return (
     <StatChartCard
       name="Top 10 Category Trends"
-      className="md:max-h-full"
+      className="md:max-h-110"
+      headerProps={{}}
       actions={
         <Select defaultValue="Preservative">
           <SelectTrigger className="w-[180px]">
@@ -158,7 +158,6 @@ const TopPreservativeTrends = () => {
             onMouseLeave: () => handleLegendHover(undefined),
           }}
           showOuterLabel={false}
-          showTooltip={false}
           showLegend={false}
           showFullDonut={true}
           setActiveIndex={setActiveIndex}
@@ -169,4 +168,4 @@ const TopPreservativeTrends = () => {
   );
 };
 
-export default TopPreservativeTrends;
+export default TopCategoryTrends;

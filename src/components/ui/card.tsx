@@ -104,7 +104,7 @@ const StatChartCard = ({
     <Card className={cn("md:max-h-86", className)}>
       <CardHeader
         className={cn(
-          "flex items-center justify-between pb-0",
+          "flex items-center flex-wrap gap-2 justify-between pb-0",
           headerClassName,
         )}
         {...headerPropsRest}

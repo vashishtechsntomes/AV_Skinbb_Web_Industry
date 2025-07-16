@@ -164,16 +164,20 @@ const statsData = [
 ];
 
 const concernChartData = [
-  { key: "acne", value: 5201, fill: "var(--chart-1)" },
-  { key: "dullness", value: 3440, fill: "var(--chart-2)" },
-  { key: "roughness", value: 2101, fill: "var(--chart-3)" },
-  { key: "wrinkles", value: 420, fill: "var(--chart-4)" },
-  { key: "undereye darkcircles", value: 989, fill: "var(--chart-5)" },
-  { key: "oily skin", value: 2558, fill: "var(--chart-1)" },
-  { key: "dark spots", value: 4303, fill: "var(--chart-2)" },
-  { key: "photodamage", value: 321, fill: "var(--chart-3)" },
-  { key: "melasma", value: 643, fill: "var(--chart-4)" },
-  { key: "Unknown", value: 91274, fill: "var(--chart-5)" },
+  { key: "acne", value: 5201, fill: "oklch(0.7317 0.1325 20.8)" },
+  { key: "dullness", value: 3440, fill: "oklch(0.7317 0.1325 20.8/0.85)" },
+  { key: "roughness", value: 2101, fill: "oklch(0.7317 0.1325 20.8/0.8)" },
+  { key: "wrinkles", value: 420, fill: "oklch(0.7317 0.1325 20.8/0.7)" },
+  {
+    key: "undereye darkcircles",
+    value: 989,
+    fill: "oklch(0.7317 0.1325 20.8/0.6)",
+  },
+  { key: "oily skin", value: 2558, fill: "oklch(0.7317 0.1325 20.8/0.5)" },
+  { key: "dark spots", value: 4303, fill: "oklch(0.7317 0.1325 20.8/0.4)" },
+  { key: "photodamage", value: 321, fill: "oklch(0.7317 0.1325 20.8/0.3)" },
+  { key: "melasma", value: 643, fill: "oklch(0.7317 0.1325 20.8/0.2)" },
+  { key: "Unknown", value: 91274, fill: "oklch(0.7317 0.1325 20.8/0.1)" },
   // {
   //   // name: "Usage",
   //   acne: 1260,
