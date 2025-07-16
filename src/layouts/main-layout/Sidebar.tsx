@@ -1,10 +1,7 @@
 // import logo from "@/assets/images/logo-icon.png";
 import { Tree, TreeItem, TreeItemLabel } from "@/components/ui/tree";
 import { SVGBiglogo } from "@/config/svg";
-import {
-  useSidebar,
-  useSidebarMobile
-} from "@/context/theme-provider";
+import { useSidebar, useSidebarMobile } from "@/context/theme-provider";
 import { ROUTES } from "@/routes/routes.constant";
 import { camelToTitle, cn } from "@/utils";
 import {
@@ -131,10 +128,10 @@ const items: () => Record<string, Item> = () => ({
   },
   "market trends": {
     name: "market trends",
-    href: "market-trends",
+    href: "/market-trends",
   },
   "ingredient analysis": {
-    name: "ingredient analysis",
+    name: "Ingredient insight",
     href: ROUTES.INGREDIENT_ANALYTIC,
   },
   "market research": {
@@ -158,7 +155,7 @@ const items: () => Record<string, Item> = () => ({
   },
   promotions: {
     name: "promotions",
-    href: "promo",
+    href: "/promo",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -177,7 +174,7 @@ const items: () => Record<string, Item> = () => ({
   },
   listing: {
     name: "listing",
-    href: "listing",
+    href: "/listing",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +193,7 @@ const items: () => Record<string, Item> = () => ({
   },
   users: {
     name: "users",
-    href: "users",
+    href: "/users",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -316,7 +313,7 @@ function SidebarNavigation() {
 
 function SidebarItemLabel({ item }: { item: ItemInstance<Item> }) {
   const location = useLocation();
-  const { closeSidebar } = useSidebar();
+  const { closeSidebar, isMobile } = useSidebar();
   // const dispatch = useDispatch();
   const { href, icon, children } = item.getItemData();
 
@@ -368,7 +365,7 @@ function SidebarItemLabel({ item }: { item: ItemInstance<Item> }) {
       to={href}
       className={cn("no-underline focus-visible:outline-none")}
       onClick={() => {
-        closeSidebar();
+        if (isMobile) closeSidebar();
       }}
     >
       {labelContent}
