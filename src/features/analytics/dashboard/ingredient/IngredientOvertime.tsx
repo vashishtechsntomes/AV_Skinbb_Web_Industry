@@ -209,7 +209,7 @@ const IngredientOvertime = () => {
     <StatChartCard
       name="Top 10 Ingredients OverTime"
       className="md:max-h-full"
-      headerProps={{className: "md:h-[40px]"}}
+      headerProps={{ className: "md:h-[40px]" }}
       contentProps={{ className: "pt-5" }}
     >
       <LineChart

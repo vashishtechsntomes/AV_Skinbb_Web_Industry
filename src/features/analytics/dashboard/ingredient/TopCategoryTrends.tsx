@@ -12,7 +12,25 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 
-const preservativeData = [
+// Define the allowed keys as a union type
+type PreservativeKey =
+  | "phenoxyethanol"
+  | "ethylhexylglycerin"
+  | "sodium_benzoate"
+  | "potassium_sorbate"
+  | "benzyl_alcohol"
+  | "caprylyl_glycol"
+  | "chlorphenesin"
+  | "dehydroacetic_acid"
+  | "methylparaben"
+  | "sorbic_acid";
+
+const preservativeData: {
+  key: PreservativeKey;
+  value: number;
+  fill: string;
+  showValue: boolean;
+}[] = [
   {
     key: "phenoxyethanol",
     value: 420,

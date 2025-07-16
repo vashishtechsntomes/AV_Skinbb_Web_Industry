@@ -10,7 +10,7 @@ type Props = {
 
 export const MarkdownMessage = ({ content }: Props) => {
   return (
-    <div className="prose max-w-none prose:list prose-p:text-foreground leading-relaxed">
+    <div className="prose prose:list prose-p:text-foreground max-w-none leading-relaxed">
       <ReactMarkdown
       //   className="prose max-w-none text-sm leading-relaxed"
       //   remarkPlugins={[remarkGfm]}

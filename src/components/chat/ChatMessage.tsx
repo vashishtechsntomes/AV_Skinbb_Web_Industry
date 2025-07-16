@@ -38,10 +38,10 @@ export function ChatMessage({
       <div
         className={cn(isUser ? "bg-muted rounded-xl px-4 py-3" : "space-y-4")}
       >
-        <div className="flex  flex-col gap-3">
+        <div className="flex flex-col gap-3">
           <p className="sr-only">{isUser ? "You" : "ChatGPT"} said:</p>
           {typeof children === "string" ? (
-            <MarkdownMessage  content={children} />
+            <MarkdownMessage content={children} />
           ) : (
             children
           )}

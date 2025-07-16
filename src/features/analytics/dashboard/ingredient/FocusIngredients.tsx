@@ -1,7 +1,6 @@
 import BarChart from "@/components/charts/BarChart";
 import { StatChartCard } from "@/components/ui/card";
 import type { ChartConfig } from "@/components/ui/chart";
-import React from "react";
 
 const focusIngredientData = [
   {

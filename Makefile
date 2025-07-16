@@ -19,6 +19,7 @@ preview:
 
 # Type check using tsc
 typecheck:
+	npx tsc -b
 	npx tsc --noEmit
 
 # Run ESLint on all relevant files

@@ -51,6 +51,7 @@ export const sendMessageAsync = createAsyncThunk<
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query }),
+      referrerPolicy: "unsafe-url",
     });
     const data = await res.json();
     return data.answer;

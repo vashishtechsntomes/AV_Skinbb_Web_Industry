@@ -1,4 +1,3 @@
-
 const OptionCharts = () => {
   return <div>OptionCharts</div>;
 };

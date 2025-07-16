@@ -120,21 +120,24 @@ const IngredientProductMap = () => {
     }
   }, []);
 
-  const addNode = (id: string, type: NodeType, animate = false): boolean => {
-    if (nodeSet.current.has(id)) return false;
-    nodeSet.current.add(id);
+  const addNode = useCallback(
+    (id: string, type: NodeType): boolean => {
+      if (nodeSet.current.has(id)) return false;
+      nodeSet.current.add(id);
 
-    // note: we stash the intended final size in data() so we can animate back to it after fade
-    const finalSize = type === "ingredient" ? 70 : 80;
-    const node: ElementDefinition = {
-      data: { id, label: id, width: finalSize, height: finalSize },
-      classes: type,
-    };
+      // note: we stash the intended final size in data() so we can animate back to it after fade
+      const finalSize = type === "ingredient" ? 70 : 80;
+      const node: ElementDefinition = {
+        data: { id, label: id, width: finalSize, height: finalSize },
+        classes: type,
+      };
 
-    setElements((prev) => [...prev, node]);
-    setTimeout(() => animateIn(id));
-    return true;
-  };
+      setElements((prev) => [...prev, node]);
+      setTimeout(() => animateIn(id));
+      return true;
+    },
+    [animateIn],
+  );
 
   const addEdge = useCallback(
     (source: string, target: string): boolean => {
@@ -176,8 +179,8 @@ const IngredientProductMap = () => {
   };
 
   useEffect(() => {
-    addNode("Aloe Vera", "ingredient", true);
-  }, []);
+    addNode("Aloe Vera", "ingredient");
+  }, [addNode]);
 
   return (
     <div className="bg-muted rounded-lg border inset-shadow-sm">

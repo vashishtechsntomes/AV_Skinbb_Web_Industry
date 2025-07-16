@@ -1,6 +1,6 @@
-import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import * as React from "react";
 
 import { cn } from "@/utils/index";
 
@@ -242,19 +242,19 @@ function SelectScrollDownButton({
   );
 }
 
-interface SelectOption {
-  value: string;
-  label: string;
-}
+// interface SelectOption {
+//   value: string;
+//   label: string;
+// }
 
-interface CustomSelectProps {
-  options: SelectOption[];
-  optionsLabel: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  className?: string;
-}
+// interface CustomSelectProps {
+//   options: SelectOption[];
+//   optionsLabel: string;
+//   value: string;
+//   onChange: (value: string) => void;
+//   placeholder?: string;
+//   className?: string;
+// }
 
 // const CustomSelect: React.FC<CustomSelectProps> = ({
 //   options,
@@ -293,5 +293,6 @@ export {
   SelectScrollUpButton,
   SelectSeparator,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 };
+
