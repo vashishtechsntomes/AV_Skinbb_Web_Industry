@@ -55,6 +55,7 @@ export default defineConfig([
         Headers: true,
         navigator: true,
         location: true, 
+        getComputedStyle: true,
       },
     },
 

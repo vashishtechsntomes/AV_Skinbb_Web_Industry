@@ -120,7 +120,7 @@ const IngredientProductMap = () => {
     }
   }, []);
 
-  const addNode = (id: string, type: NodeType): boolean => {
+  const addNode = (id: string, type: NodeType, animate = false): boolean => {
     if (nodeSet.current.has(id)) return false;
     nodeSet.current.add(id);
 
@@ -132,9 +132,7 @@ const IngredientProductMap = () => {
     };
 
     setElements((prev) => [...prev, node]);
-
-    // wait a tick for Cytoscape to render it, then animate in
-    setTimeout(() => animateIn(id), 50);
+    setTimeout(() => animateIn(id));
     return true;
   };
 
@@ -150,7 +148,7 @@ const IngredientProductMap = () => {
 
       setElements((prev) => [...prev, edge]);
 
-      setTimeout(() => animateIn(edgeId), 50);
+      setTimeout(() => animateIn(edgeId));
       return true;
     },
     [animateIn],
@@ -178,8 +176,7 @@ const IngredientProductMap = () => {
   };
 
   useEffect(() => {
-    addNode("Aloe Vera", "ingredient");
-    // animateIn();
+    addNode("Aloe Vera", "ingredient", true);
   }, []);
 
   return (
@@ -195,35 +192,29 @@ const IngredientProductMap = () => {
           cy.on("tap", "node", (evt) => {
             const node = evt.target;
             const id = node.id();
+            cy.nodes().removeClass("highlighted");
+            node.addClass("highlighted");
 
             const didAddSomething = handleNodeClick(id);
             if (didAddSomething) {
               cy.layout({
                 name: "breadthfirst",
-                fit: false,
                 animate: false,
+                fit: false,
               }).run();
-
-              animateIn(id);
-              setTimeout(() => {
-                cy.animate(
-                  {
-                    center: { eles: node },
-                  },
-                  {
-                    duration: 500,
-                    easing: "ease-in-out",
-                  },
-                );
-              }, 300);
-              // cy.stop(true);
-              // cy.animate(
-              //   {
-              //     center: { eles: node },
-              //   },
-              //   { duration: 300 },
-              // );
             }
+            setTimeout(() => {
+              cy.stop(true);
+              cy.animate(
+                {
+                  center: { eles: node },
+                },
+                {
+                  duration: 500,
+                  easing: "ease-in-out",
+                },
+              );
+            }, 300);
           });
 
           cy.layout({
@@ -237,7 +228,6 @@ const IngredientProductMap = () => {
         }}
         style={{ width: "100%", height: "430px" }}
         stylesheet={[
-          // base rule to ensure new items start out hidden
           {
             selector: "node, edge",
             style: {
@@ -258,6 +248,8 @@ const IngredientProductMap = () => {
               "background-clip": "none",
               "background-opacity": 0,
               label: "data(label)",
+              "text-max-width": "100px",
+              "text-wrap": "wrap",
               "text-valign": "bottom",
               "text-halign": "center",
               "font-size": 12,
@@ -279,6 +271,8 @@ const IngredientProductMap = () => {
               "background-clip": "none",
               "background-opacity": 0,
               label: "data(label)",
+              "text-max-width": "100px",
+              "text-wrap": "wrap",
               "text-valign": "bottom",
               "text-halign": "center",
               "font-size": 12,
@@ -294,6 +288,18 @@ const IngredientProductMap = () => {
               "target-arrow-shape": "triangle",
               "target-arrow-color": "#ccc",
               "curve-style": "bezier",
+            },
+          },
+          {
+            selector: "node.highlighted",
+            style: {
+              "overlay-color": "#1e1b39",
+              "overlay-padding": 5,
+              "overlay-radius": 10,
+              "overlay-opacity": 0.1,
+              shape: "ellipse",
+              "transition-property": "border-width, border-color, shape",
+              "transition-duration": "100ms",
             },
           },
         ]}
