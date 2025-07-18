@@ -45,7 +45,7 @@ export default function ChatBox() {
     <div className="flex h-full min-h-[77dvh] flex-col justify-center p-4">
       {messages.length === 0 && (
         <h3 className="text-muted-foreground text-center text-xl italic md:text-3xl">
-          Ask me anything to get started!
+          Welcome to SkinBB Metaverse! <br />
         </h3>
       )}
       {!!messages.length && (
@@ -76,7 +76,7 @@ export default function ChatBox() {
           <div className="bg-muted focus-within:bg-muted/50 focus-within:border-input relative rounded-[20px] border transition-colors has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 [&:has(input:is(:disabled))_*]:pointer-events-none">
             <textarea
               className="text-foreground placeholder:text-muted-foreground/70 flex w-full [resize:none] bg-transparent px-4 py-3 text-[15px] leading-relaxed focus-visible:outline-none sm:min-h-[84px]"
-              placeholder="Ask me anything..."
+              placeholder="Ask me anything about skincare..."
               aria-label="Enter your prompt"
               value={input}
               onChange={(e) => dispatch(setInput(e.target.value))}
