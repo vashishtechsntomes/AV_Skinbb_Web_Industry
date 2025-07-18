@@ -16,7 +16,7 @@ export function ChatMessage({
   return (
     <article
       className={cn(
-        "flex items-start gap-4 text-[15px] leading-relaxed",
+        "flex items-start gap-4 leading-relaxed",
         isUser && "justify-end",
       )}
     >
@@ -41,7 +41,7 @@ export function ChatMessage({
         <div className="flex flex-col gap-3">
           <p className="sr-only">{isUser ? "You" : "ChatGPT"} said:</p>
           {typeof children === "string" ? (
-            <MarkdownMessage content={children} />
+            <MarkdownMessage content={children} className="prose-p:text-lg" />
           ) : (
             children
           )}
