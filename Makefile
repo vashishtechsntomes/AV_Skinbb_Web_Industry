@@ -64,3 +64,7 @@ sonar-start:
 # Run SonarScanner analysis
 sonar:
 	sonar-scanner
+
+
+remove-zone:
+	find . -type f -name '*Zone.Identifier*' -delete
