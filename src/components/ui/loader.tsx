@@ -1,6 +1,6 @@
 const FullLoader = () => {
   return (
-    <div className="fixed inset-0 flex h-full w-full items-center justify-center bg-[#00000010] backdrop-blur-[1px]">
+    <div className="fixed inset-0 z-100 flex h-full w-full items-center justify-center bg-[#00000020] backdrop-blur-[1px]">
       <svg className="w-15" viewBox="0 0 100 50">
         <line
           x1="10"

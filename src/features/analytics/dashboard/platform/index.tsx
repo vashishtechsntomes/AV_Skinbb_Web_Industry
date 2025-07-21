@@ -86,13 +86,6 @@ const skinChartData = [
   { key: "oily", value: 12172, fill: "var(--chart-3)" },
   { key: "combination", value: 5747, fill: "var(--chart-4)" },
   { key: "unknown", value: 68303, fill: "var(--chart-5)" },
-  // {
-  //   dry: 1260,
-  //   normal: 570,
-  //   oily: 890,
-  //   combination: 420,
-  //   unknown: 130,
-  // },
 ];
 const skinChartConfig = {
   value: {
@@ -114,26 +107,6 @@ const skinChartConfig = {
   unknown: {
     label: "Unknown",
   },
-  // dry: {
-  //   label: "Dry",
-  //   color: "var(--chart-1)",
-  // },
-  // normal: {
-  //   label: "Normal",
-  //   color: "var(--chart-2)",
-  // },
-  // oily: {
-  //   label: "Oily",
-  //   color: "var(--chart-3)",
-  // },
-  // combination: {
-  //   label: "Combination",
-  //   color: "var(--chart-4)",
-  // },
-  // unknown: {
-  //   label: "Unknown",
-  //   color: "var(--chart-5)",
-  // },
 } satisfies ChartConfig;
 
 const statsData = [
@@ -178,14 +151,6 @@ const concernChartData = [
   { key: "photodamage", value: 321, fill: "oklch(0.7317 0.1325 20.8/0.3)" },
   { key: "melasma", value: 643, fill: "oklch(0.7317 0.1325 20.8/0.2)" },
   { key: "Unknown", value: 91274, fill: "oklch(0.7317 0.1325 20.8/0.1)" },
-  // {
-  //   // name: "Usage",
-  //   acne: 1260,
-  //   dullness: 570,
-  //   roughness: 890,
-  //   wrinkles: 420,
-  //   // "sagging skin": 130,
-  // },
 ];
 const concernChartConfig = {
   value: {
@@ -207,10 +172,6 @@ const concernChartConfig = {
     label: "wrinkles",
     color: "var(--chart-4)",
   },
-  // "sagging skin": {
-  //   label: "sagging skin",
-  //   color: "var(--chart-5)",
-  // },
 } satisfies ChartConfig;
 
 const PlatformDashboard = () => {
@@ -315,7 +276,7 @@ and performance`,
             }}
           />
         </StatChartCard>
-        <StatChartCard name="Skin Type Distribution">
+        <StatChartCard name="Skin Type">
           <DonutPieChart
             config={skinChartConfig}
             data={skinChartData}
@@ -325,7 +286,7 @@ and performance`,
             showFullDonut
           />
         </StatChartCard>
-        <StatChartCard name="Concern Distribution">
+        <StatChartCard name="Concern Wheel">
           <DonutPieChart
             config={concernChartConfig}
             data={concernChartData}
@@ -339,7 +300,7 @@ and performance`,
           />
         </StatChartCard>
 
-        <StatChartCard name="State Distribution" className="col-span-2">
+        <StatChartCard name="Location wise distribution" className="col-span-2">
           <BarChart
             config={stateChartConfig}
             data={stateChartData}

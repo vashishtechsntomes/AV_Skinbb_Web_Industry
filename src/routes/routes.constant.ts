@@ -1,4 +1,6 @@
 export const ROUTES = {
+  CREATE: "/create",
+  EDIT: "/edit",
   // Dashboard routes
   DASHBOARD: "/",
   BRAND: "/brand",
@@ -11,7 +13,10 @@ export const ROUTES = {
   INGREDIENT: "/ingredient",
   CHAT: "/chat",
   RELATIONSHIP_PREVIEW: "/relationship",
+  SURVEY: "/survey",
+  SURVEYS: "/surveys",
 
+  // analytics
   get PLATFORM_ANALYTIC() {
     return `${this.ANALYTIC}${this.PLATFORM}`;
   },
@@ -21,9 +26,14 @@ export const ROUTES = {
   get INGREDIENT_ANALYTIC() {
     return `${this.ANALYTIC}${this.INGREDIENT}`;
   },
-  MARKET_RESEARCH: "/market-research",
-  MARKET_RESEARCH_CREATE: "/market-research/add",
-  MARKET_RESEARCH_EDIT: "/market-research/edit",
+
+  // survey
+  get SURVEY_CREATE() {
+    return `${this.SURVEY}${this.CREATE}`;
+  },
+  get SURVEY_EDIT() {
+    return `${this.SURVEY}${this.EDIT}`;
+  },
 
   // Auth routes
   SIGN_IN: "/sign-in",

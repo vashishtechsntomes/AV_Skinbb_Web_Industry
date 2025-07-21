@@ -54,25 +54,25 @@ export const dashboardRoutes: RouteObject[] = [
             ],
           },
           {
-            path: ROUTES.MARKET_RESEARCH,
+            path: ROUTES.SURVEYS,
             Component: lazy(
               () => import("@/features/market-research/market-research-list"),
             ),
           },
           {
-            path: ROUTES.MARKET_RESEARCH_CREATE,
+            path: ROUTES.SURVEY_CREATE,
             Component: lazy(
               () => import("@/features/market-research/market-research-create"),
             ),
           },
           {
-            path: `${ROUTES.MARKET_RESEARCH_EDIT}/:id`,
+            path: `${ROUTES.SURVEY_EDIT}/:id`,
             Component: lazy(
               () => import("@/features/market-research/market-research-create"),
             ),
           },
           {
-            path: `${ROUTES.MARKET_RESEARCH}/:id`,
+            path: `${ROUTES.SURVEY}/:id`,
             Component: lazy(
               () => import("@/features/market-research/market-research-detail"),
             ),

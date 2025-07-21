@@ -6,19 +6,17 @@ interface SurveyQuestionProps {
 }
 const SurveyQuestions = ({ data }: SurveyQuestionProps) => {
   return (
-    <>
-      <div className="flex flex-col gap-2 md:gap-5">
-        {data.questions.map((question, index) => {
-          return (
-            <QuestionDetailModal
-              question={question}
-              index={index}
-              key={question.text}
-            />
-          );
-        })}
-      </div>
-    </>
+    <div className="flex flex-col gap-4 md:gap-5">
+      {data.questions.map((question, index) => {
+        return (
+          <QuestionDetailModal
+            question={question}
+            index={index}
+            key={question.text}
+          />
+        );
+      })}
+    </div>
   );
 };
 

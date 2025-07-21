@@ -450,7 +450,7 @@ export function DataTableAction<TData>({
       className={cn("flex items-center justify-between", className)}
       {...props}
     >
-      <h5 className="table-heading text-2xl">{tableHeading}</h5>
+      <h5 className="table-heading">{tableHeading}</h5>
       <div className="flex flex-wrap gap-2 md:gap-4">
         <Input
           startIcon={<MagnifyingGlassIcon />}

@@ -112,7 +112,7 @@ export default function SurveyReview({
                       )}
                       {!!question?.options.length && (
                         <div className="mt-3 flex justify-between gap-2">
-                          <div className="flex gap-2">
+                          <div className="flex flex-wrap gap-2">
                             <p>Options:</p>
                             {question?.options?.map((item) => (
                               <Badge

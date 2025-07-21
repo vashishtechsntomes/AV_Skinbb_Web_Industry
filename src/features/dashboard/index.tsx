@@ -56,10 +56,10 @@ const cardData = [
     ),
   },
   {
-    title: "Market Research",
+    title: "Survey",
     description:
       "Explore trends, ingredient interest, and competitive landscape analysis",
-    buttons: [{ name: "Explore", href: ROUTES.MARKET_RESEARCH }],
+    buttons: [{ name: "Explore", href: ROUTES.SURVEYS }],
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -211,12 +211,12 @@ const columns: ColumnDef<Survey>[] = [
       return (
         <Button variant="ghost" size="icon" asChild>
           {isEdit ? (
-            <NavLink to={`${ROUTES.MARKET_RESEARCH_EDIT}/${row.original.id}`}>
+            <NavLink to={`${ROUTES.SURVEY_EDIT}/${row.original.id}`}>
               <span className="sr-only">Open Survey Details</span>
               <EyeIcon />
             </NavLink>
           ) : (
-            <NavLink to={`${ROUTES.MARKET_RESEARCH}/${row.original.id}`}>
+            <NavLink to={`${ROUTES.SURVEY}/${row.original.id}`}>
               <span className="sr-only">Open Survey Details</span>
               <EyeIcon />
             </NavLink>
@@ -231,7 +231,7 @@ const MarketResearchList = () => {
   return (
     <PageContent
       header={{
-        title: "Market Research",
+        title: "Survey",
         description: "View and manage your surveys.",
         actions: (
           <div className="flex gap-2 md:gap-5">
@@ -241,7 +241,7 @@ const MarketResearchList = () => {
               mode="range"
             />
             <Button color={"primary"} asChild>
-              <NavLink to={ROUTES.MARKET_RESEARCH_CREATE}>Add Research</NavLink>
+              <NavLink to={ROUTES.SURVEY_CREATE}>Add Survey</NavLink>
             </Button>
           </div>
         ),
@@ -279,8 +279,8 @@ function Card({ research }: { research: Survey }) {
     <NavLink
       to={
         research.status === "draft"
-          ? `${ROUTES.MARKET_RESEARCH_EDIT}/${research.id}`
-          : `${ROUTES.MARKET_RESEARCH}/${research.id}`
+          ? `${ROUTES.SURVEY_EDIT}/${research.id}`
+          : `${ROUTES.SURVEY}/${research.id}`
       }
     >
       <article className="bg-card hover:ring-primary w-full rounded-xl p-5 shadow-md transition hover:ring-3">

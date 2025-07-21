@@ -16,19 +16,6 @@ import React, { useEffect, useMemo } from "react";
 import { NavLink, useLocation } from "react-router";
 import { Button } from "../../components/ui/button";
 const INDENT = 32;
-
-// const DASHBOARD_ROUTES = {
-//   dashboard: "/",
-//   brands: "/brands",
-//   marketResearch: "/market-research",
-//   promotions: "/promotions",
-//   listing: "/listing",
-//   users: "/users",
-//   userInsight: "/user-insight",
-//   marketTrends: "/market-trends",
-//   anyDashboard: DASHBOARD_ROUTES.analyticsDashboardPlatform,
-// };
-
 interface Item {
   name: string;
   href?: string;
@@ -44,7 +31,7 @@ const items: () => Record<string, Item> = () => ({
       "dashboard",
       "brands",
       "analytics",
-      "market research",
+      "survey",
       "promotions",
       "listing",
       "users",
@@ -134,9 +121,9 @@ const items: () => Record<string, Item> = () => ({
     name: "Ingredient insight",
     href: ROUTES.INGREDIENT_ANALYTIC,
   },
-  "market research": {
-    name: "market research",
-    href: "/market-research",
+  survey: {
+    name: "survey",
+    href: ROUTES.SURVEYS,
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"

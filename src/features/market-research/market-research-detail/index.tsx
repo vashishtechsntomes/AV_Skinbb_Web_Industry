@@ -28,13 +28,29 @@ const marketData: Survey = {
       text: "How effective was the dermatology product in addressing your skin concerns?",
       type: SurveyQuestionType.multiple_choice,
       description: "Please rate how well the product worked for you.",
-      options: ["Very Effective", "Effective", "Neutral"],
+      options: [
+        "Very Effective",
+        "Somewhat Effective",
+        "Neutral",
+        "Somewhat Ineffective",
+        "Very Ineffective",
+      ],
     },
     {
       text: "What skin concerns do you usually have?",
       type: SurveyQuestionType.single_choice,
       description: "Select all that apply to your skin’s condition.",
-      options: ["Very Effective", "Effective", "Neutral"],
+      options: [
+        "Acne or breakouts",
+        "Dryness or flakiness",
+        "Oily skin",
+        "Redness or irritation",
+        "Dark spots or hyperpigmentation",
+        "Fine lines or wrinkles",
+        "Enlarged pores",
+        "Uneven skin tone",
+        "Sensitivity",
+      ],
     },
     {
       text: "Would you like us to improve our products?",
@@ -120,7 +136,7 @@ const MarketResearchDetail = () => {
         ),
       }}
     >
-      <div className="grid gap-2 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
         {statsData.map((item) => (
           <StatCard
             key={item.title}
