@@ -251,7 +251,6 @@ const PreviewCytoscape = ({
         <GraphControls
           cy={cyRef.current}
           layout={relationshipLayouts[layout]({})}
-          className="top-15 bottom-auto"
         >
           <hr />
           <DropdownMenu
@@ -300,7 +299,7 @@ const PreviewCytoscape = ({
         </GraphControls>
       )}
 
-      <div className="bg-background absolute top-2 right-2 z-1 rounded-md border p-2 shadow-md">
+      <div className="bg-background absolute top-2 right-2 z-1 max-w-70 rounded-md border p-2 shadow-md sm:max-w-full">
         <ul className="flex flex-wrap gap-4 text-sm">
           <li className="flex items-center gap-2">
             <span className="block size-3 rounded-full border-2 border-[#93aafd]"></span>{" "}
