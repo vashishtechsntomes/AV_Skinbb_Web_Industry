@@ -47,7 +47,7 @@ export const GraphControls: React.FC<GraphControlsProps> = ({
   return (
     <div
       className={cn(
-        "[&>button]:text-muted-foreground absolute right-2 bottom-2 z-50 flex flex-col overflow-hidden rounded-md border shadow-md [&>button]:size-9 [&>button]:rounded-none [&>button]:shadow-none",
+        "[&>button]:text-muted-foreground [&>button]:bg-background [&>button]:hover:bg-muted absolute right-2 bottom-2 z-1 flex flex-col overflow-hidden rounded-md border shadow-md [&>button]:size-6 [&>button]:rounded-none [&>button]:shadow-none sm:[&>button]:size-9 [&>button]:[&_svg]:size-4 sm:[&>button]:[&_svg]:size-5",
         className,
       )}
     >

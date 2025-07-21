@@ -344,7 +344,7 @@ function renderMenuItems(items: DropdownMenuItemType[]): React.ReactNode {
 
 type DropdownMenuProps = {
   items: DropdownMenuItemType[];
-  children: React.ReactNode;
+  children?: React.ReactNode;
   align?: "start" | "center" | "end";
   asChild?: boolean;
   triggerProps?: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>;
@@ -364,13 +364,15 @@ export function DropdownMenu({
   const { className } = triggerProps ?? {};
   return (
     <DropdownMenuRoot {...props}>
-      <DropdownMenuTrigger
-        className={cn("", className)}
-        {...triggerProps}
-        asChild={asChild}
-      >
-        {children}
-      </DropdownMenuTrigger>
+      {children && (
+        <DropdownMenuTrigger
+          className={cn("", className)}
+          {...triggerProps}
+          asChild={asChild}
+        >
+          {children}
+        </DropdownMenuTrigger>
+      )}
       <DropdownMenuContent align={align}>
         {label && (
           <>

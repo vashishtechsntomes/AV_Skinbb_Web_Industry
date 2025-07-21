@@ -1,24 +1,31 @@
 import { Button } from "@/components/ui/button";
+import { StatChartCard } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import {
-  SelectRoot,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectRoot,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { PageContent } from "@/components/ui/structure";
+import RelationshipPreview from "@/features/relationship-preview";
 import FocusIngredients from "./FocusIngredients";
 import FunctionalTrends from "./FunctionalTrends";
 import IngredientOvertime from "./IngredientOvertime";
 import TopCategoryTrends from "./TopCategoryTrends";
-import { StatChartCard } from "@/components/ui/card";
-import IngredientProductMap from "@/components/cytoscape/IngredientProductMap";
+import { Tooltip } from "@/components/ui/tooltip";
+import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
+import { NavLink, useLocation } from "react-router";
+import { ROUTES } from "@/routes/routes.constant";
 // import FunctionalTrends from "./FunctionalTrends";
 
 const Ingredient = () => {
+  const location = useLocation();
+  const searchParams = location.search;
+  console.log("🚀 ~ Ingredient ~ searchParams:", searchParams);
   return (
     <PageContent
       header={{
@@ -77,8 +84,24 @@ const Ingredient = () => {
         <TopCategoryTrends />
       </div>
       <FunctionalTrends />
-      <StatChartCard name="Top Ingredients" className="md:max-h-full">
-        <IngredientProductMap />
+      <StatChartCard
+        name="Top Ingredients"
+        className="md:max-h-full"
+        actions={
+          <Tooltip title="Full Screen">
+            <Button size={"icon"} variant={"ghost"} asChild>
+              <NavLink to={`${ROUTES.RELATIONSHIP_PREVIEW}${searchParams}`}>
+                <ArrowsPointingOutIcon />
+              </NavLink>
+            </Button>
+          </Tooltip>
+        }
+      >
+        {/* <IngredientProductMap /> */}
+        <RelationshipPreview
+          className="bg-muted rounded-lg border inset-shadow-sm"
+          height="400px"
+        />
       </StatChartCard>
     </PageContent>
   );

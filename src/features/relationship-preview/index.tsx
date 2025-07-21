@@ -1,132 +1,189 @@
 import { GraphControls } from "@/components/cytoscape/GraphControls";
 import { Button } from "@/components/ui/button";
+import { ComboBox, type Option } from "@/components/ui/combo-box";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
-import useQuery from "@/hooks/useQuery";
-import type { ApiResponse } from "@/services";
-import { capitalize } from "@/utils";
+import { Tooltip } from "@/components/ui/tooltip";
+import { useDebounce } from "@/hooks/useDebounce";
+import { capitalize, cn } from "@/utils";
 import { CircleStackIcon } from "@heroicons/react/24/outline";
-import type { Core, ElementDefinition, EventObject } from "cytoscape";
+import type {
+  Core,
+  ElementDefinition,
+  EventObject,
+  NodeSingular,
+} from "cytoscape";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
-import DATA from "./cleaned-data.json";
-import { relationshipLayouts, relationshipStyle } from "./data";
+import { useSearchParams, type SetURLSearchParams } from "react-router";
+import {
+  autocompleteIngredient,
+  handleTap,
+  relationshipLayouts,
+  relationshipStyle,
+  type Node,
+  type NodeType,
+} from "./data";
 
-type Product = {
-  brand_name: string;
-  product_name: string;
-  all_ingredients: string[];
-  product_images: string;
-};
+const RelationshipPreview = ({
+  className,
+  height = "100dvh",
+}: {
+  className?: string;
+  height?: string;
+}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [visibleCyto, setVisibleCyto] = useState<[boolean, Node | undefined]>([
+    false,
+    undefined,
+  ]);
 
-// type TransformedProduct = {
-//   [productName: string]: {
-//     brand_name: string;
-//     product_name: string;
-//     all_ingredients: string[];
-//     product_images: string[];
-//   };
-// };
+  useEffect(() => {
+    const label = searchParams.get("label");
+    const id = searchParams.get("id");
+    const hasChildren = searchParams.get("hasChildren");
+    if (label && id && hasChildren) {
+      setVisibleCyto([
+        true,
+        {
+          hasChildren: JSON.parse(hasChildren),
+          id,
+          label,
+        },
+      ]);
+    }
+  }, [searchParams]);
 
-const PRODUCT_INGREDIENT = DATA as Product[];
-
-async function fetchData(): Promise<ApiResponse<Product[]>> {
-  return new Promise((res) => {
-    const data = PRODUCT_INGREDIENT?.map((item) => ({
-      ...item,
-      // product_name: item.product_name,
-      // brand_name: item.brand_name,
-      // product_images: item.product_images,
-      // all_ingredients: item.all_ingredients
-      // key_ingredients: item.key_ingredients
-      //   .split("|")
-      //   .map((val) => val.trim())
-      //   .filter(Boolean),
-      // "key_features_&_benefits": item["key_features_&_benefits"]
-      //   .split("|")
-      //   .map((val) => val.trim())
-      //   .filter(Boolean),
-    }));
-
-    res({
-      data: data,
-      error: "",
-    });
-  });
-}
-
-type NodeType = "ingredient" | "product";
-
-// ingredient → products
-const fetchProductsByIngredient = async (
-  ingredientId: string,
-): Promise<string[]> => {
-  console.log(`Fetching products for ingredient: ${ingredientId}`);
-  await new Promise((res) => setTimeout(res, 300)); // simulate delay
-
-  return PRODUCT_INGREDIENT.filter((product) =>
-    product.all_ingredients.some(
-      (ing) => ing.toLowerCase() === ingredientId.toLowerCase(),
-    ),
-  ).map((product) => product.product_name);
-};
-
-// product → ingredients
-const fetchIngredientsByProduct = async (
-  productId: string,
-): Promise<string[]> => {
-  console.log(`Fetching ingredients for product: ${productId}`);
-  await new Promise((res) => setTimeout(res, 300)); // simulate delay
-
-  const product = PRODUCT_INGREDIENT.find(
-    (p) => p.product_name.toLowerCase() === productId.toLowerCase(),
+  const reset = () => {
+    setVisibleCyto([false, undefined]);
+    setSearchParams({});
+  };
+  return (
+    <div
+      className={cn(
+        "bg-muted relative flex h-full items-center justify-center border inset-shadow-sm",
+        className,
+      )}
+      style={{
+        height,
+      }}
+    >
+      {visibleCyto && visibleCyto[1] ? (
+        <PreviewCytoscape
+          initialNode={visibleCyto[1]}
+          height={height}
+          reset={reset}
+        />
+      ) : (
+        <SelectIngredient setSearchParams={setSearchParams} />
+      )}
+    </div>
   );
-
-  return product?.all_ingredients || [];
 };
 
-const RelationshipPreview = () => {
-  const { data } = useQuery(async () => await fetchData());
+const SelectIngredient = ({
+  setSearchParams,
+}: {
+  setSearchParams: SetURLSearchParams;
+}) => {
+  const [value, setValue] = useState<string | undefined>(undefined);
+  const [options, setOptions] = useState<Option[]>([]);
+  const [input, setInput] = useState("");
+
+  const debouncedInput = useDebounce(input, 300);
+
+  useEffect(() => {
+    if (debouncedInput.trim() === "" || debouncedInput.length < 3) {
+      setOptions([]);
+      return;
+    }
+
+    autocompleteIngredient(debouncedInput).then((results) => {
+      setOptions(results);
+    });
+  }, [debouncedInput]);
+
+  const handleChange = (val: string, opt: unknown) => {
+    const option = opt as Node | undefined;
+    setValue(val);
+
+    if (option?.label) {
+      setSearchParams({
+        id: option.label,
+        label: option.label,
+        hasChildren: String(option.hasChildren),
+      });
+    } else {
+      setSearchParams(undefined);
+    }
+  };
+
+  return (
+    <ComboBox
+      options={options}
+      className="max-w-50"
+      popoverContentProps={{ className: "h-[40dvh]" }}
+      value={value}
+      placeholder="Search ingredients"
+      commandInputProps={{
+        onValueChange(search) {
+          setInput(search);
+        },
+      }}
+      emptyMessage={
+        options.length === 0 && debouncedInput.length >= 3
+          ? "No result found."
+          : "Please enter at least 3 characters."
+      }
+      onChange={handleChange}
+    />
+  );
+};
+
+const PreviewCytoscape = ({
+  initialNode,
+  height,
+  reset,
+}: {
+  initialNode: Node;
+  height: string;
+  reset: () => void;
+}) => {
   const [elements, setElements] = useState<ElementDefinition[]>([]);
   const [layout, setLayout] =
-    useState<keyof typeof relationshipLayouts>("concentric");
+    useState<keyof typeof relationshipLayouts>("breadthfirst");
+
   const cyRef = useRef<Core | null>(null);
   const nodeSet = useRef<Set<string>>(new Set());
   const edgeSet = useRef<Set<string>>(new Set());
-
-  const animateIn = useCallback((id: string) => {
-    const cy = cyRef.current;
-    if (!cy) return;
-
-    const el = cy.getElementById(id);
-    if (!el.empty()) {
-      el.stop(true);
-      el.animate(
-        {
-          style: {
-            opacity: 1,
-            width: el.data("width") || undefined,
-            height: el.data("height") || undefined,
-          },
-        },
-        { duration: 400 },
-      );
-    }
-  }, []);
+  const hasLoadedRef = useRef(false);
 
   const addNode = useCallback(
-    async (id: string, type: NodeType): Promise<void> => {
-      if (nodeSet.current.has(id)) return;
+    async (nodeData: Node, type: NodeType): Promise<NodeSingular | null> => {
+      const { id, label, hasChildren } = nodeData;
+      if (nodeSet.current.has(id))
+        return cyRef.current?.getElementById(id) ?? null;
       nodeSet.current.add(id);
 
       const finalSize = type === "ingredient" ? 70 : 80;
       const node: ElementDefinition = {
-        data: { id, label: id, width: finalSize, height: finalSize },
-        classes: type,
+        data: { id, label, width: finalSize, height: finalSize },
+        classes: `${type} ${hasChildren ? "has-children" : ""}`.trim(),
       };
 
       setElements((prev) => [...prev, node]);
 
-      await new Promise((resolve) => setTimeout(resolve, 50)); // small wait
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      const cy = cyRef.current;
+      if (!cy) return null;
+
+      for (let i = 0; i < 10; i++) {
+        await new Promise((r) => setTimeout(r, 50));
+        const ele = cy.getElementById(id);
+        if (ele && ele.length > 0) return ele;
+      }
+
+      return null;
     },
     [],
   );
@@ -152,70 +209,50 @@ const RelationshipPreview = () => {
     const cy = cyRef.current;
     if (!cy) return;
 
-    const handleTap = async (evt: EventObject) => {
-      const node = evt.target;
-      const id = node.id();
-      cy.nodes().removeClass("highlighted");
-      node.addClass("highlighted");
-      const type = node.hasClass("ingredient") ? "ingredient" : "product";
-
-      const relatedItems =
-        type === "ingredient"
-          ? await fetchProductsByIngredient(id)
-          : await fetchIngredientsByProduct(id);
-
-      console.log("🚀 ~ handleTap ~ relatedItems:", relatedItems);
-
-      await Promise.all(
-        relatedItems.map(async (item) => {
-          const nodeType = type === "ingredient" ? "product" : "ingredient";
-          await addNode(item, nodeType);
-          await addEdge(id, item);
-        }),
-      );
-
-      requestAnimationFrame(() => {
-        const layoutInstance = cy.layout(relationshipLayouts[layout]);
-
-        layoutInstance.on("layoutstop", () => {
-          cy.animate(
-            {
-              center: { eles: node },
-            },
-            {
-              duration: 500,
-              easing: "ease-in-out",
-            },
-          );
-        });
-
-        layoutInstance.run();
+    const listener = (evt: EventObject) =>
+      handleTap({
+        evt,
+        cy,
+        layout: relationshipLayouts[layout],
+        addNode,
+        addEdge,
       });
-    };
 
-    cy.on("tap", "node", handleTap);
+    cy.on("tap", "node", listener);
 
     return () => {
-      cy.off("tap", "node", handleTap);
+      cy.off("tap", "node", listener);
     };
   }, [addNode, addEdge, layout]);
 
   useEffect(() => {
-    if (data) {
-      addNode(data[0].all_ingredients[0], "ingredient");
-    }
-  }, [addNode, data]);
+    const loadAndCenter = async () => {
+      if (initialNode && cyRef.current && !hasLoadedRef.current) {
+        const cy = cyRef.current;
+        const node = await addNode(initialNode, "ingredient");
+        if (node) {
+          hasLoadedRef.current = true;
+          await new Promise((resolve) => setTimeout(resolve, 150));
+          cy.layout(relationshipLayouts[layout]({ id: node.id() })).run();
+        }
+      }
+    };
+
+    loadAndCenter();
+  }, [addNode, initialNode, layout]);
 
   useEffect(() => {
-    const cy = cyRef.current;
-    if (!cy) return;
-    cy.layout(relationshipLayouts[layout]).run();
+    cyRef.current?.layout(relationshipLayouts[layout]({})).run();
   }, [layout]);
 
   return (
-    <div className="relative flex min-h-dvh justify-center">
+    <>
       {cyRef.current && (
-        <GraphControls cy={cyRef.current} layout={relationshipLayouts[layout]}>
+        <GraphControls
+          cy={cyRef.current}
+          layout={relationshipLayouts[layout]({})}
+          className="top-15 bottom-auto"
+        >
           <hr />
           <DropdownMenu
             label="Layout"
@@ -231,8 +268,58 @@ const RelationshipPreview = () => {
           >
             <Button size="icon" startIcon={<CircleStackIcon />}></Button>
           </DropdownMenu>
+          <hr />
+          <Tooltip title="Reset Ingredient" side="left">
+            <Button
+              size="icon"
+              onClick={reset}
+              startIcon={
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                  data-slot="icon"
+                  fill="none"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12.252 6v6h4.5"
+                  ></path>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5.887 5.636A9 8.996 45 0 1 16.75 4.208a9 8.996 45 0 1 4.194 10.123 9 8.996 45 0 1-8.69 6.667 9 8.996 45 0 1-8.693-6.67m2.327-8.692L3.38 8.143M3.363 3.15v5.013m0 0h5.013"
+                  ></path>
+                </svg>
+              }
+            />
+          </Tooltip>
         </GraphControls>
       )}
+
+      <div className="bg-background hidden sm:block absolute top-2 right-2 z-1 rounded-md border p-2 shadow-md">
+        <ul className="hidden flex-wrap gap-4 text-sm sm:flex">
+          <li className="flex items-center gap-2">
+            <span className="block size-3 rounded-full border-2 border-[#93aafd]"></span>{" "}
+            Ingredient
+          </li>
+          <li className="flex items-center gap-2">
+            <span className="block size-2.5 rotate-45 border-2 border-[#f08484]"></span>{" "}
+            Product
+          </li>
+          <li className="flex items-center gap-2">
+            <span className="block size-3 rounded-full border-2 border-double border-[#f08484]"></span>{" "}
+            Has Product
+          </li>
+          <li className="flex items-center gap-2">
+            <span className="block size-3 rounded-full border-2 border-double border-[#93aafd]"></span>{" "}
+            Has Ingredient
+          </li>
+        </ul>
+      </div>
 
       <CytoscapeComponent
         elements={CytoscapeComponent.normalizeElements(elements)}
@@ -241,24 +328,13 @@ const RelationshipPreview = () => {
         cy={(cy: Core) => {
           cyRef.current = cy;
         }}
-        minZoom={0.5}
+        minZoom={0.4}
         maxZoom={2}
-        style={{ width: "100%", height: "100dvh" }}
+        style={{ width: "100%", height }}
         stylesheet={relationshipStyle}
       />
-    </div>
+    </>
   );
 };
 
-{
-  /* <ComboBox
-        options={[]}
-        className="max-w-50"
-        value={value}
-        onChange={(val, row) => {
-          console.log("🚀 ~ RelationshipPreview ~ val, row:", val, row);
-          setValue(val);
-        }}
-      /> */
-}
 export default RelationshipPreview;

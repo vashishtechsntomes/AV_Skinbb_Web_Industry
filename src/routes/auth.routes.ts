@@ -21,11 +21,11 @@ export const authRoutes: RouteObject[] = [
             path: ROUTES.SIGN_UP,
             Component: lazy(() => import("@/features/auth/sign-up")),
           },
-          {
-            path: `${ROUTES.SIGN_IN}`,
-            Component: lazy(() => import("@/features/auth/sign-in-simple")),
-          },
         ],
+      },
+      {
+        path: `${ROUTES.SIGN_IN}`,
+        Component: lazy(() => import("@/features/auth/sign-in-simple")),
       },
     ],
   },

@@ -60,15 +60,17 @@ function Tooltip({
   title,
   side,
   children,
+  asChild = true,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root> & {
   title: string | React.ReactNode;
   children: React.ReactElement;
   side?: TooltipPrimitive.TooltipContentProps["side"];
+  asChild?: boolean;
 }) {
   return (
     <TooltipRoot {...props}>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
       <TooltipContent side={side}>
         {typeof title === "string" ? <p>{title}</p> : title}
       </TooltipContent>

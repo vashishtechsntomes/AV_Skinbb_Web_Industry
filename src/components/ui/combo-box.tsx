@@ -15,7 +15,7 @@ import { cn } from "@/utils";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import * as React from "react";
 
-type Option = {
+export type Option = {
   label: string;
   value: string;
   [key: string]: unknown;
@@ -26,7 +26,7 @@ interface ComboBoxProps
   options: Option[];
   placeholder?: string;
   value?: string;
-  onChange?: (value: string, option: Option | undefined) => void;
+  onChange?: (value: string, option: unknown | undefined) => void;
   className?: string;
   searchable?: boolean;
   clearable?: boolean;
