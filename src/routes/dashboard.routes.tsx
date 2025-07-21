@@ -80,6 +80,10 @@ export const dashboardRoutes: RouteObject[] = [
           { path: "chat", Component: Chat },
         ],
       },
+      {
+        path: ROUTES.RELATIONSHIP_PREVIEW,
+        Component: lazy(() => import("@/features/relationship-preview")),
+      },
     ],
   },
 ];

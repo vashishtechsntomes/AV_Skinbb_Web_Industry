@@ -106,7 +106,6 @@ const IngredientProductMap = () => {
     const el = cy.getElementById(id);
     if (!el.empty()) {
       el.stop(true);
-      // fade in
       el.animate(
         {
           style: {
@@ -125,7 +124,6 @@ const IngredientProductMap = () => {
       if (nodeSet.current.has(id)) return false;
       nodeSet.current.add(id);
 
-      // note: we stash the intended final size in data() so we can animate back to it after fade
       const finalSize = type === "ingredient" ? 70 : 80;
       const node: ElementDefinition = {
         data: { id, label: id, width: finalSize, height: finalSize },
@@ -225,7 +223,7 @@ const IngredientProductMap = () => {
             // directed: true,
             // padding: 30,
             // spacingFactor: 1.3,
-            animate: false,
+            animate: true,
             fit: false,
           }).run();
         }}
@@ -234,7 +232,7 @@ const IngredientProductMap = () => {
           {
             selector: "node, edge",
             style: {
-              opacity: 0,
+              opacity: 1,
             },
           },
           {

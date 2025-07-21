@@ -14,18 +14,18 @@ export const authRoutes: RouteObject[] = [
         Component: AuthLayout,
         children: [
           {
-            path: `${ROUTES.SIGN_IN}/-main`,
+            path: `${ROUTES.SIGN_IN}-main`,
             Component: lazy(() => import("@/features/auth/sign-in")),
           },
           {
             path: ROUTES.SIGN_UP,
             Component: lazy(() => import("@/features/auth/sign-up")),
           },
+          {
+            path: `${ROUTES.SIGN_IN}`,
+            Component: lazy(() => import("@/features/auth/sign-in-simple")),
+          },
         ],
-      },
-      {
-        path: `${ROUTES.SIGN_IN}`,
-        Component: lazy(() => import("@/features/auth/sign-in-simple")),
       },
     ],
   },

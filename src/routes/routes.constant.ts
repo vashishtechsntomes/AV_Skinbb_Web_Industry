@@ -10,6 +10,7 @@ export const ROUTES = {
   PLATFORM: "/platform",
   INGREDIENT: "/ingredient",
   CHAT: "/chat",
+  RELATIONSHIP_PREVIEW: "/relationship",
 
   get PLATFORM_ANALYTIC() {
     return `${this.ANALYTIC}${this.PLATFORM}`;

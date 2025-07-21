@@ -16,7 +16,7 @@ function TooltipProvider({
   );
 }
 
-function Tooltip({
+function TooltipRoot({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
   return (
@@ -56,4 +56,30 @@ function TooltipContent({
   );
 }
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
+function Tooltip({
+  title,
+  side,
+  children,
+  ...props
+}: React.ComponentProps<typeof TooltipPrimitive.Root> & {
+  title: string | React.ReactNode;
+  children: React.ReactElement;
+  side?: TooltipPrimitive.TooltipContentProps["side"];
+}) {
+  return (
+    <TooltipRoot {...props}>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent side={side}>
+        {typeof title === "string" ? <p>{title}</p> : title}
+      </TooltipContent>
+    </TooltipRoot>
+  );
+}
+
+export {
+  Tooltip,
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+};

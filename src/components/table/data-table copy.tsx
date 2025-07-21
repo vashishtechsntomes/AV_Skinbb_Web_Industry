@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
-  Select,
+  SelectRoot,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -289,7 +289,7 @@ const DataTableInner = <TData extends object, TValue = unknown>(
                   Page {table.getState().pagination.pageIndex + 1} of{" "}
                   {table.getPageCount()}
                 </span>
-                <Select
+                <SelectRoot
                   value={String(table.getState().pagination.pageSize)}
                   onValueChange={(value) => table.setPageSize(Number(value))}
                 >
@@ -303,7 +303,7 @@ const DataTableInner = <TData extends object, TValue = unknown>(
                       </SelectItem>
                     ))}
                   </SelectContent>
-                </Select>
+                </SelectRoot>
               </>
             )}
             <div className="flex items-center space-x-2">

@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import {
-  Select,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  SelectRoot,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -42,22 +49,15 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table";
 import {
-  type Dispatch,
   useEffect,
   useMemo,
   useState,
   type ComponentProps,
+  type Dispatch,
+  type KeyboardEvent,
   type ReactNode,
   type SetStateAction,
-  type KeyboardEvent,
 } from "react";
-import {
-  DropdownMenuRoot,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 
 export enum DataViewMode {
   "list" = "list",
@@ -226,7 +226,7 @@ function SortableHeader<TData>({ header }: { header: Header<TData, unknown> }) {
   );
 }
 
-interface DataTableBodyProps<TData> extends ComponentProps<"table"> {
+interface DataTableBodyProps<TData> extends TableProps {
   table: TableType<TData>;
   emptyMessage?: string;
 }
@@ -358,7 +358,7 @@ export function DataPagination<TData>({
       <div className="flex flex-wrap items-center gap-2 md:gap-4">
         {showPageSizeOptions && (
           <div className="flex items-center gap-2">
-            <Select
+            <SelectRoot
               value={String(pageSize)}
               onValueChange={(value) => table.setPageSize(Number(value))}
             >
@@ -372,7 +372,7 @@ export function DataPagination<TData>({
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
+            </SelectRoot>
             Entries per page
           </div>
         )}

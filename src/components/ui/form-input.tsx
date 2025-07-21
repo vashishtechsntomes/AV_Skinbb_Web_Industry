@@ -28,7 +28,7 @@ import {
 } from "./form";
 import { Input, type InputProps } from "./input";
 import {
-  Select,
+  SelectRoot,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -283,7 +283,7 @@ export function InputRenderer<T extends FieldValues, N extends FieldPath<T>>({
     case INPUT_TYPES.SELECT: {
       return (
         <FormControl {...formControlProps}>
-          <Select
+          <SelectRoot
             {...field}
             value={value}
             disabled={disabled}
@@ -304,7 +304,7 @@ export function InputRenderer<T extends FieldValues, N extends FieldPath<T>>({
                   </SelectItem>
                 ))}
             </SelectContent>
-          </Select>
+          </SelectRoot>
         </FormControl>
       );
     }

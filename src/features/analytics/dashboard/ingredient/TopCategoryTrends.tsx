@@ -2,7 +2,7 @@ import DonutPieChart from "@/components/charts/DonutPieChart";
 import { StatChartCard } from "@/components/ui/card";
 import type { ChartConfig } from "@/components/ui/chart";
 import {
-  Select,
+  SelectRoot,
   SelectContent,
   SelectGroup,
   SelectItem,
@@ -118,7 +118,7 @@ const TopCategoryTrends = () => {
       className="md:max-h-110"
       headerProps={{}}
       actions={
-        <Select defaultValue="Preservative">
+        <SelectRoot defaultValue="Preservative">
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
@@ -135,7 +135,7 @@ const TopCategoryTrends = () => {
               </SelectItem>
             </SelectGroup>
           </SelectContent>
-        </Select>
+        </SelectRoot>
       }
     >
       <div className="flex flex-wrap items-center md:flex-nowrap">

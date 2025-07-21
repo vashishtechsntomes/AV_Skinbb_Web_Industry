@@ -4,147 +4,136 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/utils/index";
 
-const buttonVariants = cva(
-  [
-    "inline-flex shrink-0 cursor-pointer select-none flex-wrap items-center justify-center text-center leading-[1em] gap-2 no-underline duration-[0.2s] ease-out transition-[color,background-color,border-color,opacity,box-shadow,transform,scale] shadow border-transparent border-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:hidden active:scale-95 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-
-    "disabled:cursor-not-allowed disabled:scale-100 disabled:bg-muted1 disabled:opacity-70",
-  ],
-  {
-    variants: {
-      variant: {
-        contained: "bg-background text-foreground hover:bg-foreground/5",
-        outlined:
-          "border border-border bg-background shadow-none hover:bg-muted",
-        ghost:
-          "text-foreground shadow-none hover:bg-accent hover:text-foreground",
-        text: "shadow-none cursor-auto hover:text-foreground",
-        link: "shadow-none underline-offset-4 hover:underline",
-      },
-      color: {
-        default: "focus-visible:outline-muted",
-        primary: "focus-visible:outline-primary",
-        success: "focus-visible:outline-success",
-        destructive: "focus-visible:outline-destructive",
-      },
-      size: {
-        tiny: "h-7 px-2 py-0 text-xs [&_svg]:size-3 gap-1",
-        sm: "h-8 px-3 text-sm [&_svg]:size-4 gap-1.5",
-        md: "h-10 px-4 text-base [&_svg]:size-5 ",
-        lg: "h-12 px-8 text-lg [&_svg]:size-5",
-        icon: "h-10 w-10 text-muted-foreground [&_svg]:size-5",
-      },
-      rounded: {
-        none: "rounded-none",
-        sm: "rounded-sm",
-        md: "rounded-md",
-        lg: "rounded-lg",
-        full: "rounded-full",
-      },
+const buttonVariants = cva("btn", {
+  variants: {
+    variant: {
+      contained: "contained",
+      outlined: "outlined",
+      ghost: "ghost",
+      text: "text",
+      link: "link",
     },
-    defaultVariants: {
-      variant: "contained",
-      size: "md",
-      color: "default",
-      rounded: "md",
+    color: {
+      default: "focus-visible:outline-muted",
+      primary: "focus-visible:outline-primary",
+      success: "focus-visible:outline-success",
+      destructive: "focus-visible:outline-destructive",
     },
-    compoundVariants: [
-      // Contained
-      {
-        variant: "contained",
-        color: "primary",
-        className:
-          "bg-primary text-primary-foreground hover:bg-primary/80 disabled:hover:bg-primary",
-      },
-      {
-        variant: "contained",
-        color: "destructive",
-        className:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/80 disabled:hover:bg-destructive",
-      },
-      {
-        variant: "contained",
-        color: "success",
-        className:
-          "bg-success text-success-foreground hover:bg-success/80 disabled:hover:bg-success",
-      },
-
-      // Outlined
-      {
-        variant: "outlined",
-        color: "primary",
-        className:
-          "border-primary text-primary hover:bg-primary hover:text-primary-foreground",
-      },
-      {
-        variant: "outlined",
-        color: "destructive",
-        className:
-          "border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground",
-      },
-      {
-        variant: "outlined",
-        color: "success",
-        className:
-          "border-success text-success hover:bg-success hover:text-success-foreground",
-      },
-
-      // Ghost
-      {
-        variant: "ghost",
-        color: "primary",
-        className:
-          "text-primary hover:bg-primary hover:text-primary-foreground",
-      },
-      {
-        variant: "ghost",
-        color: "destructive",
-        className:
-          "text-destructive hover:bg-destructive hover:text-destructive-foreground",
-      },
-      {
-        variant: "ghost",
-        color: "success",
-        className:
-          "text-success hover:bg-success hover:text-success-foreground",
-      },
-
-      // Text
-      {
-        variant: "text",
-        color: "primary",
-        className: "text-primary",
-      },
-      {
-        variant: "text",
-        color: "destructive",
-        className: "text-destructive",
-      },
-      {
-        variant: "text",
-        color: "success",
-        className: "text-success",
-      },
-
-      // Link
-      {
-        variant: "link",
-        color: "primary",
-        className: "text-primary underline-offset-4 hover:underline",
-      },
-      {
-        variant: "link",
-        color: "destructive",
-        className: "text-destructive underline-offset-4 hover:underline",
-      },
-      {
-        variant: "link",
-        color: "success",
-        className: "text-success underline-offset-4 hover:underline ",
-      },
-    ],
+    size: {
+      tiny: "h-7 px-2 py-0 text-xs [&_svg]:size-3 gap-1",
+      sm: "h-8 px-3 text-sm [&_svg]:size-4 gap-1.5",
+      md: "h-10 px-4 text-base [&_svg]:size-5 ",
+      lg: "h-12 px-8 text-lg [&_svg]:size-5",
+      icon: "h-10 w-10 text-muted-foreground [&_svg]:size-5",
+    },
+    rounded: {
+      none: "rounded-none",
+      sm: "rounded-sm",
+      md: "rounded-md",
+      lg: "rounded-lg",
+      full: "rounded-full",
+    },
   },
-);
+  defaultVariants: {
+    variant: "contained",
+    size: "md",
+    color: "default",
+    rounded: "md",
+  },
+  compoundVariants: [
+    // Contained
+    {
+      variant: "contained",
+      color: "primary",
+      className:
+        "bg-primary text-primary-foreground hover:bg-primary/80 disabled:hover:bg-primary",
+    },
+    {
+      variant: "contained",
+      color: "destructive",
+      className:
+        "bg-destructive text-destructive-foreground hover:bg-destructive/80 disabled:hover:bg-destructive",
+    },
+    {
+      variant: "contained",
+      color: "success",
+      className:
+        "bg-success text-success-foreground hover:bg-success/80 disabled:hover:bg-success",
+    },
+
+    // Outlined
+    {
+      variant: "outlined",
+      color: "primary",
+      className:
+        "border-primary text-primary hover:bg-primary hover:text-primary-foreground",
+    },
+    {
+      variant: "outlined",
+      color: "destructive",
+      className:
+        "border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground",
+    },
+    {
+      variant: "outlined",
+      color: "success",
+      className:
+        "border-success text-success hover:bg-success hover:text-success-foreground",
+    },
+
+    // Ghost
+    {
+      variant: "ghost",
+      color: "primary",
+      className: "text-primary hover:bg-primary hover:text-primary-foreground",
+    },
+    {
+      variant: "ghost",
+      color: "destructive",
+      className:
+        "text-destructive hover:bg-destructive hover:text-destructive-foreground",
+    },
+    {
+      variant: "ghost",
+      color: "success",
+      className: "text-success hover:bg-success hover:text-success-foreground",
+    },
+
+    // Text
+    {
+      variant: "text",
+      color: "primary",
+      className: "text-primary",
+    },
+    {
+      variant: "text",
+      color: "destructive",
+      className: "text-destructive",
+    },
+    {
+      variant: "text",
+      color: "success",
+      className: "text-success",
+    },
+
+    // Link
+    {
+      variant: "link",
+      color: "primary",
+      className: "text-primary underline-offset-4 hover:underline",
+    },
+    {
+      variant: "link",
+      color: "destructive",
+      className: "text-destructive underline-offset-4 hover:underline",
+    },
+    {
+      variant: "link",
+      color: "success",
+      className: "text-success underline-offset-4 hover:underline ",
+    },
+  ],
+});
 
 const defaultLoadingIndicator = (
   <svg

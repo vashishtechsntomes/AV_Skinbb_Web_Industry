@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { cn } from "@/utils/index";
 
-function Select({
+function SelectRoot({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {
   return <SelectPrimitive.Root data-slot="select" {...props} />;
@@ -242,49 +242,54 @@ function SelectScrollDownButton({
   );
 }
 
-// interface SelectOption {
-//   value: string;
-//   label: string;
-// }
+interface BaseSelectOption {
+  value: string;
+  label: string;
+}
 
-// interface CustomSelectProps {
-//   options: SelectOption[];
-//   optionsLabel: string;
-//   value: string;
-//   onChange: (value: string) => void;
-//   placeholder?: string;
-//   className?: string;
-// }
+interface SelectProps<T = BaseSelectOption>
+  extends React.ComponentProps<typeof SelectPrimitive.Root> {
+  options: T[];
+  placeholder?: string;
+  className?: string;
+  optionHeading?: string;
+  optionLabel?: keyof T;
+  optionValue?: keyof T;
+  selectValueProps?: React.ComponentProps<typeof SelectPrimitive.Value>;
+}
 
-// const CustomSelect: React.FC<CustomSelectProps> = ({
-//   options,
-//   optionsLabel,
-//   value,
-//   onChange,
-//   placeholder = "Select...",
-//   className = "w-[180px]",
-// }) => {
-//   return (
-//     <Select value={value} onValueChange={onChange}>
-//       <SelectTrigger className={className}>
-//         <SelectValue placeholder={placeholder} />
-//       </SelectTrigger>
-//       <SelectContent>
-//         <SelectGroup>
-//           {optionsLabel && <SelectLabel>{optionsLabel}</SelectLabel>}
-//           {options.map((option) => (
-//             <SelectItem key={option.value} value={option.value}>
-//               {option.label}
-//             </SelectItem>
-//           ))}
-//         </SelectGroup>
-//       </SelectContent>
-//     </Select>
-//   );
-// };
+const Select: React.FC<SelectProps> = ({
+  options,
+  optionLabel = "label",
+  optionValue = "value",
+  optionHeading = "",
+  placeholder = "Select...",
+  className = "w-[180px]",
+  selectValueProps,
+  ...props
+}) => {
+  return (
+    <SelectRoot {...props}>
+      <SelectTrigger className={className}>
+        <SelectValue placeholder={placeholder} {...selectValueProps} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {optionHeading && <SelectLabel>{optionHeading}</SelectLabel>}
+          {options.map((option) => (
+            <SelectItem key={option[optionValue]} value={option[optionValue]}>
+              {option[optionLabel]}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </SelectRoot>
+  );
+};
 
 export {
   Select,
+  SelectRoot,
   SelectContent,
   SelectGroup,
   SelectItem,
@@ -293,6 +298,5 @@ export {
   SelectScrollUpButton,
   SelectSeparator,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 };
-

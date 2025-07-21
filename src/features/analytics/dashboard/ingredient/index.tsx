@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
+  SelectRoot,
   SelectContent,
   SelectGroup,
   SelectItem,
@@ -28,7 +28,7 @@ const Ingredient = () => {
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-2">
               <Label>Age</Label>
-              <Select defaultValue="All">
+              <SelectRoot defaultValue="All">
                 <SelectTrigger className="bg-background w-full truncate">
                   <SelectValue placeholder="Select a age" />
                 </SelectTrigger>
@@ -44,11 +44,11 @@ const Ingredient = () => {
                     )}
                   </SelectGroup>
                 </SelectContent>
-              </Select>
+              </SelectRoot>
             </div>
             <div className="flex items-center gap-2">
               <Label>Gender</Label>
-              <Select defaultValue="All">
+              <SelectRoot defaultValue="All">
                 <SelectTrigger className="bg-background w-full truncate">
                   <SelectValue placeholder="Select a gender" />
                 </SelectTrigger>
@@ -62,7 +62,7 @@ const Ingredient = () => {
                     ))}
                   </SelectGroup>
                 </SelectContent>
-              </Select>
+              </SelectRoot>
             </div>
             <Button type="submit" variant={"outlined"} color={"primary"}>
               Apply

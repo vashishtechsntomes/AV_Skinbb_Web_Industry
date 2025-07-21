@@ -56,6 +56,7 @@ export default defineConfig([
         navigator: true,
         location: true,
         getComputedStyle: true,
+        requestAnimationFrame: true,
       },
     },
 

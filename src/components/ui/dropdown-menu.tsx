@@ -349,12 +349,14 @@ type DropdownMenuProps = {
   asChild?: boolean;
   triggerProps?: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>;
   contentProps?: React.ComponentProps<typeof DropdownMenuPrimitive.Content>;
+  label?: string;
 } & React.ComponentProps<typeof DropdownMenuPrimitive.Root>;
 
 export function DropdownMenu({
   items,
   children,
   align = "start",
+  label = "",
   triggerProps,
   asChild = false,
   ...props
@@ -370,6 +372,12 @@ export function DropdownMenu({
         {children}
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align}>
+        {label && (
+          <>
+            <DropdownMenuLabel>{label}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+          </>
+        )}
         {renderMenuItems(items)}
       </DropdownMenuContent>
     </DropdownMenuRoot>

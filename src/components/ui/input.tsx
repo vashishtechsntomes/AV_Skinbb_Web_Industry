@@ -4,64 +4,38 @@ import { cn } from "@/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { KeyFilter, type KeyFilterType } from "./keyfilter";
 
-const inputVariants = cva(
-  [
-    //  Base styling
-    "border-input flex h-10 w-full min-w-0 rounded-md border py-2 text-base",
-    "bg-background text-foreground placeholder:text-muted-foreground/50",
-    "transition-[color,box-shadow] outline-none",
-    "selection:bg-primary selection:text-primary-foreground",
-
-    // Dark mode adjustments
-    "dark:bg-input/30",
-
-    // File input styling
-    "file:border-border file:text-muted-foreground file:inline-flex file:border-0 file:border-e file:bg-transparent file:py-0 file:pe-1 file:font-normal",
-
-    // Disabled state
-    "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-70",
-
-    // Focus state
-    "focus-visible:border-ring focus-visible:border-primary",
-    "focus-visible:ring-primary/50 focus-visible:ring-[3px]",
-
-    // Invalid/aria-invalid state
-    "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
-    "aria-invalid:border-destructive",
-  ],
-  {
-    variants: {
-      size: {
-        sm: "h-8 text-sm",
-        md: "h-10 text-base", // default
-        lg: "h-12 text-lg",
-      },
-      state: {
-        invalid: "ring-destructive/20 border-destructive",
-        valid: "border-green-500 ring-green-200 ring-[3px]",
-        default: "",
-      },
-      withStartIcon: {
-        true: "ps-10 pe-4",
-        false: "px-4",
-      },
-      withEndIcon: {
-        true: "pe-10",
-        false: "",
-      },
+const inputVariants = cva("form-control", {
+  variants: {
+    size: {
+      sm: "h-8 text-sm",
+      md: "h-10 text-base", // default
+      lg: "h-12 text-lg",
     },
-    compoundVariants: [
-      {
-        withStartIcon: false,
-        withEndIcon: false,
-        className: "px-4",
-      },
-    ],
-    defaultVariants: {
-      size: "md",
+    state: {
+      invalid: "ring-destructive/20 border-destructive",
+      valid: "border-green-500 ring-green-200 ring-[3px]",
+      default: "",
+    },
+    withStartIcon: {
+      true: "ps-10 pe-4",
+      false: "px-4",
+    },
+    withEndIcon: {
+      true: "pe-10",
+      false: "",
     },
   },
-);
+  compoundVariants: [
+    {
+      withStartIcon: false,
+      withEndIcon: false,
+      className: "px-4",
+    },
+  ],
+  defaultVariants: {
+    size: "md",
+  },
+});
 
 export interface InputProps
   extends Omit<React.ComponentProps<"input">, "size" | "onInput">,
