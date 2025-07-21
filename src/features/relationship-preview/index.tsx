@@ -300,8 +300,8 @@ const PreviewCytoscape = ({
         </GraphControls>
       )}
 
-      <div className="bg-background hidden sm:block absolute top-2 right-2 z-1 rounded-md border p-2 shadow-md">
-        <ul className="hidden flex-wrap gap-4 text-sm sm:flex">
+      <div className="bg-background absolute top-2 right-2 z-1 rounded-md border p-2 shadow-md">
+        <ul className="flex flex-wrap gap-4 text-sm">
           <li className="flex items-center gap-2">
             <span className="block size-3 rounded-full border-2 border-[#93aafd]"></span>{" "}
             Ingredient

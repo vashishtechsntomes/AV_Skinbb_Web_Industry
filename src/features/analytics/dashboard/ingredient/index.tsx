@@ -11,7 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageContent } from "@/components/ui/structure";
-import RelationshipPreview from "@/features/relationship-preview";
 import FocusIngredients from "./FocusIngredients";
 import FunctionalTrends from "./FunctionalTrends";
 import IngredientOvertime from "./IngredientOvertime";
@@ -20,6 +19,10 @@ import { Tooltip } from "@/components/ui/tooltip";
 import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
 import { NavLink, useLocation } from "react-router";
 import { ROUTES } from "@/routes/routes.constant";
+import { lazy, Suspense } from "react";
+const RelationshipPreview = lazy(
+  () => import("@/features/relationship-preview"),
+);
 // import FunctionalTrends from "./FunctionalTrends";
 
 const Ingredient = () => {
@@ -98,10 +101,20 @@ const Ingredient = () => {
         }
       >
         {/* <IngredientProductMap /> */}
-        <RelationshipPreview
-          className="bg-muted rounded-lg border inset-shadow-sm"
-          height="400px"
-        />
+        <Suspense
+          fallback={
+            <div className="h-[400px] animate-pulse overflow-hidden rounded-lg border inset-shadow-sm">
+              <div className="bg-muted-foreground/20 text-muted-foreground flex h-full items-center justify-center rounded">
+                Loading...
+              </div>
+            </div>
+          }
+        >
+          <RelationshipPreview
+            className="bg-muted rounded-lg border inset-shadow-sm"
+            height="400px"
+          />
+        </Suspense>
       </StatChartCard>
     </PageContent>
   );

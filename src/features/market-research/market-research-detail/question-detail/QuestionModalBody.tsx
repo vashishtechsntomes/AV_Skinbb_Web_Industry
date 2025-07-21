@@ -99,7 +99,7 @@ const QuestionModalBody = ({
             </DialogTitle>
           </DialogHeader>
           <hr />
-          <div className="grid grid-cols-1 gap-2 p-3 md:grid-cols-10 md:gap-5 md:px-5 md:pt-3 md:pb-5">
+          <div className="grid grid-cols-1 gap-4 p-3 md:grid-cols-10 md:gap-5 md:px-5 md:pt-3 md:pb-5">
             <div className="md:col-span-2">
               Options
               <div className="mt-2 flex flex-col gap-5">
